@@ -68,66 +68,53 @@
 <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Asia%2FKuala_Lumpur&showPrint=0&src=YzQ5OGJhM2IwMTFhZDFlNzM3MGE1YTMxODRjODcxNTZkYTlhZWQzMzg1MTZhYmQ1MmNjNmUwZDI0MGY2NDk1ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y2UyNWM0YjYzZWY2MmIwNGU5MjhjYTFlMDIxMzQ2OWE3Nzg0NTVlODg0OTNmMTc4OWI0YmQxNTI1YzQzYWM0ZUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23f6bf26&color=%23009688" style="border:solid 1px #777" width="100%"  height="600" frameborder="0" scrolling="no"></iframe>  </div>
 </div>
 
-<!-- Contact Section -->
+<!-- Contact Container -->
 <div class="w3-container w3-padding-64 w3-theme-l5" id="contact">
   <div class="w3-row">
     <div class="w3-col m5">
       <div class="w3-padding-16">
-        <span class="w3-xlarge w3-border-teal w3-bottombar">Contact me</span>
+        <span class="w3-xlarge w3-border-teal w3-bottombar">Pour me joindre</span>
       </div>
-      <p><i class="fa fa-map-marker w3-text-teal w3-xlarge"></i> Canadian International Matriculation Programme</p>
-      <p><i class="fa fa-envelope-o w3-text-teal w3-xlarge"></i> annieb@sunwayeducation.info</p>
+ 
+      <p><i class="fa fa-envelope-o w3-text-teal w3-xlarge"></i> bernatcheza@csviamonde.ca</p>
     </div>
   </div>
 </div>
 
 <!-- Footer -->
 <footer class="w3-container w3-padding-32 w3-theme-d1 w3-center">
-  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+
 
   <div style="position:relative;bottom:100px;z-index:1;" class="w3-tooltip w3-right">
-    <span class="w3-text w3-padding w3-teal w3-hide-small">Back</span>
+    <span class="w3-text w3-padding w3-teal w3-hide-small">Retour</span>
     <a class="w3-button w3-theme" href="#myPage"><span class="w3-xlarge">
-      <i class="fa fa-chevron-circle-up"></i></span></a>
+    <i class="fa fa-chevron-circle-up"></i></span></a>
   </div>
 </footer>
 
-<!-- Scripts -->
 <script>
-  function w3_open() {
-    var x = document.getElementById("mySidebar");
-    x.style.width = "300px";
-    x.style.paddingTop = "10%";
-    x.style.display = "block";
-  }
+// Sidebar functions
+function w3_open() {
+  var x = document.getElementById("mySidebar");
+  x.style.width = "300px";
+  x.style.paddingTop = "10%";
+  x.style.display = "block";
+}
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
 
-  function w3_close() {
-    document.getElementById("mySidebar").style.display = "none";
+// Toggle for small screen menu
+function openNav() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else {
+    x.className = x.className.replace(" w3-show", "");
   }
+}
+</script>
 
-  function openNav() {
-    var x = document.getElementById("navDemo");
-    if (x.className.indexOf("w3-show") == -1) {
-      x.className += " w3-show";
-    } else {
-      x.className = x.className.replace(" w3-show", "");
-    }
-  }
-</script>
-<!-- Koalendar Popup Widget Start -->
-<script>window.Koalendar = window.Koalendar || function(){(Koalendar.props = Koalendar.props || []).push(arguments)};</script>
-<script async src="https://koalendar.com/assets/widget.js"></script>
-<script>
-  Koalendar('widget', {
-    "url": "https://koalendar.com/e/meet-with-ms-annie-bernatchez",
-    "text": "Schedule a meeting",
-    "shape": "rounded-full",
-    "backgroundColor": "#5145CD",
-    "textColor": "#FFFFFF",
-    "position": "bottom-right",
-    "icon": "calendar"
-  });
-</script>
-<!-- Koalendar Popup Widget End -->
+
 </body>
 </html>
