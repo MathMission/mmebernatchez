@@ -1,5 +1,8 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Histogram to Normal Curve</title>
+
+
+Histogramme courbe normale · HTML
+<!doctype html><html lang="fr"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>De l'histogramme à la courbe normale</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600&display=swap">
 <style>
 /* Layout: narrow control column beside one large chart; stacks to one column on phones. */
@@ -89,66 +92,66 @@ button.quiet { border-color: var(--line); color: var(--muted); font-weight: 400;
 .explain { margin: 0; max-width: 70ch; font-size: 1.05rem; }
 .explain .c { color: var(--curve); font-weight: 700; }
 </style>
-
+ 
 <div class="wrap">
   <header>
-    <h1>From histogram to normal curve</h1>
-    <p class="lede">Switch the y-axis from count to density, add more data, and narrow the bins to watch the bars settle onto the curve.</p>
+    <h1>De l'histogramme à la courbe normale</h1>
+    <p class="lede">Faites passer l'axe des y de l'effectif à la densité, ajoutez des données et rétrécissez les classes pour voir les barres épouser la courbe.</p>
   </header>
-
+ 
   <div class="grid">
-    <section class="controls" aria-label="Controls">
+    <section class="controls" aria-label="Commandes">
       <div class="group">
-        <label class="label" for="data">Data</label>
+        <label class="label" for="data">Données</label>
         <textarea id="data" spellcheck="false"></textarea>
-        <p class="hint">Starts with 40 simulated heights of adult women, in cm. Paste your own numbers, separated by spaces, commas or new lines.</p>
-        <div class="row"><button class="quiet" id="reset" type="button">Reset to starting data</button></div>
+        <p class="hint">Commence avec 40 tailles simulées de femmes adultes, en cm. Collez vos propres nombres, séparés par des espaces, des virgules ou des retours à la ligne.</p>
+        <div class="row"><button class="quiet" id="reset" type="button">Revenir aux données de départ</button></div>
       </div>
-
+ 
       <div class="group">
-        <label class="label" for="addN">Add more data <output id="addOut">100</output></label>
+        <label class="label" for="addN">Ajouter des données <output id="addOut">100</output></label>
         <input type="range" id="addN" min="10" max="2000" step="10" value="100">
-        <div class="row"><button class="primary" id="add" type="button">Add 100 values</button></div>
+        <div class="row"><button class="primary" id="add" type="button">Ajouter 100 valeurs</button></div>
         <div class="params">
-          <label for="gm">Drawn from mean<input type="number" id="gm" step="any"></label>
-          <label for="gs">and SD<input type="number" id="gs" step="any" min="0"></label>
+          <label for="gm">Tirées d'une loi de moyenne<input type="number" id="gm" step="any"></label>
+          <label for="gs">et d'écart type<input type="number" id="gs" step="any" min="0"></label>
         </div>
       </div>
-
+ 
       <div class="group">
-        <span class="label" id="yl">Y-axis</span>
+        <span class="label" id="yl">Axe des y</span>
         <div class="seg" role="group" aria-labelledby="yl">
-          <button type="button" id="mCount" aria-pressed="true">Count</button>
-          <button type="button" id="mDensity" aria-pressed="false">Density</button>
+          <button type="button" id="mCount" aria-pressed="true">Effectif</button>
+          <button type="button" id="mDensity" aria-pressed="false">Densité</button>
         </div>
       </div>
-
+ 
       <div class="group">
-        <label class="label" for="bw">Bin width <output id="bwOut"></output></label>
+        <label class="label" for="bw">Largeur des classes <output id="bwOut"></output></label>
         <input type="range" id="bw" min="0" max="1" step="1" value="0">
       </div>
-
-      <label class="check" for="curve"><input type="checkbox" id="curve" checked>Overlay normal curve</label>
+ 
+      <label class="check" for="curve"><input type="checkbox" id="curve" checked>Superposer la courbe normale</label>
     </section>
-
-    <section class="stage" aria-label="Histogram">
+ 
+    <section class="stage" aria-label="Histogramme">
       <div class="chart" id="chart"></div>
       <dl class="stats">
-        <div><dt>Values (n)</dt><dd id="sN"></dd></div>
-        <div><dt>Mean</dt><dd id="sMean"></dd></div>
-        <div><dt>Standard deviation</dt><dd id="sSd"></dd></div>
-        <div class="area"><dt>Total area of bars</dt><dd id="sArea"></dd></div>
+        <div><dt>Valeurs (n)</dt><dd id="sN"></dd></div>
+        <div><dt>Moyenne</dt><dd id="sMean"></dd></div>
+        <div><dt>Écart type</dt><dd id="sSd"></dd></div>
+        <div class="area"><dt>Aire totale des barres</dt><dd id="sArea"></dd></div>
       </dl>
       <p class="explain" id="explain"></p>
     </section>
   </div>
 </div>
-
+ 
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
   var data = [], heights = false, density = false, widths = [1], gm = 0, gs = 1;
-
+ 
   // Seeded generator so the starting data set is the same every time.
   function seeded(seed) {
     return function () {
@@ -187,14 +190,14 @@ button.quiet { border-color: var(--line); color: var(--muted); font-weight: 400;
     return v.toFixed(Math.min(d, 8));
   }
   function trim(v, sig) { return String(parseFloat(v.toPrecision(sig || 4))); }
-
+ 
   function domain(s) {
     var lo = s.lo, hi = s.hi;
     if (isFinite(gm) && gs > 0) { lo = Math.min(lo, gm - 4 * gs); hi = Math.max(hi, gm + 4 * gs); }
     if (hi <= lo) { lo -= 1; hi += 1; }
     return [lo, hi];
   }
-
+ 
   // Called when the data set is replaced: reset the generator and the bin-width choices.
   function adopt() {
     if (data.length >= 2) {
@@ -216,12 +219,12 @@ button.quiet { border-color: var(--line); color: var(--muted); font-weight: 400;
     }
     draw();
   }
-
+ 
   function draw() {
     var box = $("chart"), W = Math.max(280, box.clientWidth - 16), H = Math.round(Math.min(540, Math.max(300, W * 0.56)));
-    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="Histogram of the data">';
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="Histogramme des données">';
     if (data.length < 2) {
-      box.innerHTML = svg + '<text class="empty" x="' + W / 2 + '" y="' + H / 2 + '" text-anchor="middle">Enter at least two numbers to draw the histogram.</text></svg>';
+      box.innerHTML = svg + '<text class="empty" x="' + W / 2 + '" y="' + H / 2 + '" text-anchor="middle">Entrez au moins deux nombres pour tracer l\'histogramme.</text></svg>';
       $("sN").textContent = data.length; $("sMean").textContent = $("sSd").textContent = $("sArea").textContent = "–";
       $("explain").textContent = ""; $("bwOut").textContent = "";
       return;
@@ -236,11 +239,11 @@ button.quiet { border-color: var(--line); color: var(--muted); font-weight: 400;
     var hs = counts.map(function (c) { return density ? c / (n * w) : c; });
     var peak = showCurve ? scale / (s.sd * Math.sqrt(2 * Math.PI)) : 0;
     var ymax = Math.max(Math.max.apply(null, hs), peak) * 1.08;
-
+ 
     var L = 62, R = 14, T = 14, B = 46, pw = W - L - R, ph = H - T - B;
     var X = function (v) { return L + (v - start) / (end - start) * pw; };
     var Y = function (v) { return T + ph - v / ymax * ph; };
-
+ 
     var ys = niceStep(ymax, 6), v;
     for (v = 0; v <= ymax + 1e-12; v += ys) {
       svg += '<line class="gridline" x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '"/>';
@@ -251,8 +254,8 @@ button.quiet { border-color: var(--line); color: var(--muted); font-weight: 400;
       if (!counts[i]) continue;
       var a = start + i * w, y = Y(hs[i]);
       svg += '<rect class="bar" x="' + (X(a) + gap / 2) + '" y="' + y + '" width="' + (pw / nb - gap) + '" height="' + (T + ph - y) + '">' +
-        '<title>' + trim(a, 6) + ' to ' + trim(a + w, 6) + ': count ' + counts[i] + ', density ' + trim(counts[i] / (n * w), 3) +
-        ', area ' + trim(counts[i] / n, 3) + '</title></rect>';
+        '<title>De ' + trim(a, 6) + ' à ' + trim(a + w, 6) + '\u00a0: effectif ' + counts[i] + ', densité ' + trim(counts[i] / (n * w), 3) +
+        ', aire ' + trim(counts[i] / n, 3) + '</title></rect>';
     }
     if (showCurve) {
       var p = "", steps = 240;
@@ -268,30 +271,30 @@ button.quiet { border-color: var(--line); color: var(--muted); font-weight: 400;
       svg += '<line class="axis" x1="' + X(v) + '" x2="' + X(v) + '" y1="' + (T + ph) + '" y2="' + (T + ph + 5) + '"/>';
       svg += '<text x="' + X(v) + '" y="' + (T + ph + 20) + '" text-anchor="middle">' + fmt(v, xs) + '</text>';
     }
-    svg += '<text class="title" x="' + (L + pw / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + (heights ? "Height of adult women (cm)" : "Value") + '</text>';
-    svg += '<text class="title" transform="translate(15 ' + (T + ph / 2) + ') rotate(-90)" text-anchor="middle">' + (density ? "Density" : "Count") + '</text>';
+    svg += '<text class="title" x="' + (L + pw / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + (heights ? "Taille des femmes adultes (cm)" : "Valeur") + '</text>';
+    svg += '<text class="title" transform="translate(15 ' + (T + ph / 2) + ') rotate(-90)" text-anchor="middle">' + (density ? "Densité" : "Effectif") + '</text>';
     box.innerHTML = svg + '</svg>';
-
+ 
     $("bwOut").textContent = trim(w);
-    $("sN").textContent = n.toLocaleString();
+    $("sN").textContent = n.toLocaleString("fr-CA");
     $("sMean").textContent = s.mean.toFixed(2);
     $("sSd").textContent = s.sd.toFixed(2);
     $("sArea").textContent = density ? "1" : trim(n * w, 6);
     var e = density
-      ? "Each bar's height is its count ÷ (n × bin width), so each bar's area is the fraction of the data in that bin. The areas always add up to 1."
-      : "Each bar's height is the number of values in that bin. The total area is n × bin width = " + n.toLocaleString() + " × " + trim(w) + " = " + trim(n * w, 6) + ", so it grows every time you add data.";
-    if (showCurve) e += ' <span class="c">The curve</span> is the normal distribution with the data\'s mean and standard deviation' +
-      (density ? ". Its area is also 1, so the bars and the curve are on the same scale."
-        : ". Its area is 1 and it peaks at only " + trim(peak, 3) + ", so on a count axis it lies almost flat along the bottom.");
+      ? "La hauteur de chaque barre est son effectif ÷ (n × largeur de classe), donc l'aire de chaque barre correspond à la proportion des données dans cette classe. La somme des aires vaut toujours 1."
+      : "La hauteur de chaque barre est le nombre de valeurs dans cette classe. L'aire totale est n × largeur de classe = " + n.toLocaleString("fr-CA") + " × " + trim(w) + " = " + trim(n * w, 6) + ", donc elle augmente chaque fois que vous ajoutez des données.";
+    if (showCurve) e += ' <span class="c">La courbe</span> représente la loi normale ayant la même moyenne et le même écart type que les données' +
+      (density ? ". Son aire vaut aussi 1, donc les barres et la courbe sont à la même échelle."
+        : ". Son aire vaut 1 et son sommet n'atteint que " + trim(peak, 3) + "; sur un axe des effectifs, elle reste donc presque à plat au bas du graphique.");
     $("explain").innerHTML = e;
   }
-
+ 
   function setData(a) { data = a; $("data").value = a.join(", "); }
-
+ 
   $("data").addEventListener("input", function () { data = parse(this.value); heights = false; adopt(); });
   $("reset").addEventListener("click", function () { setData(startingData()); heights = true; adopt(); });
   $("addN").addEventListener("input", function () {
-    $("addOut").textContent = this.value; $("add").textContent = "Add " + this.value + " values";
+    $("addOut").textContent = this.value; $("add").textContent = "Ajouter " + this.value + " valeurs";
   });
   $("add").addEventListener("click", function () {
     var m = parseFloat($("gm").value), sd = parseFloat($("gs").value), k = +$("addN").value;
@@ -314,13 +317,15 @@ button.quiet { border-color: var(--line); color: var(--muted); font-weight: 400;
   $("bw").addEventListener("input", draw);
   $("curve").addEventListener("change", draw);
   window.addEventListener("resize", draw);
-
+ 
   // Form values are restored after a republish, so prefer what is already in the box.
   var existing = parse($("data").value);
   if (existing.length >= 2) { data = existing; heights = existing.slice(0, 40).join() === startingData().join(); } else { setData(startingData()); heights = true; }
-  $("addOut").textContent = $("addN").value; $("add").textContent = "Add " + $("addN").value + " values";
+  $("addOut").textContent = $("addN").value; $("add").textContent = "Ajouter " + $("addN").value + " valeurs";
   adopt();
 })();
 </script>
-
+ 
 </body></html>
+ 
+Claude a terminé sa réponse.
