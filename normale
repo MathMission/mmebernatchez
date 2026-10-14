@@ -1,0 +1,326 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Histogram to Normal Curve</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600&display=swap">
+<style>
+/* Layout: narrow control column beside one large chart; stacks to one column on phones. */
+:root {
+  --bg: #f1f5f7;
+  --panel: #ffffff;
+  --fg: #14222e;
+  --muted: #55677a;
+  --line: #d2dce4;
+  --bar: #2f7f95;
+  --curve: #c2410c;
+  --accent: #1d5f73;
+  --on-accent: #ffffff;
+  --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f171d; --panel: #18232c; --fg: #e6edf2; --muted: #98a9b8; --line: #2c3b48;
+    --bar: #4fa9bf; --curve: #ff9a5c; --accent: #6cc4d9; --on-accent: #0f171d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f171d; --panel: #18232c; --fg: #e6edf2; --muted: #98a9b8; --line: #2c3b48;
+  --bar: #4fa9bf; --curve: #ff9a5c; --accent: #6cc4d9; --on-accent: #0f171d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 16px; line-height: 1.45;
+  padding-inline: 20px; padding-block: 24px 40px;
+}
+.wrap { max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+h1 { font-family: var(--display); font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.15; margin: 0; text-wrap: balance; }
+.lede { margin: 6px 0 0; color: var(--muted); max-width: 65ch; }
+.grid { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 820px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.controls { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.label { font-weight: 700; font-size: 0.95rem; display: flex; justify-content: space-between; gap: 8px; }
+.label output { font-variant-numeric: tabular-nums; color: var(--accent); }
+.hint { color: var(--muted); font-size: 0.85rem; margin: 0; }
+textarea {
+  width: 100%; resize: vertical; min-height: 130px; padding: 10px;
+  font: 0.9rem/1.5 var(--body); font-variant-numeric: tabular-nums;
+  color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+}
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button {
+  font: 700 0.95rem var(--body); cursor: pointer; border-radius: 6px;
+  padding: 9px 14px; border: 1px solid var(--accent); background: var(--panel); color: var(--accent);
+}
+button.primary { background: var(--accent); color: var(--on-accent); }
+button.quiet { border-color: var(--line); color: var(--muted); font-weight: 400; }
+:focus-visible { outline: 3px solid var(--curve); outline-offset: 2px; }
+.seg { display: flex; }
+.seg button { flex: 1; border-radius: 0; }
+.seg button:first-child { border-radius: 6px 0 0 6px; }
+.seg button:last-child { border-radius: 0 6px 6px 0; border-left: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.check { display: flex; gap: 10px; align-items: center; font-weight: 700; font-size: 0.95rem; cursor: pointer; }
+.check input { width: 20px; height: 20px; accent-color: var(--curve); margin: 0; }
+.params { display: flex; gap: 10px; }
+.params label { flex: 1; min-width: 0; font-size: 0.85rem; color: var(--muted); display: flex; flex-direction: column; gap: 3px; }
+.params input {
+  width: 100%; padding: 7px 8px; font: 0.95rem var(--body); font-variant-numeric: tabular-nums;
+  color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+}
+.stage { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.chart { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 8px 4px; }
+.chart svg { display: block; width: 100%; height: auto; }
+.chart .bar { fill: var(--bar); }
+.chart .curve { fill: none; stroke: var(--curve); stroke-width: 3; stroke-linejoin: round; }
+.chart .gridline { stroke: var(--line); stroke-width: 1; }
+.chart .axis { stroke: var(--fg); stroke-width: 1.5; }
+.chart text { fill: var(--muted); font: 13px var(--body); font-variant-numeric: tabular-nums; }
+.chart text.title { fill: var(--fg); font-weight: 700; font-size: 14px; }
+.chart text.empty { fill: var(--muted); font-size: 16px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px 20px; margin: 0; }
+.stats div { display: flex; flex-direction: column; }
+.stats dt { color: var(--muted); font-size: 0.85rem; }
+.stats dd { margin: 0; font: 600 1.6rem/1.2 var(--display); font-variant-numeric: tabular-nums; }
+.stats .area dd { color: var(--accent); }
+.explain { margin: 0; max-width: 70ch; font-size: 1.05rem; }
+.explain .c { color: var(--curve); font-weight: 700; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>From histogram to normal curve</h1>
+    <p class="lede">Switch the y-axis from count to density, add more data, and narrow the bins to watch the bars settle onto the curve.</p>
+  </header>
+
+  <div class="grid">
+    <section class="controls" aria-label="Controls">
+      <div class="group">
+        <label class="label" for="data">Data</label>
+        <textarea id="data" spellcheck="false"></textarea>
+        <p class="hint">Starts with 40 simulated heights of adult women, in cm. Paste your own numbers, separated by spaces, commas or new lines.</p>
+        <div class="row"><button class="quiet" id="reset" type="button">Reset to starting data</button></div>
+      </div>
+
+      <div class="group">
+        <label class="label" for="addN">Add more data <output id="addOut">100</output></label>
+        <input type="range" id="addN" min="10" max="2000" step="10" value="100">
+        <div class="row"><button class="primary" id="add" type="button">Add 100 values</button></div>
+        <div class="params">
+          <label for="gm">Drawn from mean<input type="number" id="gm" step="any"></label>
+          <label for="gs">and SD<input type="number" id="gs" step="any" min="0"></label>
+        </div>
+      </div>
+
+      <div class="group">
+        <span class="label" id="yl">Y-axis</span>
+        <div class="seg" role="group" aria-labelledby="yl">
+          <button type="button" id="mCount" aria-pressed="true">Count</button>
+          <button type="button" id="mDensity" aria-pressed="false">Density</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <label class="label" for="bw">Bin width <output id="bwOut"></output></label>
+        <input type="range" id="bw" min="0" max="1" step="1" value="0">
+      </div>
+
+      <label class="check" for="curve"><input type="checkbox" id="curve" checked>Overlay normal curve</label>
+    </section>
+
+    <section class="stage" aria-label="Histogram">
+      <div class="chart" id="chart"></div>
+      <dl class="stats">
+        <div><dt>Values (n)</dt><dd id="sN"></dd></div>
+        <div><dt>Mean</dt><dd id="sMean"></dd></div>
+        <div><dt>Standard deviation</dt><dd id="sSd"></dd></div>
+        <div class="area"><dt>Total area of bars</dt><dd id="sArea"></dd></div>
+      </dl>
+      <p class="explain" id="explain"></p>
+    </section>
+  </div>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var data = [], heights = false, density = false, widths = [1], gm = 0, gs = 1;
+
+  // Seeded generator so the starting data set is the same every time.
+  function seeded(seed) {
+    return function () {
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function normal(rand, mean, sd) {
+    var u = 1 - rand(), v = rand();
+    return mean + sd * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  function startingData() {
+    var r = seeded(2026), out = [];
+    for (var i = 0; i < 40; i++) out.push(Math.round(normal(r, 163, 7) * 10) / 10);
+    return out;
+  }
+  function parse(text) {
+    var m = text.match(/-?\d*\.?\d+(?:e[-+]?\d+)?/gi) || [];
+    return m.map(Number).filter(isFinite);
+  }
+  function stats(a) {
+    var n = a.length, sum = 0, i;
+    for (i = 0; i < n; i++) sum += a[i];
+    var mean = sum / n, ss = 0, lo = Infinity, hi = -Infinity;
+    for (i = 0; i < n; i++) { ss += (a[i] - mean) * (a[i] - mean); if (a[i] < lo) lo = a[i]; if (a[i] > hi) hi = a[i]; }
+    return { n: n, mean: mean, sd: n > 1 ? Math.sqrt(ss / (n - 1)) : 0, lo: lo, hi: hi };
+  }
+  function niceStep(span, target) {
+    var raw = span / target, p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p;
+    return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * p;
+  }
+  function fmt(v, step) {
+    var d = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+    return v.toFixed(Math.min(d, 8));
+  }
+  function trim(v, sig) { return String(parseFloat(v.toPrecision(sig || 4))); }
+
+  function domain(s) {
+    var lo = s.lo, hi = s.hi;
+    if (isFinite(gm) && gs > 0) { lo = Math.min(lo, gm - 4 * gs); hi = Math.max(hi, gm + 4 * gs); }
+    if (hi <= lo) { lo -= 1; hi += 1; }
+    return [lo, hi];
+  }
+
+  // Called when the data set is replaced: reset the generator and the bin-width choices.
+  function adopt() {
+    if (data.length >= 2) {
+      var s = stats(data);
+      gm = parseFloat(s.mean.toPrecision(4));
+      gs = s.sd > 0 ? parseFloat(s.sd.toPrecision(3)) : 1;
+      $("gm").value = gm; $("gs").value = gs;
+      var d = domain(s), range = d[1] - d[0], mult = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8], list = [];
+      var k0 = Math.floor(Math.log10(range / 100)) - 1;
+      for (var k = k0; k <= k0 + 4; k++) for (var j = 0; j < mult.length; j++) {
+        var w = parseFloat((mult[j] * Math.pow(10, k)).toPrecision(3));
+        if (w >= range / 100 && w <= range / 4) list.push(w);
+      }
+      if (!list.length) list = [range / 10];
+      widths = list;
+      var best = 0, target = range / 16;
+      for (var i = 1; i < list.length; i++) if (Math.abs(list[i] - target) < Math.abs(list[best] - target)) best = i;
+      $("bw").max = list.length - 1; $("bw").value = best;
+    }
+    draw();
+  }
+
+  function draw() {
+    var box = $("chart"), W = Math.max(280, box.clientWidth - 16), H = Math.round(Math.min(540, Math.max(300, W * 0.56)));
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="Histogram of the data">';
+    if (data.length < 2) {
+      box.innerHTML = svg + '<text class="empty" x="' + W / 2 + '" y="' + H / 2 + '" text-anchor="middle">Enter at least two numbers to draw the histogram.</text></svg>';
+      $("sN").textContent = data.length; $("sMean").textContent = $("sSd").textContent = $("sArea").textContent = "–";
+      $("explain").textContent = ""; $("bwOut").textContent = "";
+      return;
+    }
+    var s = stats(data), n = s.n, w = widths[Math.min(widths.length - 1, +$("bw").value)];
+    var showCurve = $("curve").checked && s.sd > 0;
+    var d = domain(s), start = Math.floor(d[0] / w + 1e-9) * w;
+    var nb = Math.max(1, Math.ceil((d[1] - start) / w - 1e-9)), end = start + nb * w;
+    var counts = new Array(nb).fill(0), i;
+    for (i = 0; i < n; i++) counts[Math.max(0, Math.min(nb - 1, Math.floor((data[i] - start) / w + 1e-9)))]++;
+    var scale = 1;                                 // the curve is always the true Gaussian, area 1
+    var hs = counts.map(function (c) { return density ? c / (n * w) : c; });
+    var peak = showCurve ? scale / (s.sd * Math.sqrt(2 * Math.PI)) : 0;
+    var ymax = Math.max(Math.max.apply(null, hs), peak) * 1.08;
+
+    var L = 62, R = 14, T = 14, B = 46, pw = W - L - R, ph = H - T - B;
+    var X = function (v) { return L + (v - start) / (end - start) * pw; };
+    var Y = function (v) { return T + ph - v / ymax * ph; };
+
+    var ys = niceStep(ymax, 6), v;
+    for (v = 0; v <= ymax + 1e-12; v += ys) {
+      svg += '<line class="gridline" x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '"/>';
+      svg += '<text x="' + (L - 8) + '" y="' + (Y(v) + 4) + '" text-anchor="end">' + fmt(v, ys) + '</text>';
+    }
+    var gap = pw / nb > 5 ? 1 : 0;
+    for (i = 0; i < nb; i++) {
+      if (!counts[i]) continue;
+      var a = start + i * w, y = Y(hs[i]);
+      svg += '<rect class="bar" x="' + (X(a) + gap / 2) + '" y="' + y + '" width="' + (pw / nb - gap) + '" height="' + (T + ph - y) + '">' +
+        '<title>' + trim(a, 6) + ' to ' + trim(a + w, 6) + ': count ' + counts[i] + ', density ' + trim(counts[i] / (n * w), 3) +
+        ', area ' + trim(counts[i] / n, 3) + '</title></rect>';
+    }
+    if (showCurve) {
+      var p = "", steps = 240;
+      for (i = 0; i <= steps; i++) {
+        var x = start + (end - start) * i / steps, z = (x - s.mean) / s.sd;
+        p += (i ? "L" : "M") + X(x).toFixed(1) + " " + Y(scale * Math.exp(-0.5 * z * z) / (s.sd * Math.sqrt(2 * Math.PI))).toFixed(1);
+      }
+      svg += '<path class="curve" d="' + p + '"/>';
+    }
+    svg += '<line class="axis" x1="' + L + '" x2="' + (W - R) + '" y1="' + (T + ph) + '" y2="' + (T + ph) + '"/>';
+    var xs = niceStep(end - start, W < 520 ? 5 : 9);
+    for (v = Math.ceil(start / xs - 1e-9) * xs; v <= end + 1e-9; v += xs) {
+      svg += '<line class="axis" x1="' + X(v) + '" x2="' + X(v) + '" y1="' + (T + ph) + '" y2="' + (T + ph + 5) + '"/>';
+      svg += '<text x="' + X(v) + '" y="' + (T + ph + 20) + '" text-anchor="middle">' + fmt(v, xs) + '</text>';
+    }
+    svg += '<text class="title" x="' + (L + pw / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + (heights ? "Height of adult women (cm)" : "Value") + '</text>';
+    svg += '<text class="title" transform="translate(15 ' + (T + ph / 2) + ') rotate(-90)" text-anchor="middle">' + (density ? "Density" : "Count") + '</text>';
+    box.innerHTML = svg + '</svg>';
+
+    $("bwOut").textContent = trim(w);
+    $("sN").textContent = n.toLocaleString();
+    $("sMean").textContent = s.mean.toFixed(2);
+    $("sSd").textContent = s.sd.toFixed(2);
+    $("sArea").textContent = density ? "1" : trim(n * w, 6);
+    var e = density
+      ? "Each bar's height is its count ÷ (n × bin width), so each bar's area is the fraction of the data in that bin. The areas always add up to 1."
+      : "Each bar's height is the number of values in that bin. The total area is n × bin width = " + n.toLocaleString() + " × " + trim(w) + " = " + trim(n * w, 6) + ", so it grows every time you add data.";
+    if (showCurve) e += ' <span class="c">The curve</span> is the normal distribution with the data\'s mean and standard deviation' +
+      (density ? ". Its area is also 1, so the bars and the curve are on the same scale."
+        : ". Its area is 1 and it peaks at only " + trim(peak, 3) + ", so on a count axis it lies almost flat along the bottom.");
+    $("explain").innerHTML = e;
+  }
+
+  function setData(a) { data = a; $("data").value = a.join(", "); }
+
+  $("data").addEventListener("input", function () { data = parse(this.value); heights = false; adopt(); });
+  $("reset").addEventListener("click", function () { setData(startingData()); heights = true; adopt(); });
+  $("addN").addEventListener("input", function () {
+    $("addOut").textContent = this.value; $("add").textContent = "Add " + this.value + " values";
+  });
+  $("add").addEventListener("click", function () {
+    var m = parseFloat($("gm").value), sd = parseFloat($("gs").value), k = +$("addN").value;
+    if (!isFinite(m) || !(sd > 0)) return;
+    gm = m; gs = sd;
+    var extra = [];
+    for (var i = 0; i < k; i++) extra.push(parseFloat(normal(Math.random, m, sd).toPrecision(4)));
+    data = data.concat(extra);
+    $("data").value = data.join(", ");
+    draw();
+  });
+  function mode(d) {
+    density = d;
+    $("mCount").setAttribute("aria-pressed", String(!d));
+    $("mDensity").setAttribute("aria-pressed", String(d));
+    draw();
+  }
+  $("mCount").addEventListener("click", function () { mode(false); });
+  $("mDensity").addEventListener("click", function () { mode(true); });
+  $("bw").addEventListener("input", draw);
+  $("curve").addEventListener("change", draw);
+  window.addEventListener("resize", draw);
+
+  // Form values are restored after a republish, so prefer what is already in the box.
+  var existing = parse($("data").value);
+  if (existing.length >= 2) { data = existing; heights = existing.slice(0, 40).join() === startingData().join(); } else { setData(startingData()); heights = true; }
+  $("addOut").textContent = $("addN").value; $("add").textContent = "Add " + $("addN").value + " values";
+  adopt();
+})();
+</script>
+
+</body></html>
