@@ -1,0 +1,424 @@
+<title>Libérez Sophie !</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: one game stage, the jail cell on one side and the step card on the other; stacks on phones */
+:root {
+  --bg: #F7F3EA; --surface: #FFFDF8; --line: #E3D8BF; --fg: #1F2A44; --muted: #55607A;
+  --accent: #C85A12; --accent-soft: #FBE6D2; --teal: #1F7A8C; --teal-soft: #DCEEF1;
+  --bad: #B3402F; --bad-soft: #F8DDD7; --star: #D4A72C;
+  --display: 'Fredoka', 'Trebuchet MS', sans-serif;
+  --body: 'Noto Sans', Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #141B2D; --surface: #1F2A44; --line: #33405E; --fg: #F2EEE4; --muted: #AEB8C8;
+  --accent: #F4A261; --accent-soft: #3A2E2A; --teal: #8FD3DE; --teal-soft: #1C3640;
+  --bad: #F2998A; --bad-soft: #3D2629; --star: #F0C04A; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #141B2D; --surface: #1F2A44; --line: #33405E; --fg: #F2EEE4; --muted: #AEB8C8;
+  --accent: #F4A261; --accent-soft: #3A2E2A; --teal: #8FD3DE; --teal-soft: #1C3640;
+  --bad: #F2998A; --bad-soft: #3D2629; --star: #F0C04A; color-scheme: dark }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 24px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 20px; }
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1; margin: 0; text-wrap: balance; }
+h1 span { color: var(--accent); }
+.tag { margin: 6px 0 0; color: var(--muted); }
+.hud { display: flex; gap: 10px; flex-wrap: wrap; }
+.chip { font-family: var(--display); font-weight: 600; font-size: 1rem; padding: 6px 14px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.chip b { color: var(--accent); }
+
+.levels { display: flex; gap: 8px; flex-wrap: wrap; }
+.dot { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 600;
+  border: 2px solid var(--line); background: var(--surface); color: var(--muted); }
+.dot.now { border-color: var(--accent); color: var(--accent); }
+.dot.done { background: var(--teal); border-color: var(--teal); color: var(--bg); }
+
+.stage { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 24px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 24px; position: relative; overflow: hidden; }
+@media (max-width: 760px) { .stage { grid-template-columns: minmax(0, 1fr); padding: 16px; } .cell { max-width: 300px; margin: 0 auto; } }
+.cell { width: 100%; }
+.cell svg { width: 100%; height: auto; display: block; border-radius: 16px; }
+.bar { transition: transform .7s cubic-bezier(.5,-0.3,.7,1), opacity .7s; transform-box: fill-box; transform-origin: center bottom; }
+.bar.gone { transform: translateY(420px) rotate(14deg); opacity: 0; }
+#happy.hop { animation: hop .8s ease-in-out infinite alternate; }
+@keyframes hop { from { transform: translateY(0); } to { transform: translateY(-18px); } }
+.cell-cap { text-align: center; color: var(--muted); font-size: .95rem; margin: 10px 0 0; }
+
+.card { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.eyebrow { font-family: var(--display); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .85rem; color: var(--teal); margin: 0; }
+.eq { font-family: var(--body); font-weight: 500; font-size: clamp(1.35rem, 3.6vw, 2rem); line-height: 1.35; padding: 14px 18px;
+  background: var(--bg); border: 2px dashed var(--line); border-radius: 14px; overflow-x: auto; white-space: nowrap; }
+.eq.free { border-style: solid; border-color: var(--teal); background: var(--teal-soft); }
+.x { color: var(--accent); font-weight: 700; }
+sub { font-size: .6em; } sup { font-size: .6em; }
+.q { font-family: var(--display); font-weight: 600; font-size: 1.35rem; line-height: 1.3; margin: 0; text-wrap: balance; }
+.opts { display: grid; gap: 10px; }
+.opt { font: inherit; text-align: left; color: var(--fg); background: var(--surface); border: 2px solid var(--line); border-radius: 14px;
+  padding: 12px 16px; cursor: pointer; transition: border-color .15s, background .15s, transform .1s; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:active:not(:disabled) { transform: scale(.99); }
+.opt:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--teal); background: var(--teal-soft); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); opacity: .85; }
+.fb { margin: 0; min-height: 1.5em; font-size: 1rem; }
+.fb.good { color: var(--teal); font-weight: 700; }
+.fb.bad { color: var(--bad); }
+.shake { animation: shake .35s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+.btn { font-family: var(--display); font-weight: 600; font-size: 1.15rem; border: 0; border-radius: 999px; padding: 12px 26px; cursor: pointer;
+  background: var(--accent); color: var(--bg); align-self: flex-start; }
+.btn:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+.win { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 16px; background: var(--accent-soft); }
+.win h2 { font-family: var(--display); font-size: 1.8rem; margin: 0; line-height: 1.1; }
+.stars { font-size: 2rem; letter-spacing: 4px; color: var(--star); }
+.stars .off { color: var(--line); }
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.legend div { padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+.legend b { font-family: var(--display); font-size: 1.05rem; display: block; }
+.legend .r1 b { color: var(--teal); } .legend .r2 b { color: var(--accent); }
+.confetti { position: absolute; top: -20px; width: 10px; height: 16px; border-radius: 3px; pointer-events: none; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(720px) rotate(540deg); opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .bar, #happy.hop, .confetti, .shake { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Libérez <span>Sophie</span>&nbsp;!</h1>
+      <p class="tag">Sophie (notre <span class="x">x</span>) est enfermée dans le logarithme. Chaque bonne étape brise un barreau.</p>
+    </div>
+    <div class="hud">
+      <span class="chip">Niveau <b id="lvlNum">1</b>/<span id="lvlTot">5</span></span>
+      <span class="chip">Étoiles <b id="starTot">0</b></span>
+    </div>
+  </header>
+
+  <nav class="levels" id="dots" aria-label="Niveaux"></nav>
+
+  <section class="stage" id="stage">
+    <div class="cell">
+      <svg id="jail" viewBox="0 0 320 360" role="img" aria-label="Sophie dans sa cellule">
+        <defs>
+          <pattern id="st" width="20" height="24" patternUnits="userSpaceOnUse"><rect width="20" height="24" fill="#F7F3EA"/><rect width="20" height="12" fill="#1F2A44"/></pattern>
+          <pattern id="br" width="120" height="140" patternUnits="userSpaceOnUse"><rect width="120" height="140" fill="#E3D8BF"/><path d="M0 1H120M0 71H120M60 0V70M1 70V140M119 70V140" stroke="#D2C4A4" stroke-width="3" fill="none"/></pattern>
+        </defs>
+        <rect width="320" height="360" fill="url(#br)"/>
+        <g id="sad"><g transform="translate(160 132) scale(1.05)">
+          <path d="M-60 -10 Q-66 -68 0 -66 Q66 -68 60 -10 L74 130 Q40 150 0 142 Q-40 150 -74 130 Z" fill="#6B3E26"/>
+          <rect x="-62" y="50" width="124" height="210" rx="52" fill="url(#st)"/>
+          <circle cx="0" cy="0" r="52" fill="#F2C49B"/>
+          <path d="M-52 -6 Q-62 40 -54 78 L-40 74 Q-46 34 -40 4 Z" fill="#6B3E26"/>
+          <path d="M52 -6 Q62 40 54 78 L40 74 Q46 34 40 4 Z" fill="#6B3E26"/>
+          <path d="M-54 2 Q-56 -60 0 -58 Q56 -60 54 2 Q36 -24 10 -20 Q-18 -34 -54 2 Z" fill="#6B3E26"/>
+          <path d="M-32 5 L-12 -1 M12 -1 L32 5" stroke="#4E2C1A" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <circle cx="-20" cy="16" r="6" fill="#1F2A44"/><circle cx="20" cy="16" r="6" fill="#1F2A44"/>
+          <circle cx="-30" cy="30" r="6" fill="#EE9A84"/><circle cx="30" cy="30" r="6" fill="#EE9A84"/>
+          <path d="M-14 39 Q0 30 14 39" stroke="#1F2A44" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M29 23 q5 9 0 13 q-5 -4 0 -13Z" fill="#6FA8DC"/>
+          <rect x="-32" y="96" width="64" height="52" rx="9" fill="#E8772E"/>
+          <path d="M-13 109 L13 135 M13 109 L-13 135" stroke="#1F2A44" stroke-width="8" stroke-linecap="round"/>
+        </g></g>
+        <g id="happy" display="none"><g transform="translate(160 140) scale(1.05)">
+          <path d="M-60 -10 Q-66 -68 0 -66 Q66 -68 60 -10 L74 130 Q40 150 0 142 Q-40 150 -74 130 Z" fill="#6B3E26"/>
+          <path d="M-45 80 L-95 -8" stroke="#F2C49B" stroke-width="20" stroke-linecap="round"/>
+          <path d="M45 80 L95 -8" stroke="#F2C49B" stroke-width="20" stroke-linecap="round"/>
+          <circle cx="-95" cy="-8" r="14" fill="#F2C49B"/><circle cx="95" cy="-8" r="14" fill="#F2C49B"/>
+          <rect x="-38" y="190" width="28" height="48" rx="12" fill="#3B5B8C"/>
+          <rect x="10" y="190" width="28" height="48" rx="12" fill="#3B5B8C"/>
+          <rect x="-62" y="50" width="124" height="160" rx="52" fill="#1F7A8C"/>
+          <circle cx="0" cy="0" r="52" fill="#F2C49B"/>
+          <path d="M-52 -6 Q-62 40 -54 78 L-40 74 Q-46 34 -40 4 Z" fill="#6B3E26"/>
+          <path d="M52 -6 Q62 40 54 78 L40 74 Q46 34 40 4 Z" fill="#6B3E26"/>
+          <path d="M-54 2 Q-56 -60 0 -58 Q56 -60 54 2 Q36 -24 10 -20 Q-18 -34 -54 2 Z" fill="#6B3E26"/>
+          <path d="M-27 18 q9 -11 18 0 M9 18 q9 -11 18 0" stroke="#1F2A44" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <circle cx="-30" cy="30" r="6" fill="#EE9A84"/><circle cx="30" cy="30" r="6" fill="#EE9A84"/>
+          <path d="M-18 30 Q0 52 18 30 Z" fill="#9C3B2E"/>
+          <path d="M-12 100 L12 124 M12 100 L-12 124" stroke="#F7F3EA" stroke-width="7" stroke-linecap="round"/>
+        </g></g>
+        <g id="bars"></g>
+        <rect x="0" y="18" width="320" height="14" fill="#4A5568"/>
+        <rect x="0" y="328" width="320" height="14" fill="#4A5568"/>
+      </svg>
+      <p class="cell-cap" id="cellCap">Barreaux restants&nbsp;: <b id="barsLeft">0</b></p>
+    </div>
+
+    <div class="card" id="card">
+      <p class="eyebrow" id="stepLabel">Étape 1</p>
+      <div class="eq" id="eq"></div>
+      <p class="q" id="q"></p>
+      <div class="opts" id="opts"></div>
+      <p class="fb" id="fb" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="legend" aria-label="Rappel des voies d’évasion">
+    <div class="r1"><b>Voie d’évasion 1</b>log<sub>b</sub>(A) = log<sub>b</sub>(B) → A = B</div>
+    <div class="r2"><b>Voie d’évasion 2</b>log<sub>b</sub>(A) = c → b<sup>c</sup> = A</div>
+    <div><b>Lois des logarithmes</b>log(A) + log(B) = log(AB) · log(A) − log(B) = log(A/B) · n·log(A) = log(A<sup>n</sup>)</div>
+  </section>
+</div>
+
+<script>
+const X = '<span class="x">x</span>';
+const lg = (b, a) => `log<sub>${b}</sub>(${a})`;
+const R1 = { t: 'Voie 1 : le même log des deux côtés' };
+const R2 = { t: 'Voie 2 : un log égal à une constante' };
+
+const LEVELS = [
+  { eq: `${lg(2, X + ' + 3')} = 4`, steps: [
+    { q: 'Quelle voie d’évasion est déjà atteinte ?', after: `${lg(2, X + ' + 3')} = 4`, opts: [
+      { ...R2, ok: true, fb: 'Oui ! Un seul log, égal à la constante 4.' },
+      { ...R1, fb: 'Regarde le côté droit : c’est une constante, pas un log.' },
+      { t: 'Aucune : il faut d’abord une loi des logs', fb: 'Pas besoin ici : un seul log est déjà égal à une constante.' } ] },
+    { q: 'Passe à la forme exponentielle.', after: `2<sup>4</sup> = ${X} + 3`, free: true, opts: [
+      { t: `2<sup>4</sup> = ${X} + 3`, ok: true, fb: 'Sophie sort du log !' },
+      { t: `4<sup>2</sup> = ${X} + 3`, fb: 'La base du log (2) devient la base de la puissance.' },
+      { t: `${X} + 3 = 2 × 4`, fb: 'Un log n’est pas une multiplication : log<sub>b</sub>(A) = c donne b<sup>c</sup> = A.' } ] },
+    { q: 'Isole x.', after: `${X} = 13`, free: true, opts: [
+      { t: `${X} = 13`, ok: true, fb: '16 − 3 = 13.' },
+      { t: `${X} = 5`, fb: 'Attention : 2<sup>4</sup> = 16, pas 8.' },
+      { t: `${X} = 19`, fb: 'On soustrait 3 des deux côtés : 16 − 3 = ?' } ] },
+    { q: 'Vérifie : l’argument est-il positif ?', after: `${X} = 13 ✔`, free: true, opts: [
+      { t: 'Oui : 13 + 3 = 16 > 0, donc x = 13 est valide', ok: true, fb: 'Bravo, solution vérifiée !' },
+      { t: 'Non : on rejette x = 13', fb: 'Remplace x par 13 dans x + 3 : le résultat est positif.' },
+      { t: 'On ne peut pas vérifier', fb: 'On peut toujours vérifier en remplaçant x dans chaque argument.' } ] } ] },
+
+  { eq: `${lg(3, '2' + X + ' − 1')} = ${lg(3, X + ' + 4')}`, steps: [
+    { q: 'Quelle voie d’évasion est déjà atteinte ?', after: `${lg(3, '2' + X + ' − 1')} = ${lg(3, X + ' + 4')}`, opts: [
+      { ...R1, ok: true, fb: 'Oui ! Un log en base 3 de chaque côté.' },
+      { ...R2, fb: 'Le côté droit est aussi un log, pas une constante.' },
+      { t: 'Aucune : il faut d’abord une loi des logs', fb: 'Les deux côtés ont déjà un seul log de même base.' } ] },
+    { q: 'Égalise les arguments.', after: `2${X} − 1 = ${X} + 4`, free: true, opts: [
+      { t: `2${X} − 1 = ${X} + 4`, ok: true, fb: 'Sophie sort du log !' },
+      { t: `2${X} − 1 = 3(${X} + 4)`, fb: 'Même base des deux côtés : on égalise simplement les arguments.' },
+      { t: `(2${X} − 1)(${X} + 4) = 3`, fb: 'Les logs « s’annulent » : il reste argument = argument.' } ] },
+    { q: 'Isole x.', after: `${X} = 5`, free: true, opts: [
+      { t: `${X} = 5`, ok: true, fb: '2x − x = 4 + 1.' },
+      { t: `${X} = 3`, fb: 'Regroupe : 2x − x = 4 + 1.' },
+      { t: `${X} = −5`, fb: 'Vérifie les signes en ramenant le −1 à droite.' } ] },
+    { q: 'Vérifie les arguments avec x = 5.', after: `${X} = 5 ✔`, free: true, opts: [
+      { t: '2(5) − 1 = 9 et 5 + 4 = 9 : tout est positif, x = 5 est valide', ok: true, fb: 'Bravo, solution vérifiée !' },
+      { t: 'Un argument est négatif : on rejette x = 5', fb: 'Calcule 2(5) − 1 et 5 + 4 : les deux sont positifs.' },
+      { t: 'Les arguments sont égaux, donc c’est impossible', fb: 'Des arguments égaux, c’est exactement ce qu’on voulait !' } ] } ] },
+
+  { eq: `${lg(2, X + ' + 2')} + ${lg(2, X + ' − 2')} = 5`, steps: [
+    { q: 'Quelle loi utiliser en premier ?', after: `${lg(2, X + '<sup>2</sup> − 4')} = 5`, opts: [
+      { t: `Loi du produit : ${lg(2, '(' + X + ' + 2)(' + X + ' − 2)')}`, ok: true, fb: 'Une somme de logs devient le log d’un produit.' },
+      { t: `Loi du quotient : ${lg(2, '(' + X + ' + 2)/(' + X + ' − 2)')}`, fb: 'C’est une somme, pas une différence.' },
+      { t: `Égaliser : ${X} + 2 = ${X} − 2`, fb: 'Les deux logs sont du même côté : il faut d’abord les combiner.' } ] },
+    { q: 'Quelle voie d’évasion peut-on prendre maintenant ?', after: `${lg(2, X + '<sup>2</sup> − 4')} = 5`, opts: [
+      { t: 'Voie 2 : passer à la forme exponentielle', ok: true, fb: 'Oui ! (La voie 1 marche aussi : 5 = log<sub>2</sub>(32).)' },
+      { t: 'Voie 1 : écrire 5 = log<sub>2</sub>(32)', ok: true, fb: 'Oui ! (La voie 2 marche aussi : 2<sup>5</sup> = x<sup>2</sup> − 4.)' },
+      { t: 'Aucune : on est bloqué', fb: 'On a un seul log égal à une constante : c’est la voie 2 !' } ] },
+    { q: 'Après l’évasion, on obtient :', after: `${X}<sup>2</sup> − 4 = 32`, free: true, opts: [
+      { t: `${X}<sup>2</sup> − 4 = 32`, ok: true, fb: 'Sophie sort du log ! 2<sup>5</sup> = 32.' },
+      { t: `${X}<sup>2</sup> − 4 = 10`, fb: '2<sup>5</sup> = 2 × 2 × 2 × 2 × 2, pas 2 × 5.' },
+      { t: `${X}<sup>2</sup> − 4 = 25`, fb: 'La base est 2 : c’est 2<sup>5</sup>, pas 5<sup>2</sup>.' } ] },
+    { q: 'Résous x² = 36.', after: `${X} = 6 ou ${X} = −6`, free: true, opts: [
+      { t: `${X} = 6 ou ${X} = −6`, ok: true, fb: 'Une racine carrée donne deux candidats.' },
+      { t: `${X} = 6 seulement`, fb: 'N’oublie pas la solution négative : ±6.' },
+      { t: `${X} = 18`, fb: 'x² = 36 : on prend la racine carrée, on ne divise pas par 2.' } ] },
+    { q: 'Quelle solution garder ?', after: `${X} = 6 ✔`, free: true, opts: [
+      { t: `${X} = 6`, ok: true, fb: 'Bravo ! x = −6 donne log<sub>2</sub>(−4), qui n’existe pas.' },
+      { t: `${X} = −6`, fb: 'log<sub>2</sub>(−6 + 2) = log<sub>2</sub>(−4) : impossible.' },
+      { t: 'Les deux', fb: 'Vérifie x = −6 dans x + 2 : l’argument serait négatif.' } ] } ] },
+
+  { eq: `2 ${lg(5, X)} = ${lg(5, '3' + X + ' + 10')}`, steps: [
+    { q: 'Quelle loi utiliser en premier ?', after: `${lg(5, X + '<sup>2</sup>')} = ${lg(5, '3' + X + ' + 10')}`, opts: [
+      { t: `Loi de la puissance : ${lg(5, X + '<sup>2</sup>')}`, ok: true, fb: 'Le coefficient 2 devient un exposant.' },
+      { t: `Loi du produit : ${lg(5, '2' + X)}`, fb: 'Un coefficient devant un log devient un exposant : 2 log<sub>5</sub>(x) = log<sub>5</sub>(x<sup>2</sup>).' },
+      { t: 'Diviser les deux côtés par 2', fb: 'Possible, mais on obtiendrait ½ log du côté droit. Utilise plutôt la loi de la puissance.' } ] },
+    { q: 'Quelle voie d’évasion est atteinte ?', after: `${lg(5, X + '<sup>2</sup>')} = ${lg(5, '3' + X + ' + 10')}`, opts: [
+      { ...R1, ok: true, fb: 'Oui ! log<sub>5</sub> de chaque côté.' },
+      { ...R2, fb: 'Il y a un log de chaque côté, pas de constante seule.' },
+      { t: 'Aucune', fb: 'Un seul log de même base de chaque côté : c’est la voie 1.' } ] },
+    { q: 'Égalise les arguments.', after: `${X}<sup>2</sup> = 3${X} + 10`, free: true, opts: [
+      { t: `${X}<sup>2</sup> = 3${X} + 10`, ok: true, fb: 'Sophie sort du log !' },
+      { t: `2${X} = 3${X} + 10`, fb: 'L’argument de gauche est x<sup>2</sup>, pas 2x.' },
+      { t: `${X}<sup>2</sup> = 5(3${X} + 10)`, fb: 'Même base des deux côtés : on égalise les arguments, sans multiplier par 5.' } ] },
+    { q: 'Factorise x² − 3x − 10 = 0.', after: `(${X} − 5)(${X} + 2) = 0`, free: true, opts: [
+      { t: `(${X} − 5)(${X} + 2) = 0`, ok: true, fb: '−5 × 2 = −10 et −5 + 2 = −3.' },
+      { t: `(${X} + 5)(${X} − 2) = 0`, fb: 'Développe : (x + 5)(x − 2) = x<sup>2</sup> + 3x − 10. Le signe du milieu ne va pas.' },
+      { t: `(${X} − 10)(${X} + 1) = 0`, fb: 'Développe : on obtient x<sup>2</sup> − 9x − 10.' } ] },
+    { q: 'Quelle solution garder ?', after: `${X} = 5 ✔`, free: true, opts: [
+      { t: `${X} = 5`, ok: true, fb: 'Bravo ! x = −2 donne log<sub>5</sub>(−2), qui n’existe pas.' },
+      { t: `${X} = −2`, fb: 'log<sub>5</sub>(−2) n’existe pas : l’argument doit être positif.' },
+      { t: 'Les deux', fb: 'Vérifie x = −2 dans log<sub>5</sub>(x).' } ] } ] },
+
+  { eq: `${lg(3, X + ' + 6')} − ${lg(3, X + ' − 2')} = 2`, steps: [
+    { q: 'Quelle loi utiliser en premier ?', after: `${lg(3, '(' + X + ' + 6)/(' + X + ' − 2)')} = 2`, opts: [
+      { t: `Loi du quotient : ${lg(3, '(' + X + ' + 6)/(' + X + ' − 2)')}`, ok: true, fb: 'Une différence de logs devient le log d’un quotient.' },
+      { t: `Loi du produit : ${lg(3, '(' + X + ' + 6)(' + X + ' − 2)')}`, fb: 'C’est une différence : log(A) − log(B) = log(A/B).' },
+      { t: `Soustraire les arguments : ${lg(3, '8')}`, fb: 'On ne soustrait jamais les arguments : log(A) − log(B) = log(A/B).' } ] },
+    { q: 'Quelle voie d’évasion peut-on prendre ?', after: `${lg(3, '(' + X + ' + 6)/(' + X + ' − 2)')} = 2`, opts: [
+      { t: 'Voie 2 : passer à la forme exponentielle', ok: true, fb: 'Oui ! (La voie 1 marche aussi : 2 = log<sub>3</sub>(9).)' },
+      { t: 'Voie 1 : écrire 2 = log<sub>3</sub>(9)', ok: true, fb: 'Oui ! (La voie 2 marche aussi : 3<sup>2</sup> = 9.)' },
+      { t: 'Aucune : on est bloqué', fb: 'On a un seul log égal à une constante : c’est la voie 2 !' } ] },
+    { q: 'Après l’évasion, on obtient :', after: `(${X} + 6)/(${X} − 2) = 9`, free: true, opts: [
+      { t: `(${X} + 6)/(${X} − 2) = 9`, ok: true, fb: 'Sophie sort du log ! 3<sup>2</sup> = 9.' },
+      { t: `(${X} + 6)/(${X} − 2) = 6`, fb: '3<sup>2</sup> = 3 × 3, pas 3 × 2.' },
+      { t: `(${X} + 6)/(${X} − 2) = 8`, fb: 'La base est 3 et l’exposant 2 : 3<sup>2</sup> = ?' } ] },
+    { q: 'Résous l’équation.', after: `${X} = 3`, free: true, opts: [
+      { t: `${X} + 6 = 9${X} − 18, donc ${X} = 3`, ok: true, fb: '24 = 8x, donc x = 3.' },
+      { t: `${X} + 6 = 9${X} − 2, donc ${X} = 1`, fb: 'Distribue bien le 9 : 9(x − 2) = 9x − 18.' },
+      { t: `${X} + 6 = 9${X}, donc ${X} = 0,75`, fb: 'Multiplie les deux côtés par (x − 2) en entier.' } ] },
+    { q: 'Vérifie les arguments avec x = 3.', after: `${X} = 3 ✔`, free: true, opts: [
+      { t: '3 + 6 = 9 et 3 − 2 = 1 : tout est positif, x = 3 est valide', ok: true, fb: 'Bravo, solution vérifiée !' },
+      { t: '3 − 2 = 1, donc on rejette x = 3', fb: '1 est positif : l’argument est valide.' },
+      { t: 'Il faut aussi garder x = −3', fb: 'Il n’y a qu’une solution ici : x = 3.' } ] } ] }
+];
+
+const $ = id => document.getElementById(id);
+let S = { lvl: 0, step: 0, miss: 0, stars: [] };
+
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function drawDots() {
+  $('dots').innerHTML = LEVELS.map((_, i) =>
+    `<span class="dot ${i < S.lvl ? 'done' : ''} ${i === S.lvl ? 'now' : ''}" aria-label="Niveau ${i + 1}">${i + 1}</span>`).join('');
+  $('lvlNum').textContent = Math.min(S.lvl + 1, LEVELS.length);
+  $('lvlTot').textContent = LEVELS.length;
+  $('starTot').textContent = S.stars.reduce((a, b) => a + b, 0);
+}
+
+function drawBars(total, left) {
+  const g = $('bars'); g.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const x = 26 + i * (268 / (total - 1)) - 8;
+    const bar = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    bar.setAttribute('class', 'bar' + (i >= left ? ' gone' : ''));
+    bar.innerHTML = `<rect x="${x}" y="0" width="16" height="360" fill="#4A5568"/><rect x="${x + 4}" y="0" width="4" height="360" fill="#8A97A8"/>`;
+    g.appendChild(bar);
+  }
+  $('barsLeft').textContent = left;
+}
+
+function setSophie(free) {
+  $('sad').setAttribute('display', free ? 'none' : 'inline');
+  $('happy').setAttribute('display', free ? 'inline' : 'none');
+  $('happy').classList.toggle('hop', free);
+  $('jail').setAttribute('aria-label', free ? 'Sophie est libre et saute de joie' : 'Sophie, triste, dans sa cellule');
+}
+
+function loadLevel() {
+  if (S.lvl >= LEVELS.length) return finale();
+  const L = LEVELS[S.lvl];
+  drawDots();
+  drawBars(L.steps.length, L.steps.length - S.step);
+  setSophie(false);
+  $('eq').innerHTML = S.step === 0 ? L.eq : L.steps[S.step - 1].after;
+  $('eq').classList.toggle('free', S.step > 0 && !!L.steps[S.step - 1].free);
+  showStep();
+}
+
+function showStep() {
+  const L = LEVELS[S.lvl], st = L.steps[S.step];
+  $('stepLabel').textContent = `Niveau ${S.lvl + 1} · Étape ${S.step + 1} sur ${L.steps.length}`;
+  $('q').innerHTML = st.q;
+  $('fb').textContent = ''; $('fb').className = 'fb';
+  const box = $('opts'); box.innerHTML = '';
+  shuffle(st.opts).forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'opt'; b.innerHTML = o.t; b.type = 'button';
+    b.onclick = () => pick(b, o);
+    box.appendChild(b);
+  });
+}
+
+function pick(btn, o) {
+  const L = LEVELS[S.lvl], st = L.steps[S.step];
+  if (o.ok) {
+    [...$('opts').children].forEach(b => b.disabled = true);
+    btn.classList.add('right');
+    $('fb').innerHTML = o.fb; $('fb').className = 'fb good';
+    const bars = [...$('bars').children].filter(b => !b.classList.contains('gone'));
+    const victim = bars[Math.floor(bars.length / 2)];
+    if (victim) victim.classList.add('gone');
+    S.step++;
+    $('barsLeft').textContent = L.steps.length - S.step;
+    $('eq').innerHTML = st.after;
+    $('eq').classList.toggle('free', !!st.free);
+    setTimeout(() => S.step >= L.steps.length ? escape() : showStep(), 1100);
+  } else {
+    S.miss++;
+    btn.classList.add('wrong'); btn.disabled = true;
+    $('fb').innerHTML = o.fb; $('fb').className = 'fb bad';
+    $('jail').classList.remove('shake'); void $('jail').offsetWidth; $('jail').classList.add('shake');
+  }
+  snap();
+}
+
+function starsFor(m) { return m === 0 ? 3 : m <= 2 ? 2 : 1; }
+function starRow(n, of = 3) { return '★'.repeat(n) + `<span class="off">${'★'.repeat(of - n)}</span>`; }
+
+function escape() {
+  const n = starsFor(S.miss);
+  S.stars.push(n);
+  setSophie(true); confetti(); drawDots();
+  const last = S.lvl === LEVELS.length - 1;
+  $('card').innerHTML = `
+    <div class="win">
+      <p class="eyebrow">Niveau ${S.lvl + 1} réussi</p>
+      <h2>Sophie est libre&nbsp;!</h2>
+      <div class="eq free">${LEVELS[S.lvl].steps.at(-1).after}</div>
+      <div class="stars" aria-label="${n} étoiles sur 3">${starRow(n)}</div>
+      <p style="margin:0">${S.miss === 0 ? 'Sans aucune erreur. Évasion parfaite !' : `${S.miss} erreur${S.miss > 1 ? 's' : ''} en chemin.`}</p>
+      <button class="btn" type="button" id="next">${last ? 'Voir mon score' : 'Niveau suivant →'}</button>
+    </div>`;
+  $('next').onclick = () => { S.lvl++; S.step = 0; S.miss = 0; resetCard(); loadLevel(); snap(); };
+  $('next').focus();
+  snap();
+}
+
+function finale() {
+  const tot = S.stars.reduce((a, b) => a + b, 0), max = LEVELS.length * 3;
+  drawDots(); setSophie(true); confetti();
+  drawBars(2, 0); $('cellCap').innerHTML = 'Plus aucun barreau&nbsp;!';
+  $('card').innerHTML = `
+    <div class="win">
+      <p class="eyebrow">Mission accomplie</p>
+      <h2>Sophie est libre pour de bon&nbsp;!</h2>
+      <div class="stars" aria-label="${tot} étoiles sur ${max}">${starRow(tot, max)}</div>
+      <p style="margin:0"><b>${tot} / ${max} étoiles.</b> ${tot === max ? 'Score parfait : tu maîtrises les deux voies d’évasion.' : 'Rejoue pour viser le score parfait.'}</p>
+      <button class="btn" type="button" id="again">Rejouer</button>
+    </div>`;
+  $('again').onclick = () => { S = { lvl: 0, step: 0, miss: 0, stars: [] }; resetCard(); loadLevel(); snap(); };
+}
+
+function resetCard() {
+  $('cellCap').innerHTML = 'Barreaux restants&nbsp;: <b id="barsLeft">0</b>';
+  $('card').innerHTML = `<p class="eyebrow" id="stepLabel"></p><div class="eq" id="eq"></div><p class="q" id="q"></p><div class="opts" id="opts"></div><p class="fb" id="fb" aria-live="polite"></p>`;
+}
+
+function confetti() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const colors = ['#E8772E', '#1F7A8C', '#D4A72C', '#8FD3DE', '#F4A261'];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.background = colors[i % colors.length];
+    c.style.animationDuration = 1.6 + Math.random() * 1.6 + 's';
+    c.style.animationDelay = Math.random() * .4 + 's';
+    $('stage').appendChild(c);
+    setTimeout(() => c.remove(), 3800);
+  }
+}
+
+function snap() { try { window.claude?.hot?.snapshot?.(() => S); } catch (e) {} }
+
+function start(data) {
+  if (data && typeof data.lvl === 'number') S = { lvl: data.lvl, step: data.step || 0, miss: data.miss || 0, stars: data.stars || [] };
+  if (S.step >= (LEVELS[S.lvl]?.steps.length ?? 0)) { S.lvl++; S.step = 0; S.miss = 0; }
+  loadLevel();
+  snap();
+}
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+</script>
