@@ -1,0 +1,669 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>How Many Curry Puffs?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: scoreboard across the top, graph-paper board on the left, one question card on the right; stacks on phones. */
+:root{
+  --bg:#EDF1F3; --surface:#FFFFFF; --ink:#1D2730; --muted:#5B6873;
+  --grid:#D6DEE3; --axis:#8796A1;
+  --dough:#E4A54A; --dough-hi:#F4D08A; --crust:#A8641E; --spot:#8A4A14;
+  --tomato:#D4432A; --tomato-ink:#FFFFFF; --basil:#2C8548; --line:#C9D3DA;
+  --team1:#2462C8; --team2:#8B3DB8; --team-ink:#FFFFFF;
+  --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141A20; --surface:#1E272F; --ink:#E7ECEF; --muted:#9BA8B2;
+  --grid:#26313A; --axis:#5E6C78; --dough:#DFA046; --dough-hi:#EFC97F; --crust:#9C5C1A; --spot:#7A4012;
+  --tomato:#F0664B; --tomato-ink:#1A0E0B; --basil:#5CC27C; --line:#33404B;
+  --team1:#6F9CF2; --team2:#C68AEB; --team-ink:#10161C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141A20; --surface:#1E272F; --ink:#E7ECEF; --muted:#9BA8B2;
+  --grid:#26313A; --axis:#5E6C78; --dough:#DFA046; --dough-hi:#EFC97F; --crust:#9C5C1A; --spot:#7A4012;
+  --tomato:#F0664B; --tomato-ink:#1A0E0B; --basil:#5CC27C; --line:#33404B;
+  --team1:#6F9CF2; --team2:#C68AEB; --team-ink:#10161C; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px}
+.app{max-width:1100px;margin:0 auto;display:grid;gap:18px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,4vw,2.3rem);margin:0;letter-spacing:-.02em;text-wrap:balance}
+.level-tag{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--muted)}
+.scores{display:flex;gap:10px}
+.team{display:grid;justify-items:center;min-width:112px;padding:8px 16px;border-radius:12px;border:3px solid var(--line);background:var(--surface);transition:transform .2s}
+.team .nm{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.team b{font-family:var(--display);font-size:2.1rem;line-height:1;font-variant-numeric:tabular-nums}
+.team.t1 .nm{color:var(--team1)} .team.t2 .nm{color:var(--team2)}
+.team.t1.active{border-color:var(--team1);transform:scale(1.06)}
+.team.t2.active{border-color:var(--team2);transform:scale(1.06)}
+.main{display:grid;gap:20px;align-items:start}
+@media (min-width:820px){.main{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+.board-wrap{min-width:0}
+svg#board{width:100%;max-width:560px;display:block;margin:0 auto;touch-action:none;cursor:grab;border-radius:6px}
+svg#board:active{cursor:grabbing}
+svg#board:focus-visible{outline:3px solid var(--tomato);outline-offset:4px}
+svg#pair{width:100%;max-width:620px;display:block;margin:0 auto}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:16px;min-width:0}
+.panel h2{font-family:var(--display);font-weight:800;font-size:1.5rem;margin:0;text-wrap:balance}
+.panel p{margin:0;max-width:60ch}
+.turn{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border-radius:10px;color:var(--team-ink);font-weight:700}
+.turn.t1{background:var(--team1)} .turn.t2{background:var(--team2)}
+.turn .who{font-family:var(--display);font-size:1.35rem;font-weight:800}
+.turn .count{font-size:.9rem;opacity:.9}
+.ask{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.2}
+.ask .amt{color:var(--tomato)}
+.small-ask{font-size:clamp(1.25rem,3.6vw,1.6rem)}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-variant-numeric:tabular-nums;line-height:1;margin:0 .08em}
+.fr .n{padding:0 .15em .1em;border-bottom:.08em solid currentColor}
+.fr .d{padding-top:.1em}
+.ask .fr{font-size:.9em}
+.mixed{display:inline-flex;align-items:center;gap:.12em}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button{font:inherit;font-weight:700;border-radius:10px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);padding:10px 18px;cursor:pointer;min-height:48px}
+button:focus-visible{outline:3px solid var(--tomato);outline-offset:2px}
+button.primary{background:var(--tomato);border-color:var(--tomato);color:var(--tomato-ink)}
+button.step{width:52px;padding:0;font-size:1.4rem}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.choice{font-family:var(--display);font-size:1.45rem;font-weight:600;min-height:72px;border-color:var(--line)}
+.choice:not(:disabled):hover{border-color:var(--ink)}
+.choice:disabled{cursor:default;opacity:.55}
+.choice.right{border-color:var(--basil);background:var(--basil);color:var(--surface);opacity:1}
+.choice.wrong{border-color:var(--tomato);color:var(--tomato);opacity:1}
+.feedback{min-height:3em;font-size:1.05rem}
+.feedback.good{color:var(--basil)}
+.feedback.bad{color:var(--tomato)}
+.chip{display:inline-flex;align-items:center;gap:.4em;padding:6px 12px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-weight:700;width:fit-content}
+.reveal{font-family:var(--display);font-weight:800;font-size:clamp(2rem,6vw,3rem);line-height:1.1}
+.reveal .pi{color:var(--tomato)}
+.rules{display:grid;gap:8px;padding-left:1.2em;margin:0}
+.readout{font-family:var(--display);font-weight:600;font-size:1.8rem;display:flex;gap:.5em;align-items:center;flex-wrap:wrap}
+.readout .eq{color:var(--muted)}
+.winner{font-family:var(--display);font-weight:800;font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.1}
+.winner.t1{color:var(--team1)} .winner.t2{color:var(--team2)}
+.small{font-size:.9rem;color:var(--muted)}
+.ref{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.ref svg{flex:none}
+.ref p{font-size:.95rem}
+.ref.mini{padding:6px 12px;gap:10px;width:fit-content}
+.ref.mini p{font-weight:700}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+.top-right{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.pick{display:grid;gap:8px}
+.levels{display:flex;gap:10px;flex-wrap:wrap}
+button.skip{justify-self:start;min-height:40px;padding:6px 12px;font-size:.9rem;font-weight:700;border-color:var(--line);color:var(--muted)}
+button.mute{min-height:48px;width:52px;padding:0;display:grid;place-items:center;border-color:var(--line)}
+button.mute[aria-pressed="true"]{color:var(--muted)}
+@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.35)}100%{transform:scale(1)}}
+.team.bump b{animation:bump .5s ease-out;display:inline-block}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
+.yum{animation:pop .45s ease-out;transform-origin:200px 200px}
+@media (prefers-reduced-motion:reduce){.yum{animation:none}.team{transition:none}}
+</style>
+
+<div class="app">
+  <header>
+    <div>
+      <div class="level-tag" id="levelTag">Curry puff team game</div>
+      <h1>How Many Curry Puffs?</h1>
+    </div>
+    <div class="top-right">
+    <div class="scores" id="scores" hidden>
+      <div class="team t1" id="team1"><span class="nm">Team 1</span><b id="score1">0</b></div>
+      <div class="team t2" id="team2"><span class="nm">Team 2</span><b id="score2">0</b></div>
+    </div>
+    <button class="mute" id="mute"></button>
+    </div>
+  </header>
+  <div class="main">
+    <div class="board-wrap">
+      <svg id="board" viewBox="0 0 400 400" tabindex="0" role="slider" aria-label="Terminal arm. Use left and right arrow keys to turn it." aria-valuemin="0" aria-valuemax="24" aria-valuenow="0">
+        <defs>
+          <radialGradient id="doughGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:var(--dough-hi)"/>
+            <stop offset="100%" style="stop-color:var(--dough)"/>
+          </radialGradient>
+          <radialGradient id="doughGrad2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:var(--dough)"/>
+            <stop offset="100%" style="stop-color:var(--crust)"/>
+          </radialGradient>
+          <clipPath id="clip0"><path id="clipPath0"/></clipPath>
+          <clipPath id="clip1"><path id="clipPath1"/></clipPath>
+          <filter id="puffShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity=".3"/></filter>
+        </defs>
+        <g id="grid"></g>
+        <g id="ghost"></g>
+        <g id="plain" display="none"></g>
+        <g id="pizza"></g>
+        <g id="arms"></g>
+      </svg>
+      <svg id="pair" viewBox="0 0 400 200" hidden role="img" aria-label="Two curry puffs side by side, each on its own axes. The filled part is what has been eaten."><g id="pairG"></g></svg>
+    </div>
+    <section class="panel" id="panel" aria-live="polite"></section>
+  </div>
+</div>
+
+<script>
+(() => {
+const C = 200, R = 140, ARM = R + 22, TAU = Math.PI * 2, STEP = Math.PI / 12;
+const NS = "http://www.w3.org/2000/svg";
+const $ = id => document.getElementById(id);
+const svg = $("board");
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) { const v = String(attrs[k]); if (v.includes("var(")) e.style.setProperty(k, v); else e.setAttribute(k, v); } if (parent) parent.appendChild(e); return e; };
+const pt = (a, r) => [C + r * Math.cos(a), C - r * Math.sin(a)];
+
+/* Amounts are counted in twelfths of a curry puff (one curry puff = half a turn) */
+const SPECIAL = [2,3,4,6,8,9,10,12,14,15,16,18,20,21,22,24];
+const STOPS = [0, ...SPECIAL];                 // the only places the arm can rest
+const isSpecial = k => k === 0 || SPECIAL.includes(((Math.abs(k) - 1) % 24) + 1);
+const STOPS4 = Array.from({ length: 73 }, (_, i) => i - 24).filter(isSpecial);   // -2π … 4π
+// level 4 questions: only amounts below 0 or above 2π
+const POOL4 = [...SPECIAL.map(k => -k), ...SPECIAL.map(k => k + 24)];
+// level 1 amounts: every fraction between 1 and 2 with denominator 2, 3, 4, 5, 6 or 8
+const WARM = [2, 3, 4, 5, 6, 8].flatMap(d => Array.from({ length: d - 1 }, (_, i) => [d + i + 1, d])).filter(([n, d]) => gcd(n, d) === 1);
+const used = { 1: new Set(), 2: new Set(), 3: new Set(), 4: new Set() }; // questions already played, so a redo gets new ones
+function pickFresh(pool, n, seen, key = x => String(x)){
+  const fresh = shuffle(pool.filter(x => !seen.has(key(x)))), old = shuffle(pool.filter(x => seen.has(key(x))));
+  if (fresh.length < n) seen.clear();
+  const out = [...fresh, ...old].slice(0, n); out.forEach(x => seen.add(key(x))); return out;
+}
+const TURNS = 10;                              // per level: 5 for each team
+const LEVELS = 4;
+
+let theta = 0, raw = 0, ghostK = null;
+let state = { screen: "start", level: 1, qs: [], i: 0, checked: false, scores: [0, 0] };
+const team = () => state.i % 2;                                         // 0 = Team 1, 1 = Team 2
+const player = () => (state.level - 1) * (TURNS / 2) + Math.floor(state.i / 2) + 1;
+
+/* ---------- labels ---------- */
+function gcd(a, b){ return b ? gcd(b, a % b) : a; }
+const frac = (n, d) => `<span class="fr"><span class="n">${n}</span><span class="d">${d}</span></span>`;
+const mixed = (w, n, d) => `<span class="mixed">${w}${frac(n, d)}</span>`;
+function parts(k){ if (k === 0) return [0, 1]; const g = gcd(Math.abs(k), 12); return [k / g, 12 / g]; }
+function puffLabel(k){
+  const [n, d] = parts(k);
+  if (k === 0) return "0 curry puffs";
+  if (d === 1) return n === 1 ? "1 curry puff" : `${n} curry puffs`;
+  return `${frac(n, d)} ${n / d > 1 ? "curry puffs" : "curry puff"}`;
+}
+function piLabel(k){
+  if (k === 0) return "0";
+  const [n0, d] = parts(Math.abs(k)), sign = k < 0 ? "−" : "";
+  const top = n0 === 1 ? "π" : `${n0}π`;
+  return sign + (d === 1 ? top : frac(top, d));
+}
+const label = (k, lvl) => lvl >= 3 ? piLabel(k) : puffLabel(k);
+const wide = () => state.level === 4 && state.screen === "play";
+const stops = () => wide() ? STOPS4 : STOPS;
+const range = () => wide() ? [-TAU, 2 * TAU] : [0, TAU];
+const nearestStop = a => stops().reduce((b, k) => Math.abs(k * STEP - a) < Math.abs(b * STEP - a) ? k : b, 0);
+const snapK = () => Math.round(theta / STEP);
+
+const GAP = 0;
+// a braided seam along a puff's straight folded edge; puff 1's sits just above the x-axis, puff 2's just below
+function braid(g, x1, x2, y, tilt, op = 1){
+  const lo = Math.min(x1, x2), hi = Math.max(x1, x2);
+  for (let x = lo + 5; x <= hi - 4; x += 9)
+    el("ellipse", { cx: x, cy: y, rx: 7, ry: 4, transform: `rotate(${tilt} ${x} ${y})`, fill: "var(--dough-hi)", stroke: "var(--crust)", "stroke-width": 1.5, opacity: op }, g);
+}
+function piece(a1, a2, r, cy){ // one wedge of a puff, never more than half a turn
+  const x1 = C + r * Math.cos(a1), y1 = cy - r * Math.sin(a1), x2 = C + r * Math.cos(a2), y2 = cy - r * Math.sin(a2);
+  return `M${C} ${cy} L${x1} ${y1} A${r} ${r} 0 0 0 ${x2} ${y2}Z`;
+}
+/* ---------- static grid, ticks, outline of the two puffs ---------- */
+(function drawGrid(){
+  const g = $("grid");
+  for (let v = 25; v <= 375; v += 35) {
+    el("line", { x1: v, y1: 25, x2: v, y2: 375, stroke: "var(--grid)", "stroke-width": 1 }, g);
+    el("line", { x1: 25, y1: v, x2: 375, y2: v, stroke: "var(--grid)", "stroke-width": 1 }, g);
+  }
+  el("line", { x1: 18, y1: C, x2: 382, y2: C, stroke: "var(--axis)", "stroke-width": 2 }, g);
+  el("line", { x1: C, y1: 18, x2: C, y2: 382, stroke: "var(--axis)", "stroke-width": 2 }, g);
+  el("path", { d: "M382 200 l-9 -5 v10z M200 18 l-5 9 h10z", fill: "var(--axis)" }, g);
+  const t1 = el("text", { x: 384, y: 190, "text-anchor": "end", fill: "var(--muted)", "font-size": 15, "font-style": "italic", "font-family": "Georgia, serif" }, g); t1.textContent = "x";
+  const t2 = el("text", { x: 210, y: 30, fill: "var(--muted)", "font-size": 15, "font-style": "italic", "font-family": "Georgia, serif" }, g); t2.textContent = "y";
+  STOPS.forEach(k => { const a = k * STEP, big = k % 6 === 0, [x1, y1] = pt(a, R + 3), [x2, y2] = pt(a, R + (big ? 17 : 13));
+    el("line", { x1, y1, x2, y2, stroke: "var(--ink)", "stroke-width": big ? 3 : 2, "stroke-linecap": "round" }, g); });
+  // plain unit circle for levels 3 and 4
+  el("circle", { cx: C, cy: C, r: R, fill: "none", stroke: "var(--ink)", "stroke-width": 2.5 }, $("plain"));
+  const gh = $("ghost");
+  [[0, C - GAP], [Math.PI, C + GAP]].forEach(([a0, cy]) => {
+    el("path", { d: piece(a0, a0 + Math.PI, R, cy), fill: "var(--dough)", "fill-opacity": .14, stroke: "var(--crust)", "stroke-opacity": .6, "stroke-width": 2.5, "stroke-dasharray": "6 5" }, gh);
+    braid(gh, C - R + 4, C + R - 4, cy + (a0 ? 6 : -6), a0 ? -40 : 40, .45);
+  });
+  [["curry puff 1", C - GAP - 52], ["curry puff 2", C + GAP + 64]].forEach(([s, y]) => {
+    const t = el("text", { x: C - 66, y, "text-anchor": "middle", fill: "var(--crust)", "font-size": 15, "font-weight": 700, "font-family": "var(--body)" }, gh); t.textContent = s;
+  });
+})();
+
+/* toasty spots, fixed so they don't jump around */
+const SPOTS = (() => { let s = 7; const r = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  return Array.from({ length: 34 }, () => { const a = r() * TAU, d = Math.sqrt(r()) * (R - 22); return [C + d * Math.cos(a), C - d * Math.sin(a), 2 + r() * 3.5]; }); })();
+
+function sectorPath(a, r, cx = C, cy = C){
+  if (a <= 0.0005) return "";
+  if (a >= TAU - 0.0005) return `M${cx + r} ${cy} A${r} ${r} 0 1 0 ${cx - r} ${cy} A${r} ${r} 0 1 0 ${cx + r} ${cy}Z`;
+  const x = cx + r * Math.cos(a), y = cy - r * Math.sin(a);
+  return `M${cx} ${cy} L${cx + r} ${cy} A${r} ${r} 0 ${a > Math.PI ? 1 : 0} 0 ${x} ${y}Z`;
+}
+function rope(g, a, x, y, rx, ry){
+  const deg = -a * 180 / Math.PI + 50;
+  el("ellipse", { cx: x, cy: y, rx, ry, transform: `rotate(${deg} ${x} ${y})`, fill: "var(--dough-hi)", stroke: "var(--crust)", "stroke-width": 1.5 }, g);
+}
+
+/* ---------- board: the swept part is the curry puff that has been eaten ---------- */
+function draw(){
+  const p = $("pizza"); p.innerHTML = "";
+  // levels 3 and 4 use a plain unit circle: no curry puffs
+  const plain = state.level >= 3 && ["play", "end"].includes(state.screen) || state.screen === "interlude" && state.level >= 3;
+  $("ghost").setAttribute("display", plain ? "none" : "inline"); $("plain").setAttribute("display", plain ? "inline" : "none");
+  // eaten region split into half-turn pieces; each piece belongs to the top puff or the bottom puff.
+  // a second lap (past 2π) is drawn as a smaller puff stacked on top of the first lap.
+  const pieces = [];
+  if (!plain && Math.abs(theta) > 0.001) {
+    const lo = Math.min(0, theta), hi = Math.max(0, theta); let a = lo;
+    while (a < hi - 0.001) { const nx = Math.min(hi, (Math.floor(a / Math.PI + 1e-9) + 1) * Math.PI); pieces.push([a, nx]); a = nx; }
+  }
+  const band = (g, x1, y1, x2, y2) => {
+    el("line", { x1, y1, x2, y2, stroke: "var(--crust)", "stroke-width": 9, "stroke-linecap": "round" }, g);
+    el("line", { x1, y1, x2, y2, stroke: "var(--dough-hi)", "stroke-width": 3, "stroke-linecap": "round" }, g);
+  };
+  const onFold = a => Math.abs(a / Math.PI - Math.round(a / Math.PI)) < 1e-6;
+  pieces.forEach(([a1, a2], i) => {
+    const mid = (a1 + a2) / 2, lap = Math.floor(Math.abs(mid) / TAU), rr = lap ? R - 36 : R;
+    const top = ((mid % TAU) + TAU) % TAU < Math.PI, cy = C, y = cy + (top ? -6 : 6), tilt = top ? 40 : -40;
+    const g = el("g", { filter: "url(#puffShadow)" }, p);
+    const cp = el("clipPath", { id: "cp" + i }, g); el("path", { d: piece(a1, a2, rr - 12, cy) }, cp);
+    el("path", { d: piece(a1, a2, rr - 10, cy), fill: lap ? "url(#doughGrad2)" : "url(#doughGrad)", stroke: "var(--crust)", "stroke-width": 2 }, g);
+    const spots = el("g", { "clip-path": `url(#cp${i})` }, g);
+    SPOTS.forEach(([x, y2, r]) => el("circle", { cx: x, cy: y2, r, fill: "var(--spot)", "fill-opacity": .35 }, spots));
+    for (let a = a1; a <= a2 + 1e-6; a += Math.PI / 36) rope(g, a, C + (rr - 4) * Math.cos(a), cy - (rr - 4) * Math.sin(a), 10, 5);
+    if (a2 - a1 >= Math.PI - 0.01) braid(g, C - rr + 4, C + rr - 4, y, tilt);
+    else [a1, a2].forEach(a => {
+      const ex = C + (rr - 10) * Math.cos(a), ey = cy - (rr - 10) * Math.sin(a);
+      if (onFold(a)) braid(g, C, Math.cos(a) > 0 ? C + rr - 4 : C - rr + 4, y, tilt);   // folded edge on the x-axis
+      else band(g, C, cy, ex, ey);                                                       // bitten edge
+    });
+  });
+  const g = $("arms"); g.innerHTML = "";
+  el("line", { x1: C, y1: C, x2: C + ARM, y2: C, stroke: "var(--ink)", "stroke-width": 4, "stroke-linecap": "round" }, g);
+  const st = el("text", { x: C + ARM - 4, y: C + 22, "text-anchor": "end", fill: "var(--muted)", "font-size": 12, "font-weight": 700, "font-family": "var(--body)" }, g); st.textContent = "START";
+  if (Math.abs(theta) > 0.15) {
+    const n = Math.max(12, Math.ceil(Math.abs(theta) * 14)), end = theta - Math.sign(theta) * 0.1, pts = [];
+    for (let i = 0; i <= n; i++) { const a = end * i / n, r = 24 + 9 * Math.abs(a) / TAU; pts.push(pt(a, r)); }
+    el("polyline", { points: pts.map(q => q.join(",")).join(" "), fill: "none", stroke: "var(--tomato)", "stroke-width": 2.5, "stroke-linejoin": "round" }, g);
+    const [x1, y1] = pts[n - 1], [x2, y2] = pts[n], ang = Math.atan2(y2 - y1, x2 - x1), L = 10;
+    el("path", { d: `M${x2 + Math.cos(ang) * 4} ${y2 + Math.sin(ang) * 4} L${x2 - Math.cos(ang - .5) * L} ${y2 - Math.sin(ang - .5) * L} L${x2 - Math.cos(ang + .5) * L} ${y2 - Math.sin(ang + .5) * L}Z`, fill: "var(--tomato)" }, g);
+  }
+  if (ghostK !== null) {
+    const [gx, gy] = pt(ghostK * STEP, ARM);
+    el("line", { x1: C, y1: C, x2: gx, y2: gy, stroke: "var(--basil)", "stroke-width": 4, "stroke-dasharray": "8 6", "stroke-linecap": "round" }, g);
+    el("circle", { cx: gx, cy: gy, r: 8, fill: "var(--basil)" }, g);
+  }
+  const [ax, ay] = pt(theta, ARM);
+  el("line", { x1: C, y1: C, x2: ax, y2: ay, stroke: "var(--tomato)", "stroke-width": 5, "stroke-linecap": "round" }, g);
+  el("circle", { cx: ax, cy: ay, r: 14, fill: "var(--tomato)", stroke: "var(--surface)", "stroke-width": 3 }, g);
+  el("circle", { cx: C, cy: C, r: 5, fill: "var(--ink)" }, g);
+  svg.setAttribute("aria-valuenow", snapK());
+  if (state.screen === "explore") updateReadout();
+}
+
+/* ---------- level 1 picture: two separate curry puffs, each on its own axes ---------- */
+function drawPair(n, d){
+  const g = $("pairG"); g.innerHTML = "";
+  const r = 76;
+  [0, 1].forEach(j => {
+    const cx = 100 + 200 * j, cy = 150, P = (a, rr) => [cx + rr * Math.cos(a), cy - rr * Math.sin(a)];
+    const e = Math.max(0, Math.min(1, n / d - j)) * Math.PI;
+    el("line", { x1: cx - 92, y1: cy, x2: cx + 92, y2: cy, stroke: "var(--axis)", "stroke-width": 2 }, g);
+    el("line", { x1: cx, y1: cy + 14, x2: cx, y2: cy - 96, stroke: "var(--axis)", "stroke-width": 2 }, g);
+    el("path", { d: `M${cx + 94} ${cy} l-8 -4.5 v9z M${cx} ${cy - 98} l-4.5 8 h9z`, fill: "var(--axis)" }, g);
+    const tx = el("text", { x: cx + 92, y: cy - 8, "text-anchor": "end", fill: "var(--muted)", "font-size": 13, "font-style": "italic", "font-family": "Georgia, serif" }, g); tx.textContent = "x";
+    const ty = el("text", { x: cx + 8, y: cy - 88, fill: "var(--muted)", "font-size": 13, "font-style": "italic", "font-family": "Georgia, serif" }, g); ty.textContent = "y";
+    el("path", { d: `M${cx + r} ${cy} A${r} ${r} 0 0 0 ${cx - r} ${cy}Z`, fill: "none", stroke: "var(--crust)", "stroke-opacity": .5, "stroke-width": 2, "stroke-dasharray": "5 5" }, g);
+    if (e > 0.001) {
+      el("path", { d: sectorPath(e, r - 6, cx, cy), fill: "url(#doughGrad)" }, g);
+      for (let a = 0; a <= e + 1e-6; a += Math.PI / 20) { const [x, y] = P(a, r - 3); rope(g, a, x, y, 7, 3.6); }
+      if (e >= Math.PI - 0.01) el("line", { x1: cx - r + 4, y1: cy, x2: cx + r - 4, y2: cy, stroke: "var(--crust)", "stroke-width": 3, "stroke-linecap": "round" }, g);
+      else { const [ex, ey] = P(e, r - 6); el("line", { x1: cx, y1: cy, x2: ex, y2: ey, stroke: "var(--crust)", "stroke-width": 2 }, g); }
+    }
+    for (let i = 0; i <= d; i++) { const a = Math.PI * i / d, [a1, b1] = P(a, r + 3), [a2, b2] = P(a, r + 12);
+      el("line", { x1: a1, y1: b1, x2: a2, y2: b2, stroke: "var(--ink)", "stroke-width": 2, "stroke-linecap": "round" }, g); }
+    el("line", { x1: cx, y1: cy, x2: cx + r + 14, y2: cy, stroke: "var(--ink)", "stroke-width": 3.5, "stroke-linecap": "round" }, g);
+    if (e > 0.001) { const [ax, ay] = P(e, r + 14);
+      el("line", { x1: cx, y1: cy, x2: ax, y2: ay, stroke: "var(--tomato)", "stroke-width": 4, "stroke-linecap": "round" }, g);
+      el("circle", { cx: ax, cy: ay, r: 7, fill: "var(--tomato)" }, g); }
+    el("circle", { cx, cy, r: 4, fill: "var(--ink)" }, g);
+    const t = el("text", { x: cx, y: cy + 36, "text-anchor": "middle", fill: "var(--ink)", "font-size": 15, "font-weight": 700, "font-family": "var(--body)" }, g);
+    t.textContent = `Curry puff ${j + 1}`;
+  });
+}
+function warmQuestion(n, d, type){
+  const r = n - d;
+  if (type === "A") return {
+    ask: `You've eaten ${frac(n, d)} curry puffs. How many is that?`,
+    right: mixed(1, r, d), wrong: [mixed(1, r, n), mixed(2, r, d), frac(r, d)],
+    why: `${frac(n, d)} = ${frac(d, d)} + ${frac(r, d)}. That's 1 whole curry puff and ${frac(r, d)} of the next one.` };
+  return {
+    ask: `You've eaten 1 whole curry puff and ${frac(r, d)} of another. Write it as one fraction.`,
+    right: frac(n, d), wrong: [frac(1 + r, d), frac(n, 2 * d), frac(r, d)],
+    why: `1 whole = ${frac(d, d)}, and ${frac(d, d)} + ${frac(r, d)} = ${frac(n, d)}.` };
+}
+
+/* ---------- dragging: the arm jumps from tick to tick ---------- */
+let dragging = false, prevRaw = 0;
+function rawAngle(e){
+  const b = svg.getBoundingClientRect();
+  const x = (e.clientX - b.left) / b.width * 400 - C, y = C - (e.clientY - b.top) / b.height * 400;
+  return Math.atan2(y, x);
+}
+const norm = d => { while (d > Math.PI) d -= TAU; while (d <= -Math.PI) d += TAU; return d; };
+function setFromRaw(){ const t = nearestStop(raw) * STEP; if (t !== theta) { theta = t; draw(); } }
+svg.addEventListener("pointerdown", e => {
+  if (locked()) return;
+  dragging = true; svg.setPointerCapture(e.pointerId);
+  const a = rawAngle(e);
+  let target = ((a % TAU) + TAU) % TAU;
+  const [lo, hi] = range(), cands = [-TAU, 0, TAU, 2 * TAU].map(o => target + o).filter(v => v >= lo - 1e-9 && v <= hi + 1e-9);
+  target = cands.reduce((best, v) => Math.abs(v - theta) < Math.abs(best - theta) ? v : best, cands[0]);
+  raw = Math.min(hi, Math.max(lo, target)); prevRaw = a; setFromRaw();
+});
+svg.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  const a = rawAngle(e), [lo, hi] = range(); raw = Math.min(hi, Math.max(lo, raw + norm(a - prevRaw))); prevRaw = a; setFromRaw();
+});
+const endDrag = () => { dragging = false; };
+svg.addEventListener("pointerup", endDrag); svg.addEventListener("pointercancel", endDrag);
+svg.addEventListener("keydown", e => {
+  if (locked()) return;
+  if (["ArrowRight", "ArrowUp"].includes(e.key)) { nudge(1); e.preventDefault(); }
+  if (["ArrowLeft", "ArrowDown"].includes(e.key)) { nudge(-1); e.preventDefault(); }
+});
+function nudge(n){ const st = stops(), i = Math.max(0, Math.min(st.length - 1, st.indexOf(snapK()) + n)); theta = st[i] * STEP; draw(); }
+const locked = () => state.screen === "play" && state.checked;
+
+/* ---------- screens ---------- */
+const panel = $("panel");
+function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function puffSVG(w){
+  let r = "";
+  for (let i = 0; i <= 26; i++) { const a = Math.PI * i / 26, x = 60 + 50 * Math.cos(a), y = 62 - 50 * Math.sin(a), deg = -a * 180 / Math.PI + 50;
+    r += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="6.5" ry="3.4" transform="rotate(${deg.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})" style="fill:var(--dough-hi);stroke:var(--crust)" stroke-width="1.2"/>`; }
+  return `<svg width="${w}" viewBox="0 0 120 74" aria-hidden="true">
+    <path d="M14 62 A46 46 0 0 1 106 62 Z" style="fill:var(--dough)"/>
+    <path d="M30 50 q8 -10 18 -4 M60 34 q10 -6 18 2 M70 54 q8 -6 14 0" fill="none" style="stroke:var(--spot)" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/>
+    ${r}
+    <line x1="12" y1="63" x2="108" y2="63" style="stroke:var(--crust)" stroke-width="3" stroke-linecap="round"/>
+  </svg>`;
+}
+function setScores(){
+  const show = ["play", "interlude", "end"].includes(state.screen);
+  $("scores").toggleAttribute("hidden", !show);
+  $("score1").textContent = state.scores[0]; $("score2").textContent = state.scores[1];
+  const playing = state.screen === "play";
+  $("team1").classList.toggle("active", playing && team() === 0);
+  $("team2").classList.toggle("active", playing && team() === 1);
+}
+const turnBanner = () => `<div class="turn t${team() + 1}"><span class="who">Team ${team() + 1} · Next player</span><span class="count">Level ${state.level} · turn ${state.i + 1} of ${TURNS}</span></div>`;
+
+function render(){
+  const s = state.screen, warm = s === "play" && state.level === 1;
+  setScores();
+  svg.toggleAttribute("hidden", warm); $("pair").toggleAttribute("hidden", !warm);
+  $("levelTag").textContent = s === "play" ? `Level ${state.level} of ${LEVELS}` : s === "explore" ? "Explore" : "Curry puff team game";
+  if (s === "start") {
+    panel.innerHTML = `
+      <h2>Team game</h2>
+      <div class="ref">${puffSVG(120)}<p><b>This is 1 curry puff.</b><br>It's a half circle: straight folded edge, twisted edge around the curve.</p></div>
+      <ul class="rules">
+        <li>Two teams take turns: Team 1, then Team 2, then Team 1 again.</li>
+        <li>Each correct answer earns 1 point for your team.</li>
+        <li>3 levels, 10 turns each. Each turn, the next player in line plays.</li>
+      </ul>
+      <div class="pick"><span class="small">Choose your level</span>
+        <div class="levels"><button class="primary" data-l="1">Level 1: fractions</button><button data-l="2">Level 2: curry puffs</button><button data-l="3">Level 3: π</button><button data-l="4">Level 4: negatives and beyond 2π</button></div></div>
+      <div class="controls"><button id="explore">Explore freely</button></div>`;
+    panel.querySelectorAll(".levels button").forEach(b => b.onclick = () => startAt(+b.dataset.l));
+    $("explore").onclick = () => { state.screen = "explore"; render(); };
+  }
+  if (warm) {
+    const q = state.qs[state.i];
+    drawPair(q.n, q.d);
+    panel.innerHTML = `
+      ${turnBanner()}
+      <div class="ref mini">${puffSVG(54)}<p>= 1 curry puff</p></div>
+      <div class="ask small-ask">${q.w.ask}</div>
+      <div class="choices">${q.opts.map((o, i) => `<button class="choice" data-i="${i}" ${state.checked ? "disabled" : ""}>${o}</button>`).join("")}</div>
+      <div class="feedback" id="fb"></div>
+      ${skipBtn()}
+      <div class="controls" ${state.checked ? "" : "hidden"}><button class="primary" id="act">${nextLabel()}</button></div>`;
+    panel.querySelectorAll(".choice").forEach(b => b.onclick = () => answerWarm(+b.dataset.i));
+    $("act").onclick = next;
+  } else if (s === "play") {
+    const k = state.qs[state.i];
+    panel.innerHTML = `
+      ${turnBanner()}
+      ${state.level >= 3 ? "" : `<div class="ref mini">${puffSVG(54)}<p>= 1 curry puff</p></div>`}${state.level === 4 ? `<span class="chip">Negative: turn clockwise ↻</span>` : ""}
+      <div class="ask">${state.level >= 3 ? "Rotate to" : "Eat"} <span class="amt">${label(k, state.level)}</span></div>
+      <div class="controls">
+        <button class="step" id="minus" aria-label="Turn back one tick">−</button>
+        <button class="step" id="plus" aria-label="Turn forward one tick">+</button>
+        <button class="primary" id="act">${state.checked ? nextLabel() : "Check"}</button>
+      </div>
+      <div class="feedback" id="fb"></div>
+      ${skipBtn()}`;
+    $("minus").onclick = () => !locked() && nudge(-1);
+    $("plus").onclick = () => !locked() && nudge(1);
+    $("act").onclick = state.checked ? next : check;
+  }
+  if (s === "interlude" && state.level === 1) {
+    panel.innerHTML = `
+      <h2>Level 2</h2>
+      <p>Now the two curry puffs sit together on one grid. Curry puff 1 is on top, curry puff 2 is underneath. Together they make a full circle.</p>
+      <ul class="rules">
+        <li>The arm always starts on the positive <i>x</i>-axis.</li>
+        <li>Drag the red handle counterclockwise. The part it sweeps fills in: that's what you've eaten.</li>
+        <li>The arm can only stop at the tick marks. Press Check when you're done.</li>
+      </ul>
+      <div class="controls"><button class="primary" id="go">Start level 2</button><button id="redo">Redo level ${state.level}</button></div>`;
+    $("go").onclick = () => startLevel(2);
+  } else if (s === "interlude" && state.level === 2) {
+    panel.innerHTML = `
+      <h2>Level 3</h2>
+      <p>Mathematicians have their own name for one curry puff.</p>
+      <div class="reveal">1 curry puff = <span class="pi">π</span></div>
+      <p>So half a curry puff is ${frac("π", 2)}, and two curry puffs is 2π. Same arm, same turning. Only the name changes.</p>
+      <div class="controls"><button class="primary" id="go">Start level 3</button><button id="redo">Redo level ${state.level}</button></div>`;
+    $("go").onclick = () => startLevel(3);
+  } else if (s === "interlude") {
+    panel.innerHTML = `
+      <h2>Level 4</h2>
+      <p>Going further. Angles don't stop at 2π.</p>
+      <ul class="rules">
+        <li><b>Negative:</b> turn clockwise, downward from the positive <i>x</i>-axis.</li>
+        <li><b>More than 2π:</b> make one full turn, then keep going. The terminal arm can go around more than once.</li>
+        <li>The red spiral shows how many turns you've made.</li>
+      </ul>
+      <div class="controls"><button class="primary" id="go">Start level 4</button><button id="redo">Redo level ${state.level}</button></div>`;
+    $("go").onclick = () => startLevel(4);
+  }
+  if (s === "end") {
+    const [a, b] = state.scores, w = a === b ? 0 : a > b ? 1 : 2;
+    panel.innerHTML = `
+      <h2>All eaten</h2>
+      <div class="winner ${w ? "t" + w : ""}">${w ? `Team ${w} wins!` : "It's a tie!"}</div>
+      <p>Team 1 scored ${a} and Team 2 scored ${b}, out of ${LEVELS * TURNS / 2} each.</p>
+      <p>Every amount on this circle can be named in curry puffs or in π. They are the same numbers.</p>
+      <div class="controls"><button class="primary" id="again">Play again</button><button id="redo">Redo level ${state.level}</button><button id="explore">Explore freely</button></div>`;
+    $("again").onclick = () => { state.scores = [0, 0]; startLevel(1); };
+    $("explore").onclick = () => { state.screen = "explore"; render(); };
+  }
+  if (s === "explore") {
+    panel.innerHTML = `
+      <h2>Explore</h2>
+      <p>Turn the arm to any tick mark and see both names for the amount eaten.</p>
+      <div class="readout" id="ro"></div>
+      <div class="controls">
+        <button class="step" id="minus" aria-label="Turn back one tick">−</button>
+        <button class="step" id="plus" aria-label="Turn forward one tick">+</button>
+        <button id="back">Back to the game</button>
+      </div>`;
+    $("minus").onclick = () => nudge(-1); $("plus").onclick = () => nudge(1);
+    $("back").onclick = () => { state.screen = "start"; render(); };
+    updateReadout();
+  }
+  if ($("skip")) $("skip").onclick = skipLevel;
+  if ($("redo")) $("redo").onclick = () => startLevel(state.level);
+  draw();
+}
+const skipBtn = () => state.level < LEVELS ? `<button class="skip" id="skip">Skip to level ${state.level + 1} →</button>` : "";
+// jump to any level: levels 2 and 3 open on their intro screen first
+function startAt(l){
+  state.scores = [0, 0];
+  if (l === 1) { startLevel(1); return; }
+  state.level = l - 1; state.screen = "interlude"; ghostK = null; theta = l === 2 ? 0 : l === 3 ? Math.PI : TAU; render();
+}
+function skipLevel(){ state.screen = "interlude"; state.checked = false; ghostK = null; theta = state.level === 1 ? 0 : state.level === 2 ? Math.PI : TAU; render(); }
+const nextLabel = () => state.i < TURNS - 1 ? `Next: Team ${2 - team()}` : state.level < LEVELS ? "Finish level" : "See the winner";
+function updateReadout(){ const ro = $("ro"); if (ro) { const k = snapK(); ro.innerHTML = `<span>${puffLabel(k)}</span><span class="eq">=</span><span>${piLabel(k)}</span>`; } }
+function startLevel(l){
+  state.level = l; state.i = 0; state.checked = false;
+  if (l === 1) {
+    const combos = pickFresh(WARM.flatMap(([n, d]) => [[n, d, "A"], [n, d, "B"]]), TURNS, used[1], x => x.join("/"));
+    state.qs = combos.map(([n, d, type]) => { const w = warmQuestion(n, d, type), opts = shuffle([w.right, ...w.wrong]); return { n, d, w, opts, answer: opts.indexOf(w.right) }; });
+  } else state.qs = pickFresh(l === 4 ? POOL4 : SPECIAL, TURNS, used[l]);
+  state.screen = "play"; theta = 0; ghostK = null; render();
+}
+function score(ok){ if (ok) { state.scores[team()]++; sfx.right(); } else sfx.wrong(); }
+function answerWarm(i){
+  const q = state.qs[state.i], ok = i === q.answer;
+  state.checked = true; score(ok); render(); if (ok) celebrateTeam(team());
+  const bs = panel.querySelectorAll(".choice");
+  bs[q.answer].classList.add("right"); if (!ok) bs[i].classList.add("wrong");
+  const fb = $("fb"); fb.className = ok ? "feedback good" : "feedback bad";
+  fb.innerHTML = (ok ? `+1 for Team ${team() + 1}! ` : "Not quite. ") + q.w.why;
+  $("act").focus();
+}
+function check(){
+  const k = snapK(), target = state.qs[state.i], ok = k === target;
+  theta = k * STEP; state.checked = true; score(ok);
+  ghostK = ok ? null : target;
+  render(); if (ok) celebrateTeam(team());
+  const fb = $("fb");
+  if (ok) {
+    fb.className = "feedback good"; fb.innerHTML = `+1 for Team ${team() + 1}! That's ${label(k, state.level)}.`;
+    const p = $("pizza"); p.classList.remove("yum"); void p.getBBox(); p.classList.add("yum");
+  } else {
+    fb.className = "feedback bad";
+    fb.innerHTML = `${state.level >= 3 ? "You rotated to" : "You ate"} ${label(k, state.level)}. The dashed green arm shows ${label(target, state.level)}.`;
+  }
+  $("act").focus();
+}
+function next(){
+  if (state.i === TURNS - 1) {
+    state.screen = state.level === LEVELS ? "end" : "interlude"; ghostK = null;
+    theta = state.level === 1 ? 0 : state.level === 2 ? Math.PI : TAU; render();
+    if (state.screen === "end") { const [a, b] = state.scores, w = a === b ? null : a > b ? "--team1" : "--team2";
+      sfx.win(); celebrateBig(w ? [cssVar(w), cssVar("--dough"), cssVar(w), cssVar("--basil")] : party()); }
+    else { sfx.level(); confetti(innerWidth / 2, innerHeight * .4, 90, party()); }
+    return; }
+  state.i++; state.checked = false; ghostK = null; theta = 0; render();
+}
+
+const LBL = { on: "Sound on", off: "Sound off" };
+document.documentElement.lang = "en";
+/* ---------- sound effects (made in the browser, no files) + confetti ---------- */
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let muted = false;
+/* Sounds are synthesized once into small WAV files and played with <audio> elements,
+   which work in more places than Web Audio (app views, iPhone silent switch). */
+try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {}
+const RATE = 22050;
+function wav(notes){
+  const len = Math.ceil(RATE * Math.max(...notes.map(n => n[1] + n[2])) + RATE * .05), buf = new Float32Array(len);
+  notes.forEach(([f, t0, dur, type = "triangle", vol = .3, to]) => {
+    const s0 = Math.floor(t0 * RATE), n = Math.floor(dur * RATE); let ph = 0;
+    for (let i = 0; i < n && s0 + i < len; i++) {
+      const t = i / RATE, fr = to ? f * Math.pow(to / f, t / dur) : f; ph += fr / RATE;
+      const x = ph % 1, w = type === "square" ? (x < .5 ? 1 : -1) : type === "sawtooth" ? 2 * x - 1 : 1 - 4 * Math.abs(x - .5);
+      const env = Math.min(1, t / .015) * Math.exp(-4 * t / dur);
+      buf[s0 + i] += w * env * vol;
+    }
+  });
+  const data = new DataView(new ArrayBuffer(44 + len * 2)), str = (o, s) => [...s].forEach((c, i) => data.setUint8(o + i, c.charCodeAt(0)));
+  str(0, "RIFF"); data.setUint32(4, 36 + len * 2, true); str(8, "WAVEfmt "); data.setUint32(16, 16, true); data.setUint16(20, 1, true);
+  data.setUint16(22, 1, true); data.setUint32(24, RATE, true); data.setUint32(28, RATE * 2, true); data.setUint16(32, 2, true); data.setUint16(34, 16, true);
+  str(36, "data"); data.setUint32(40, len * 2, true);
+  for (let i = 0; i < len; i++) data.setInt16(44 + i * 2, Math.tanh(buf[i] * 1.4) * 32000, true);
+  let bin = ""; const bytes = new Uint8Array(data.buffer); for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode(...bytes.subarray(i, i + 8192));
+  return "data:audio/wav;base64," + btoa(bin);
+}
+const SOUNDS = {
+  right: [wav([523, 659, 784, 1047].map((f, i) => [f, i * .08, .35, "triangle", .55])), 2],
+  wrong: [wav([[587, 0, .22, "triangle", .45], [440, .17, .45, "triangle", .45]]), 2], // soft two-note "uh-oh"
+  level: [wav([392, 523, 659, 784, 659, 784].map((f, i) => [f, i * .11, .26, "square", .22])), 1],
+  win: [wav([523, 523, 523, 659, 784, 659, 784, 1047].map((f, i) => [f, i * .14, i === 7 ? 1 : .22, "square", .22])), 1]
+};
+const pools = {};
+for (const k in SOUNDS) { const [url, n] = SOUNDS[k]; pools[k] = { i: 0, els: Array.from({ length: n }, () => { const a = new Audio(url); a.preload = "auto"; return a; }) }; }
+function play(k){
+  if (muted) return; const p = pools[k], a = p.els[p.i++ % p.els.length];
+  try { a.currentTime = 0; const pr = a.play(); if (pr) pr.catch(() => {}); } catch (e) {}
+}
+// browsers only let sound play after a tap: on the first one, quietly start and stop every sound so later plays are allowed
+let unlocked = false;
+function unlock(){
+  if (unlocked) return; unlocked = true;
+  Object.values(pools).forEach(p => p.els.forEach(a => { a.muted = true; const pr = a.play();
+    const done = () => { a.pause(); a.currentTime = 0; a.muted = false; };
+    if (pr) pr.then(done).catch(() => { a.muted = false; unlocked = false; }); else done(); }));
+}
+["pointerdown", "touchend", "click", "keydown"].forEach(ev => addEventListener(ev, unlock, true));
+const sfx = { right: () => play("right"), wrong: () => play("wrong"), level: () => play("level"), win: () => play("win") };
+const cv = document.createElement("canvas"); cv.id = "confetti"; cv.setAttribute("aria-hidden", "true"); document.body.appendChild(cv);
+const cx2 = cv.getContext("2d"); let bits = [], running = false;
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function confetti(x, y, n, colors, power = 1){
+  if (reduceMotion) return;
+  for (let i = 0; i < n; i++) bits.push({ x, y, vx: (Math.random() - .5) * 14 * power, vy: -(4 + Math.random() * 11) * power,
+    rot: Math.random() * 6, vr: (Math.random() - .5) * .4, w: 6 + Math.random() * 7, h: 4 + Math.random() * 5,
+    c: colors[i % colors.length], life: 1 });
+  if (!running) { running = true; requestAnimationFrame(frame); }
+}
+function frame(){
+  const dpr = devicePixelRatio || 1, W = innerWidth, H = innerHeight;
+  if (cv.width !== W * dpr || cv.height !== H * dpr) { cv.width = W * dpr; cv.height = H * dpr; }
+  cx2.setTransform(dpr, 0, 0, dpr, 0, 0); cx2.clearRect(0, 0, W, H);
+  bits = bits.filter(b => b.life > 0 && b.y < H + 40);
+  bits.forEach(b => { b.vy += .32; b.vx *= .99; b.x += b.vx; b.y += b.vy; b.rot += b.vr; b.life -= .006;
+    cx2.save(); cx2.globalAlpha = Math.min(1, b.life * 2); cx2.translate(b.x, b.y); cx2.rotate(b.rot); cx2.fillStyle = b.c; cx2.fillRect(-b.w / 2, -b.h / 2, b.w, b.h); cx2.restore(); });
+  if (bits.length) requestAnimationFrame(frame); else { running = false; cx2.clearRect(0, 0, W, H); }
+}
+const party = () => [cssVar("--team1"), cssVar("--team2"), cssVar("--dough"), cssVar("--tomato"), cssVar("--basil")];
+function celebrateTeam(t){
+  const card = $("team" + (t + 1)), r = card.getBoundingClientRect();
+  confetti(r.left + r.width / 2, r.top + r.height / 2, 70, [cssVar("--team" + (t + 1)), cssVar("--dough"), cssVar("--basil")]);
+  card.classList.remove("bump"); void card.offsetWidth; card.classList.add("bump");
+}
+function celebrateBig(colors){
+  [.15, .5, .85].forEach((fx, i) => setTimeout(() => confetti(innerWidth * fx, innerHeight * .35, 110, colors, 1.3), i * 220));
+}
+$("mute").onclick = () => { muted = !muted; setMuteLabel(); };
+const SPK = '<path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/>';
+function setMuteLabel(){
+  $("mute").innerHTML = `<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true">${SPK}${muted
+    ? '<line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'
+    : '<path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'}</svg>`;
+  $("mute").setAttribute("aria-label", muted ? LBL.off : LBL.on); $("mute").title = muted ? LBL.off : LBL.on;
+  $("mute").setAttribute("aria-pressed", String(muted));
+}
+setMuteLabel();
+
+theta = Math.PI * 2 / 3; // a bite already taken on the start screen
+render();
+})();
+</script>
+
+</body></html>
