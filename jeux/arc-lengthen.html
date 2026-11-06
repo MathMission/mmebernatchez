@@ -1,0 +1,548 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Why Radians?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: graph-paper board with the unrolled-arc ruler under it on the left, one short card on the right; stacks on phones. Same family as the curry puff game. */
+:root{
+  --bg:#EDF1F3; --surface:#FFFFFF; --ink:#1D2730; --muted:#5B6873;
+  --grid:#D6DEE3; --axis:#8796A1; --line:#C9D3DA; --dough:#E4A54A;
+  --one:#D4432A; --one-ink:#FFFFFF; --rim:#2462C8; --good:#2C8548; --good-ink:#FFFFFF;
+  --skin:#E9B98E; --skin-shade:#C98E62; --beard:#5A3A22; --patch:#1D2730; --gold:#D9A520; --eye:#FFFFFF;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141A20; --surface:#1E272F; --ink:#E7ECEF; --muted:#9BA8B2;
+  --grid:#26313A; --axis:#5E6C78; --line:#33404B; --dough:#DFA046;
+  --one:#F0664B; --one-ink:#1A0E0B; --rim:#6F9CF2; --good:#5CC27C; --good-ink:#0F1A13;
+  --skin:#D9A77C; --skin-shade:#B07A50; --beard:#6E4A2E; --patch:#0B0F12; --gold:#E6B83A; --eye:#F4F6F7; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141A20; --surface:#1E272F; --ink:#E7ECEF; --muted:#9BA8B2;
+  --grid:#26313A; --axis:#5E6C78; --line:#33404B; --dough:#DFA046;
+  --one:#F0664B; --one-ink:#1A0E0B; --rim:#6F9CF2; --good:#5CC27C; --good-ink:#0F1A13;
+  --skin:#D9A77C; --skin-shade:#B07A50; --beard:#6E4A2E; --patch:#0B0F12; --gold:#E6B83A; --eye:#F4F6F7; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px}
+.app{max-width:1100px;margin:0 auto;display:grid;gap:18px}
+.eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--muted)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,4vw,2.3rem);margin:0;letter-spacing:-.02em;text-wrap:balance}
+.main{display:grid;gap:20px;align-items:start}
+@media (min-width:820px){.main{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+.board-wrap{min-width:0;display:grid;gap:10px}
+svg#board{width:100%;max-width:520px;display:block;margin:0 auto;touch-action:none;cursor:grab}
+svg#board.locked{cursor:default}
+svg#board:active:not(.locked){cursor:grabbing}
+svg#board:focus-visible{outline:3px solid var(--one);outline-offset:4px;border-radius:6px}
+svg#strip{width:100%;max-width:520px;display:block;margin:0 auto}
+.tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:16px;min-width:0}
+.panel h2{font-family:var(--display);font-weight:800;font-size:1.5rem;margin:0;text-wrap:balance}
+.panel p{margin:0;max-width:60ch}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{min-height:40px;padding:4px 12px;font-size:.9rem;border-color:var(--line);color:var(--muted)}
+.tabs button[aria-current="step"]{border-color:var(--ink);color:var(--ink);background:var(--bg)}
+.tabs .n{font-family:var(--display);font-weight:800;margin-right:.35em}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-variant-numeric:tabular-nums;line-height:1;margin:0 .08em}
+.fr .n{padding:0 .15em .1em;border-bottom:.08em solid currentColor}
+.fr .d{padding-top:.1em}
+.c-one{color:var(--one)} .c-rim{color:var(--rim)}
+button{font:inherit;font-weight:700;border-radius:10px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);padding:10px 18px;cursor:pointer;min-height:48px}
+button:focus-visible{outline:3px solid var(--one);outline-offset:2px}
+button:disabled{opacity:.45;cursor:default}
+button.primary{background:var(--one);border-color:var(--one);color:var(--one-ink);justify-self:start}
+.hint{color:var(--muted);font-size:.95rem}
+.callout{font-family:var(--display);font-weight:800;font-size:1.25rem;padding:10px 14px;border-radius:10px;border:2px solid var(--ink);background:var(--bg)}
+.ask{font-family:var(--display);font-weight:600;font-size:clamp(1.35rem,4vw,1.8rem);line-height:1.25}
+.prompt{font-weight:700;font-size:1.1rem}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.choice{font-family:var(--display);font-size:1.45rem;font-weight:600;min-height:72px;border-color:var(--line)}
+.choice:not(:disabled):hover{border-color:var(--ink)}
+.choice:disabled{cursor:default}
+.choice.right{border-color:var(--good);background:var(--good);color:var(--good-ink);opacity:1}
+.choice.wrong{border-color:var(--one);color:var(--one);opacity:1}
+.feedback{font-size:1.05rem}
+.feedback.good b{color:var(--good)} .feedback.bad{color:var(--one)}
+.reads{display:grid;gap:8px;margin:0}
+.rd{display:grid;gap:2px;padding:10px 14px;border-radius:10px;background:var(--bg)}
+.rd dt{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.5em}
+.rd dt::before{content:"";width:.75em;height:.75em;border-radius:50%;background:var(--sw,var(--axis))}
+.rd.one{--sw:var(--one)} .rd.rim{--sw:var(--rim)}
+.rd dd{margin:0;font-family:var(--display);font-weight:600;font-size:1.7rem;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:.3em;flex-wrap:wrap;min-height:2.6rem}
+.rd dd .exact{color:var(--ink)}
+.rd dd .sym{color:var(--muted);font-weight:600}
+.rd dd .dec{font-family:var(--body);font-size:1rem;color:var(--muted);font-weight:400}
+.big{font-family:var(--display);font-weight:800;font-size:clamp(2rem,6vw,2.8rem);display:flex;align-items:center;gap:.3em;flex-wrap:wrap}
+.big small{font-family:var(--body);font-size:1rem;font-weight:400;color:var(--muted)}
+.formula{font-family:var(--display);font-weight:800;font-size:clamp(3rem,10vw,4.4rem);line-height:1;display:flex;justify-content:center;align-items:center;gap:.25em}
+.defs{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;align-items:baseline}
+.defs dt{font-family:var(--display);font-weight:800;font-size:1.5rem;text-align:center;min-width:1.4em}
+.defs dd{margin:0}
+.pirate{width:100%;max-width:340px;display:block;margin:0 auto}
+.arrr{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,5vw,2.1rem);line-height:1.2}
+.tog{display:inline-flex;align-items:center;gap:.5em;border-color:var(--line);min-height:44px;padding:6px 14px}
+.tog::before{content:"";width:.9em;height:.9em;border-radius:50%;border:3px solid var(--sw);background:var(--sw)}
+.tog.one{--sw:var(--one)} .tog.rim{--sw:var(--rim)}
+.tog[aria-pressed="false"]{color:var(--muted);border-style:dashed}
+.tog[aria-pressed="false"]::before{background:transparent}
+.stepper{display:inline-flex;align-items:center;gap:8px;font-weight:700}
+.stepper button{width:44px;min-height:44px;padding:0;font-size:1.3rem;border-color:var(--line)}
+.stepper b{font-family:var(--display);font-size:1.3rem;color:var(--rim);min-width:2.2ch;display:inline-block;text-align:center;font-variant-numeric:tabular-nums}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+.bubble{transform-origin:90px 60px;animation:pop .45s ease-out}
+@media (prefers-reduced-motion:reduce){.bubble{animation:none}}
+</style>
+
+<div class="app">
+  <header>
+    <div class="eyebrow">Arc length lab</div>
+    <h1>Why Radians?</h1>
+  </header>
+  <div class="main">
+    <div class="board-wrap">
+      <svg id="board" viewBox="0 0 400 400" tabindex="0" role="slider" aria-label="Angle arm. Drag it, or use the arrow keys." aria-valuemin="0" aria-valuemax="6.28" aria-valuenow="0">
+        <g id="grid"></g><g id="scene"></g>
+      </svg>
+      <svg id="strip" viewBox="0 0 400 90" role="img" aria-label="The arc unrolled into a straight bar, measured in radius lengths."></svg>
+      <div class="tools" id="tools" hidden>
+        <button class="tog one" id="tg1" aria-pressed="true">Radius 1 circle</button>
+        <button class="tog rim" id="tgr" aria-pressed="true">Radius r circle</button>
+        <span class="stepper"><button id="rminus" aria-label="Smaller radius">−</button><span>r = <b id="rval">2</b></span><button id="rplus" aria-label="Bigger radius">+</button></span>
+      </div>
+    </div>
+    <section class="panel" id="panel" aria-live="polite"></section>
+  </div>
+</div>
+
+<script>
+(() => {
+const LANG = "en";
+const C = 200, TAU = Math.PI * 2, STEP = Math.PI / 12, NS = "http://www.w3.org/2000/svg";
+const $ = id => document.getElementById(id);
+const svg = $("board"), panel = $("panel");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) { const v = String(attrs[k]); if (v.includes("var(")) e.style.setProperty(k, v); else e.setAttribute(k, v); } if (parent) parent.appendChild(e); return e; };
+const txt = (s, attrs, parent) => { const t = el("text", attrs, parent); t.textContent = s; return t; };
+const pt = (a, r) => [C + r * Math.cos(a), C - r * Math.sin(a)];
+
+let phase = 0, theta = 0, raw = 0, R = 2, showUnit = true, showR = false, pirateShown = false;
+const U = 68;
+
+/* ---------- numbers ---------- */
+const num = (x, d = 2) => { const s = x.toFixed(d); return LANG === "fr" ? s.replace(".", ",") : s; };
+function gcd(a, b){ return b ? gcd(b, a % b) : a; }
+const frac = (n, d) => `<span class="fr"><span class="n">${n}</span><span class="d">${d}</span></span>`;
+function piF(n, d){ if (n === 0) return "0"; const g = gcd(n, d); n /= g; d /= g; const top = n === 1 ? "π" : `${n}π`; return d === 1 ? top : frac(top, d); }
+const piTxt = (n, d) => { if (n === 0) return "0"; const g = gcd(n, d); n /= g; d /= g; const top = n === 1 ? "π" : `${n}π`; return d === 1 ? top : `${top}/${d}`; };
+const fmtR = () => R % 1 ? num(R, 1) : String(R);
+
+/* ---------- words ---------- */
+const I18N = {
+  en: {
+    tabs: ["Arc length", "Unroll the arc on the unit circle", "Unroll the arc on a bigger circle", "Conclusion"],
+    qOf: (i, n) => `Question ${i} of ${n}`,
+    unitP: `This circle has radius <b class="c-one">1</b>, so we call it the <b>unit circle</b>.`,
+    play: "Play", prompt: "What's the arc length?", correct: "Correct!",
+    nextQ: "Next question →", nextPart: "Next: unroll the arc →",
+    quiz: [
+      { intro: "Press Play to send the arm all the way around the circle.",
+        hints: { 1: "π only takes you half way around.", 2: "360 is the angle in degrees. We want the length of the arc.", 3: "1 is the radius. The arc goes all the way around the circle." },
+        good: "The arc is the whole circumference. C = 2πr = 2π(1) = 2π." },
+      { intro: "Drag the arm half way around the circle.",
+        hints: { 1: "2π is the whole circle.", 2: "That's only a quarter of the circle.", 3: "180 is the angle in degrees. We want the length of the arc." },
+        good: "Half the circle is half the circumference: ½ × 2π = π." },
+      { intro: "Drag the arm to the first tick mark.",
+        hints: { 1: "Not quite. The first tick is 30°. How many 30° pieces make a full turn?", 2: "Close, but the arc is a piece of the circumference, 2π.", 3: "30 is the angle in degrees. We want the length of the arc." },
+        good: "The first tick is 30°, which is 1/12 of a full turn. So the arc is 1/12 of 2π: 2π/12 = π/6." },
+    ],
+    p2: `This circle has radius <b class="c-one">1</b>. Drag the arm around. The ruler shows the arc unrolled, measured in radius lengths. Each dot marks one more radius: 1 radian, 2 radians, 3 radians… The ticks mark the special angles.`,
+    arcA: "Arc length a",
+    one1: "Arc = radius = 1, so θ = 1 radian (about 57°).",
+    noteFull: "All the way around: 2π ≈ 6,28, just over 6 radius lengths. On this circle, the arc length is the angle in radians.".replace("6,28", "6.28"),
+    note: "On a radius 1 circle, the arc length is the angle in radians.",
+    go3: "Now a bigger circle →",
+    p3: `Same angle, two circles. The <b class="c-rim">blue</b> arc is <b class="c-rim">r</b> times longer than the <b class="c-one">red</b> one. Change r and move the arm.`,
+    arcOn1: "Arc on radius 1", arcOnR: r => `Arc a on radius ${r}`,
+    one2: r => `Blue arc = blue radius = ${r}, and red arc = red radius = 1. Both give θ = 1 radian.`,
+    anyCircle: "on any circle", isRadius: "= the radius", go4: "Conclusion →",
+    defs: ["the angle, in radians", "the arc length", "the radius"],
+    patch: "Look at his eye patch: it's a θ.",
+    pirateQ: "What do pirates say?", reveal: "Find out", say: "Arrr!",
+    arrr: `<span class="c-rim">A</span>…<span class="c-rim">R</span>! a over r. Now you know the formula: θ = a / r.`,
+    pirateAlt: "A cartoon pirate with a red bandana and a beard. His eye patch is shaped like the Greek letter theta.",
+    board1: "arc = radius  →  θ = 1 radian",
+    strip1: "Arc on the radius 1 circle, unrolled", stripR: r => `Arc on the radius ${r} circle, unrolled`,
+    rad: "radians",
+  },
+  fr: {
+    tabs: ["Longueur d'arc", "Dérouler l'arc sur le cercle unitaire", "Dérouler l'arc sur un plus grand cercle", "Conclusion"],
+    qOf: (i, n) => `Question ${i} sur ${n}`,
+    unitP: `Ce cercle a un rayon de <b class="c-one">1</b>, alors on l'appelle le <b>cercle unitaire</b>.`,
+    play: "Lancer", prompt: "Quelle est la longueur de l'arc ?", correct: "Bravo !",
+    nextQ: "Question suivante →", nextPart: "Suite : dérouler l'arc →",
+    quiz: [
+      { intro: "Appuie sur Lancer pour faire tourner le bras sur tout le cercle.",
+        hints: { 1: "π, c'est seulement la moitié du tour.", 2: "360, c'est l'angle en degrés. On cherche la longueur de l'arc.", 3: "1, c'est le rayon. L'arc fait tout le tour du cercle." },
+        good: "L'arc est toute la circonférence. C = 2πr = 2π(1) = 2π." },
+      { intro: "Glisse le bras jusqu'à la moitié du cercle.",
+        hints: { 1: "2π, c'est le cercle au complet.", 2: "Ça, c'est seulement le quart du cercle.", 3: "180, c'est l'angle en degrés. On cherche la longueur de l'arc." },
+        good: "La moitié du cercle, c'est la moitié de la circonférence : ½ × 2π = π." },
+      { intro: "Glisse le bras jusqu'à la première graduation.",
+        hints: { 1: "Pas tout à fait. La première graduation est à 30°. Combien de morceaux de 30° font un tour complet ?", 2: "Presque, mais l'arc est un morceau de la circonférence, 2π.", 3: "30, c'est l'angle en degrés. On cherche la longueur de l'arc." },
+        good: "La première graduation est à 30°, soit 1/12 d'un tour complet. L'arc est donc 1/12 de 2π : 2π/12 = π/6." },
+    ],
+    p2: `Ce cercle a un rayon de <b class="c-one">1</b>. Fais tourner le bras. La règle montre l'arc déroulé, mesuré en longueurs de rayon. Chaque point marque un rayon de plus : 1 radian, 2 radians, 3 radians… Les graduations marquent les angles remarquables.`,
+    arcA: "Longueur d'arc a",
+    one1: "Arc = rayon = 1, donc θ = 1 radian (environ 57°).",
+    noteFull: "Un tour complet : 2π ≈ 6,28, un peu plus de 6 longueurs de rayon. Sur ce cercle, la longueur de l'arc est l'angle en radians.",
+    note: "Sur un cercle de rayon 1, la longueur de l'arc est l'angle en radians.",
+    go3: "Maintenant, un plus grand cercle →",
+    p3: `Même angle, deux cercles. L'arc <b class="c-rim">bleu</b> est <b class="c-rim">r</b> fois plus long que l'arc <b class="c-one">rouge</b>. Change r et fais tourner le bras.`,
+    arcOn1: "Arc sur le rayon 1", arcOnR: r => `Arc a sur le rayon ${r}`,
+    one2: r => `Arc bleu = rayon bleu = ${r}, et arc rouge = rayon rouge = 1. Les deux donnent θ = 1 radian.`,
+    anyCircle: "sur n'importe quel cercle", isRadius: "= le rayon", go4: "Conclusion →",
+    defs: ["l'angle, en radians", "la longueur de l'arc", "le rayon"],
+    patch: "Regarde son cache-œil : c'est un θ.",
+    pirateQ: "Que disent les pirates ?", reveal: "Découvrir", say: "Arrr !",
+    arrr: `<span class="c-rim">A</span>…<span class="c-rim">R</span> ! a sur r. Maintenant, tu connais la formule : θ = a / r.`,
+    pirateAlt: "Un pirate en dessin avec un bandana rouge et une barbe. Son cache-œil a la forme de la lettre grecque thêta.",
+    board1: "arc = rayon  →  θ = 1 radian",
+    strip1: "Arc du cercle de rayon 1, déroulé", stripR: r => `Arc du cercle de rayon ${r}, déroulé`,
+    rad: "radians",
+  },
+};
+const T = I18N[LANG];
+
+// special angles: multiples of π/6 and π/4
+const isSpecial = k => k % 2 === 0 || k % 3 === 0;
+const specialK = () => { const k = Math.round(theta / STEP); return Math.abs(k * STEP - theta) < 1e-9 && isSpecial(k) ? k : null; };
+const isOne = () => Math.abs(theta - 1) < 1e-9;
+function show(n24, value){
+  if (n24 !== null) return value === 0 ? `<span class="exact">= 0</span>` :
+    `<span class="sym">=</span><span class="exact">${piF(n24, 24)}</span><span class="dec">≈ ${num(value)}</span>`;
+  return `<span class="sym">≈</span><span>${num(value)}</span>`;
+}
+const arc1 = () => { if (isOne()) return `<span class="sym">=</span><span class="exact">1</span><span class="dec">${T.isRadius}</span>`; const k = specialK(); return show(k === null ? null : k * 2, theta); };
+const arcR = () => { if (isOne()) return `<span class="sym">=</span><span class="exact">${fmtR()}</span><span class="dec">${T.isRadius}</span>`; const k = specialK(); return show(k === null ? null : k * Math.round(R * 2), theta * R); };
+
+/* ---------- arm ---------- */
+function setTheta(t){
+  raw = Math.max(0, Math.min(TAU, t));
+  const k = Math.round(raw / STEP);
+  // gentle pull onto the nearest special angle, or onto exactly 1 radian (parts 2 to 4)
+  const dS = isSpecial(k) ? Math.abs(k * STEP - raw) : Infinity, d1 = phase > 0 ? Math.abs(raw - 1) : Infinity;
+  if (d1 < dS && d1 < 0.04) theta = 1;
+  else theta = dS < (phase === 0 ? 0.12 : 0.05) ? k * STEP : raw;
+}
+
+/* ---------- drawing ---------- */
+(function grid(){
+  const g = $("grid");
+  for (let v = 25; v <= 375; v += 35) {
+    el("line", { x1: v, y1: 25, x2: v, y2: 375, stroke: "var(--grid)", "stroke-width": 1 }, g);
+    el("line", { x1: 25, y1: v, x2: 375, y2: v, stroke: "var(--grid)", "stroke-width": 1 }, g);
+  }
+  el("line", { x1: 18, y1: C, x2: 382, y2: C, stroke: "var(--axis)", "stroke-width": 2 }, g);
+  el("line", { x1: C, y1: 18, x2: C, y2: 382, stroke: "var(--axis)", "stroke-width": 2 }, g);
+  el("path", { d: "M382 200 l-9 -5 v10z M200 18 l-5 9 h10z", fill: "var(--axis)" }, g);
+})();
+function arcD(r){
+  const [x0, y0] = pt(0, r);
+  if (theta >= TAU - 1e-9) { const [xh, yh] = pt(Math.PI, r); return `M${x0} ${y0} A${r} ${r} 0 0 0 ${xh} ${yh} A${r} ${r} 0 0 0 ${x0} ${y0}`; }
+  const [x1, y1] = pt(theta, r);
+  return `M${x0} ${y0} A${r} ${r} 0 ${theta > Math.PI ? 1 : 0} 0 ${x1} ${y1}`;
+}
+const label = (s, x, y, fill, size = 15) => txt(s, { x, y, "text-anchor": "middle", fill, "font-size": size, "font-weight": 700, "font-family": "var(--body)" }, $("scene"));
+const halo = { stroke: "var(--bg)", "stroke-width": 5, "paint-order": "stroke", "stroke-linejoin": "round" };
+function render(){
+  const g = $("scene"); g.innerHTML = "";
+  const r1 = U, rR = R * U;
+  const outer = Math.max(showUnit ? r1 : 0, showR ? rR : 0) || r1;
+  if (theta > 0.001) {
+    const d = theta >= TAU - 1e-9 ? `M${C - outer} ${C} a${outer} ${outer} 0 1 0 ${2 * outer} 0 a${outer} ${outer} 0 1 0 ${-2 * outer} 0Z` : `M${C} ${C} L${arcD(outer).slice(1)}Z`;
+    el("path", { d, fill: "var(--dough)", "fill-opacity": .28 }, g);
+  }
+  if (showR) el("circle", { cx: C, cy: C, r: rR, fill: "none", stroke: "var(--rim)", "stroke-width": 2.5, "stroke-opacity": .55 }, g);
+  if (showUnit) el("circle", { cx: C, cy: C, r: r1, fill: "none", stroke: "var(--one)", "stroke-width": 2.5, "stroke-opacity": .55 }, g);
+  if (showR) {
+    el("line", { x1: C, y1: C, x2: C + rR, y2: C, stroke: "var(--rim)", "stroke-width": 5, "stroke-linecap": "round" }, g);
+    label(`r = ${fmtR()}`, C + rR / 2, C + 22, "var(--rim)");
+  }
+  if (showUnit) {
+    el("line", { x1: C, y1: C, x2: C + r1, y2: C, stroke: "var(--one)", "stroke-width": 5, "stroke-linecap": "round" }, g);
+    label("1", C + r1 / 2, C - 10, "var(--one)", 16);
+  }
+  // ticks at the special angles
+  for (let k = 1; k < 24; k++) if (isSpecial(k)) {
+    const len = k % 6 === 0 ? 10 : 6;
+    [[showUnit, r1, "var(--one)"], [showR, rR, "var(--rim)"]].forEach(([on, r, col]) => {
+      if (!on) return; const [x1, y1] = pt(k * STEP, r - 2), [x2, y2] = pt(k * STEP, r + len);
+      el("line", { x1, y1, x2, y2, stroke: col, "stroke-width": 2, "stroke-linecap": "round" }, g);
+    });
+  }
+  if (theta > 0.001) {
+    if (showR) el("path", { d: arcD(rR), fill: "none", stroke: "var(--rim)", "stroke-width": 7, "stroke-linecap": "round" }, g);
+    if (showUnit) el("path", { d: arcD(r1), fill: "none", stroke: "var(--one)", "stroke-width": 7, "stroke-linecap": "round" }, g);
+  }
+  // one dot per radian (one radius length of arc on the unit circle)
+  if (showUnit && phase > 0) for (let n = 1; n <= 6; n++) {
+    const on = n <= theta + 1e-9, [x, y] = pt(n, r1), [lx, ly] = pt(n, r1 - 16);
+    el("circle", { cx: x, cy: y, r: on ? 5 : 3.5, fill: on ? "var(--ink)" : "var(--surface)", stroke: "var(--ink)", "stroke-width": 2, opacity: on ? 1 : .35 }, g);
+    if (on) label(String(n), lx, ly + 4, "var(--ink)", 12);
+  }
+  if (theta > 0.15) {
+    const rr = 22, [x0, y0] = pt(0, rr), [x1, y1] = pt(Math.min(theta, TAU - 0.001), rr), [tx, ty] = pt(theta / 2, 38);
+    el("path", { d: `M${x0} ${y0} A${rr} ${rr} 0 ${theta > Math.PI ? 1 : 0} 0 ${x1} ${y1}`, fill: "none", stroke: "var(--ink)", "stroke-width": 1.5 }, g);
+    txt("θ", { x: tx, y: ty + 5, "text-anchor": "middle", fill: "var(--ink)", "font-size": 15, "font-style": "italic", "font-family": "Georgia, serif" }, g);
+  }
+  // live arc length, just outside each arc
+  const arcTxt = mult => { const k = specialK(); if (isOne()) return `a = ${mult === 1 ? "1" : fmtR()}`; return k === null ? `a ≈ ${num(theta * mult)}` : `a = ${piTxt(k * Math.round(mult * 2), 24)}`; };
+  const tag = (s, r, col) => { const [x, y] = pt(theta / 2, r); txt(s, { x, y: y + 5, "text-anchor": "middle", fill: col, "font-size": 15, "font-weight": 700, "font-family": "var(--body)", ...halo }, g); };
+  if (theta > 0.05 && phase > 0) {
+    if (showUnit) tag(arcTxt(1), r1 + 26, "var(--one)");
+    if (showR) tag(arcTxt(R), Math.abs(rR - r1) < 40 && showUnit ? Math.max(r1, rR) + 50 : rR + 26, "var(--rim)");
+  }
+  // exactly 1 radian: the arm is a radius, the same length as the arc
+  if (isOne() && phase > 0) {
+    const nx = Math.sin(theta), ny = Math.cos(theta);
+    [[showR, rR, "var(--rim)", `r = ${fmtR()}`, 1], [showUnit, r1, "var(--one)", "1", -1]].forEach(([on, r, col, s, side]) => {
+      if (!on) return;
+      const mid = col === "var(--rim)" && showUnit && rR > r1 ? (r1 + rR) / 2 : r / 2;
+      const [ex, ey] = pt(theta, r), [mx, my] = pt(theta, mid);
+      el("line", { x1: C, y1: C, x2: ex, y2: ey, stroke: col, "stroke-width": 6, "stroke-linecap": "round" }, g);
+      txt(s, { x: mx + side * 16 * nx, y: my + side * 16 * ny + 5, "text-anchor": "middle", fill: col, "font-size": 15, "font-weight": 700, "font-family": "var(--body)", ...halo }, g);
+    });
+    txt(T.board1, { x: C, y: 392, "text-anchor": "middle", fill: "var(--ink)", "font-size": 17, "font-weight": 800, "font-family": "var(--display)" }, g);
+  }
+  const [ax, ay] = pt(theta, outer + 16);
+  el("line", { x1: C, y1: C, x2: ax, y2: ay, stroke: "var(--ink)", "stroke-width": 3, "stroke-linecap": "round" }, g);
+  el("circle", { cx: C, cy: C, r: 5, fill: "var(--ink)" }, g);
+  el("circle", { cx: ax, cy: ay, r: 10, fill: locked() ? "var(--axis)" : "var(--ink)", stroke: "var(--surface)", "stroke-width": 3 }, g);
+  renderStrip();
+  svg.classList.toggle("locked", locked());
+  svg.setAttribute("aria-valuenow", theta.toFixed(2));
+  svg.setAttribute("aria-valuetext", `${num(theta)} ${T.rad}`);
+}
+function renderStrip(){
+  const s = $("strip"); s.innerHTML = "";
+  const x0 = 20, xmax = 382, sp = 360 / (TAU * (phase >= 2 ? 2.5 : 1));
+  const rows = [];
+  if (showUnit) rows.push(["one", theta, TAU, T.strip1]);
+  if (showR) rows.push(["rim", theta * R, TAU * R, T.stripR(fmtR())]);
+  let y = 6;
+  rows.forEach(([col, len, full, lab]) => {
+    txt(lab, { x: x0, y: y + 12, fill: `var(--${col})`, "font-size": 13, "font-weight": 700, "font-family": "var(--body)" }, s);
+    y += 18;
+    el("rect", { x: x0, y, width: Math.min(full * sp, xmax - x0), height: 16, rx: 3, fill: "none", stroke: `var(--${col})`, "stroke-opacity": .5, "stroke-dasharray": "4 4" }, s);
+    if (len > 0.001) el("rect", { x: x0, y, width: len * sp, height: 16, rx: 3, fill: `var(--${col})` }, s);
+    y += 26;
+  });
+  el("line", { x1: x0, y1: y, x2: xmax, y2: y, stroke: "var(--axis)", "stroke-width": 1.5 }, s);
+  const ints = sp >= 40;
+  for (let k = 1; x0 + k * STEP * sp <= xmax + 0.5; k++) if (isSpecial(k) && k % 12) {
+    const x = x0 + k * STEP * sp;
+    el("line", { x1: x, y1: y - 5, x2: x, y2: y, stroke: "var(--ink)", "stroke-width": 1.5, opacity: .6 }, s);
+  }
+  for (let i = 0; x0 + i * sp <= xmax + 0.5; i++) {
+    const x = x0 + i * sp;
+    el("line", { x1: x, y1: y, x2: x, y2: y + 6, stroke: "var(--axis)", "stroke-width": 1.5 }, s);
+    if (ints || i === 0) txt(String(i), { x, y: y + 20, "text-anchor": "middle", fill: "var(--muted)", "font-size": 12, "font-family": "var(--body)" }, s);
+  }
+  for (let n = 1; x0 + n * Math.PI * sp <= xmax + 0.5; n++) {
+    const x = x0 + n * Math.PI * sp, ly = ints ? y + 36 : y + 22;
+    el("line", { x1: x, y1: y - 4, x2: x, y2: ly - 13, stroke: "var(--ink)", "stroke-width": 2 }, s);
+    txt(n === 1 ? "π" : `${n}π`, { x, y: ly, "text-anchor": "middle", fill: "var(--ink)", "font-size": 14, "font-weight": 700, "font-family": "var(--body)" }, s);
+  }
+  s.setAttribute("viewBox", `0 0 400 ${y + (ints ? 42 : 28)}`);
+}
+
+/* ---------- panel ---------- */
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const tabs = () => `<nav class="tabs">${T.tabs.map((t, i) => `<button data-p="${i}" ${phase === i ? 'aria-current="step"' : ""}><span class="n">${i + 1}</span>${t}</button>`).join("")}</nav>`;
+const wireTabs = () => panel.querySelectorAll("[data-p]").forEach(b => b.onclick = () => setPhase(+b.dataset.p));
+
+/* part 1: three quick questions (first choice is always the right one; they get shuffled) */
+const QUIZ = [
+  { play: true, k: 24, choices: ["2π", "π", "360", "1"] },
+  { k: 12, choices: ["π", "2π", piF(12, 24), "180"] },
+  { k: 2, choices: [piF(4, 24), piF(2, 24), frac(1, 6), "30"] },
+].map((q, i) => ({ ...q, ...T.quiz[i] }));
+let qi = 0, qs = "play", qPicked = {}, qOrder = [], qWrong = null;
+const locked = () => phase === 0 && qs !== "drag";
+function loadQ(){ qs = QUIZ[qi].play ? "play" : "drag"; qPicked = {}; qWrong = null; qOrder = shuffle([0, 1, 2, 3]); setTheta(0); }
+function quizTick(){
+  if (qs === "drag" && Math.abs(theta - QUIZ[qi].k * STEP) < 1e-9) { qs = "ask"; dragging = false; buildPanel(); render(); }
+}
+function play(){
+  qs = "anim"; buildPanel();
+  const t0 = performance.now(), dur = reduced ? 0 : 2600;
+  (function f(now){
+    const p = dur ? Math.min(1, (now - t0) / dur) : 1, e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    raw = theta = e * TAU; render();
+    if (p < 1) requestAnimationFrame(f); else { raw = theta = TAU; qs = "ask"; buildPanel(); render(); }
+  })(t0);
+}
+function buildQuiz(){
+  const q = QUIZ[qi];
+  let h = `${tabs()}<div><div class="eyebrow">${T.qOf(qi + 1, QUIZ.length)}</div><h2>${T.tabs[0]}</h2></div>
+    <p>${T.unitP}</p><p class="ask">${q.intro}</p>`;
+  if (qs === "play") h += `<button class="primary" id="play">${T.play}</button>`;
+  if (qs === "ask" || qs === "done") h += `<p class="prompt">${T.prompt}</p><div class="choices">${qOrder.map(i => `<button class="choice ${qPicked[i] || ""}" data-i="${i}" ${qs === "done" || qPicked[i] ? "disabled" : ""}>${q.choices[i]}</button>`).join("")}</div>`;
+  if (qs === "done") h += `<p class="feedback good"><b>${T.correct}</b> ${q.good}</p><button class="primary" id="qnext">${qi < QUIZ.length - 1 ? T.nextQ : T.nextPart}</button>`;
+  else if (qWrong !== null) h += `<p class="feedback bad">${q.hints[qWrong]}</p>`;
+  panel.innerHTML = h; wireTabs();
+  if ($("play")) $("play").onclick = play;
+  panel.querySelectorAll(".choice").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i;
+    if (i === 0) { qPicked[i] = "right"; qs = "done"; } else { qPicked[i] = "wrong"; qWrong = i; }
+    buildQuiz();
+  });
+  if ($("qnext")) $("qnext").onclick = () => { if (qi < QUIZ.length - 1) { qi++; loadQ(); buildQuiz(); render(); } else setPhase(1); };
+}
+
+/* part 4: the pirate */
+function pirateSVG(){
+  return `<svg class="pirate" viewBox="0 0 340 250" role="img" aria-label="${T.pirateAlt}">
+    <g transform="translate(110 0)">
+      <ellipse cx="54" cy="150" rx="9" ry="14" fill="var(--skin-shade)"/>
+      <ellipse cx="186" cy="150" rx="9" ry="14" fill="var(--skin-shade)"/>
+      <circle cx="120" cy="140" r="66" fill="var(--skin)"/>
+      <line x1="104" y1="126" x2="176" y2="96" stroke="var(--patch)" stroke-width="4" stroke-linecap="round"/>
+      <line x1="80" y1="132" x2="56" y2="138" stroke="var(--patch)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M52 132 Q54 66 120 62 Q186 66 188 132 Q156 104 120 104 Q84 104 52 132Z" fill="var(--one)"/>
+      <circle cx="96" cy="84" r="4" fill="var(--eye)"/><circle cx="128" cy="76" r="4" fill="var(--eye)"/><circle cx="158" cy="88" r="4" fill="var(--eye)"/><circle cx="76" cy="104" r="4" fill="var(--eye)"/>
+      <path d="M182 112 q22 -6 30 10 q-16 2 -26 -2z M182 116 q16 14 10 32 q-10 -10 -14 -26z" fill="var(--one)"/>
+      <circle cx="184" cy="112" r="7" fill="var(--one)"/>
+      <ellipse cx="92" cy="140" rx="17" ry="22" fill="var(--patch)" fill-opacity=".12" stroke="var(--patch)" stroke-width="7"/>
+      <line x1="76" y1="140" x2="108" y2="140" stroke="var(--patch)" stroke-width="6" stroke-linecap="round"/>
+      <ellipse cx="148" cy="140" rx="11" ry="9" fill="var(--eye)"/>
+      <circle cx="150" cy="141" r="5" fill="var(--patch)"/>
+      <path d="M136 124 q12 -6 24 0" fill="none" stroke="var(--beard)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M120 146 q-8 16 2 20" fill="none" stroke="var(--skin-shade)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M58 158 Q64 226 120 230 Q176 226 182 158 Q164 184 120 184 Q76 184 58 158Z" fill="var(--beard)"/>
+      <path d="M94 176 Q120 168 146 176 Q138 200 120 200 Q102 200 94 176Z" fill="var(--patch)"/>
+      <path d="M100 178 Q120 172 140 178" fill="none" stroke="var(--eye)" stroke-width="4"/>
+      <circle cx="187" cy="168" r="7" fill="none" stroke="var(--gold)" stroke-width="3"/>
+    </g>
+    ${pirateShown ? `<g class="bubble">
+      <path d="M10 22 Q10 8 26 8 H150 Q166 8 166 22 V70 Q166 84 150 84 H124 L170 120 L102 84 H26 Q10 84 10 70Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+      <text x="88" y="60" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="34" fill="var(--ink)"><tspan fill="var(--rim)" style="fill:var(--rim)">A</tspan><tspan fill="var(--rim)" style="fill:var(--rim)">R</tspan>rr${LANG === "fr" ? " !" : "!"}</text>
+    </g>` : ""}
+  </svg>`;
+}
+function buildConclusion(){
+  panel.innerHTML = `${tabs()}<h2>${T.tabs[3]}</h2>
+    <div class="formula"><span>θ =</span>${frac('<span class="c-rim">a</span>', '<span class="c-rim">r</span>')}</div>
+    <dl class="defs">
+      <dt>θ</dt><dd>${T.defs[0]}</dd>
+      <dt class="c-rim">a</dt><dd>${T.defs[1]}</dd>
+      <dt class="c-rim">r</dt><dd>${T.defs[2]}</dd>
+    </dl>
+    ${pirateSVG()}
+    <p class="hint">${T.patch}</p>
+    <p class="ask">${T.pirateQ}</p>
+    ${pirateShown ? `<p class="arrr">${T.arrr}</p>` : `<button class="primary" id="reveal">${T.reveal}</button>`}`;
+  wireTabs();
+  if ($("reveal")) $("reveal").onclick = () => { pirateShown = true; buildConclusion(); };
+}
+
+function buildPanel(){
+  if (phase === 0) return buildQuiz();
+  if (phase === 3) return buildConclusion();
+  panel.innerHTML = phase === 1 ? `${tabs()}
+    <h2>${T.tabs[1]}</h2>
+    <p>${T.p2}</p>
+    <dl class="reads"><div class="rd one"><dt>${T.arcA}</dt><dd id="v1"></dd></div></dl>
+    <p class="callout" id="one" hidden>${T.one1}</p>
+    <p class="hint" id="note"></p>
+    <button class="primary" id="go">${T.go3}</button>`
+  : `${tabs()}
+    <h2>${T.tabs[2]}</h2>
+    <p>${T.p3}</p>
+    <dl class="reads">
+      <div class="rd one"><dt>${T.arcOn1}</dt><dd id="v1"></dd></div>
+      <div class="rd rim"><dt id="lR"></dt><dd id="vR"></dd></div>
+      <div class="rd"><dt>a ÷ r</dt><dd id="vQ"></dd></div>
+    </dl>
+    <p class="callout" id="one" hidden></p>
+    <div class="big"><span>θ = ${frac('<span class="c-rim">a</span>', '<span class="c-rim">r</span>')}</span><small>${T.anyCircle}</small></div>
+    <button class="primary" id="go">${T.go4}</button>`;
+  wireTabs();
+  $("go").onclick = () => setPhase(phase + 1);
+  updateReads();
+}
+function updateReads(){
+  $("tg1").setAttribute("aria-pressed", showUnit);
+  $("tgr").setAttribute("aria-pressed", showR);
+  $("rminus").disabled = R <= 0.5;
+  $("rplus").disabled = R >= 2.5;
+  $("rval").textContent = fmtR();
+  if (phase === 0) return quizTick();
+  if (phase === 3) return;
+  $("v1").innerHTML = arc1();
+  $("one").hidden = !isOne();
+  if (phase === 1) {
+    $("note").textContent = theta >= TAU - 1e-9 ? T.noteFull : T.note;
+  } else {
+    $("one").textContent = T.one2(fmtR());
+    $("lR").textContent = T.arcOnR(fmtR());
+    $("vR").innerHTML = arcR();
+    const k = specialK();
+    $("vQ").innerHTML = isOne() ? `<span>${fmtR()} ÷ ${fmtR()}</span><span class="sym">=</span><span class="exact c-one">1</span>`
+      : k === null ? `<span class="sym">≈</span><span>${num(theta * R)} ÷ ${fmtR()} = ${num(theta)}</span>`
+      : `<span>${k === 0 ? "0" : piF(k * Math.round(R * 2), 24)} ÷ ${fmtR()}</span><span class="sym">=</span><span class="exact c-one">${piF(k * 2, 24)}</span>`;
+  }
+}
+function setPhase(p){
+  phase = p;
+  if (p <= 1) { showUnit = true; showR = false; if (p === 0) { qi = 0; loadQ(); } }
+  else { showUnit = true; showR = true; if (theta === 0) setTheta(4 * STEP); }
+  if (p === 3) pirateShown = false;
+  $("tools").hidden = p !== 2;
+  $("strip").toggleAttribute("hidden", p === 0);
+  buildPanel(); render();
+}
+const update = () => { render(); updateReads(); };
+
+/* ---------- input ---------- */
+let dragging = false, prevA = 0;
+function ptrAngle(e){
+  const r = svg.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width * 400, y = (e.clientY - r.top) / r.height * 400;
+  let a = Math.atan2(C - y, x - C); if (a < 0) a += TAU; return a;
+}
+svg.addEventListener("pointerdown", e => {
+  if (locked()) return;
+  dragging = true; svg.setPointerCapture(e.pointerId);
+  const a = ptrAngle(e);
+  const best = [a, a + TAU, a - TAU].filter(v => v >= -0.3 && v <= TAU + 0.3).reduce((b, v) => Math.abs(v - raw) < Math.abs(b - raw) ? v : b, a);
+  prevA = a; setTheta(best); update();
+});
+svg.addEventListener("pointermove", e => {
+  if (!dragging || locked()) return;
+  const a = ptrAngle(e); let d = a - prevA;
+  if (d > Math.PI) d -= TAU; if (d < -Math.PI) d += TAU;
+  prevA = a; setTheta(raw + d); update();
+});
+const end = () => { dragging = false; };
+svg.addEventListener("pointerup", end); svg.addEventListener("pointercancel", end);
+svg.addEventListener("keydown", e => {
+  const dir = (e.key === "ArrowRight" || e.key === "ArrowUp") ? 1 : (e.key === "ArrowLeft" || e.key === "ArrowDown") ? -1 : 0;
+  if (!dir || locked()) return; e.preventDefault();
+  let k = Math.round(theta / STEP) + dir;                 // step between special angles
+  while (k > 0 && k < 24 && !isSpecial(k)) k += dir;
+  setTheta(Math.max(0, Math.min(24, k)) * STEP); update();
+});
+$("tg1").onclick = () => { if (showUnit && !showR) return; showUnit = !showUnit; update(); };
+$("tgr").onclick = () => { if (showR && !showUnit) return; showR = !showR; update(); };
+$("rminus").onclick = () => { R = Math.max(0.5, R - 0.5); update(); };
+$("rplus").onclick = () => { R = Math.min(2.5, R + 0.5); update(); };
+
+setPhase(0);
+})();
+</script>
+
+</body></html>
