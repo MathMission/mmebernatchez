@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jeopardy Probabilité MDM4U</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: projector-first game board — 5×5 grid of tiles, team scoreboard below, full-screen question overlay. Single committed dark "TV studio" look. */
+:root{
+  --bg:#0a1029;
+  --panel:#111a42;
+  --tile:#1b2c82;
+  --tile-hi:#2a42b5;
+  --tile-used:#0f1636;
+  --gold:#f3c450;
+  --fg:#f3f4ff;
+  --muted:#99a3d4;
+  --line:#2b3772;
+  --good:#5bd88a;
+  --bad:#ff7b7b;
+  --set-a:rgba(243,196,80,.28);
+  --set-b:rgba(110,170,255,.28);
+  --display:"Anton","Impact","Arial Narrow",sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--body);font-size:16px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:20px 32px}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:.02em;line-height:1;margin:4px 0 0;text-wrap:balance}
+h1 span{color:var(--gold)}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);padding:8px 14px}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible,.tile:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+button.danger{border-color:var(--bad);color:var(--bad)}
+
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.cat{background:var(--tile);border-radius:6px;padding:10px 6px;min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(.62rem,1.5vw,.95rem);line-height:1.2;text-wrap:balance;border-bottom:3px solid var(--gold)}
+.tile{appearance:none;border:0;border-radius:6px;background:var(--tile);color:var(--gold);font-family:var(--display);
+  font-size:clamp(1.3rem,4.4vw,3rem);aspect-ratio:16/10;max-width:100%;display:flex;align-items:center;justify-content:center;
+  text-shadow:0 2px 0 rgba(0,0,0,.45);transition:background .15s,transform .15s;padding:0}
+.tile:hover{background:var(--tile-hi);transform:translateY(-2px)}
+.tile.used{background:var(--tile-used);color:transparent;text-shadow:none;cursor:default;transform:none}
+.tile.used::after{content:"✓";color:var(--line);font-family:var(--body);font-size:1.2rem}
+
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.team{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.team.lead{border-color:var(--gold)}
+.team input{font:inherit;font-weight:700;background:transparent;border:0;border-bottom:1px dashed var(--line);color:var(--fg);padding:2px 0;width:100%;min-width:0}
+.team .pts{font-family:var(--display);font-size:2.4rem;line-height:1;color:var(--gold);font-variant-numeric:tabular-nums}
+.team .pts.neg{color:var(--bad)}
+.team .row{display:flex;gap:6px;flex-wrap:wrap}
+.team .row button{padding:4px 10px;font-size:.85rem}
+.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:.9rem}
+
+/* overlay */
+.overlay{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;overflow:auto;
+  padding:max(20px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(20px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.card{max-width:1000px;width:100%;margin:auto;display:flex;flex-direction:column;gap:22px}
+.card .tag{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:.85rem}
+.card .tag b{font-family:var(--display);color:var(--gold);font-size:1.6rem;letter-spacing:.02em;font-weight:400}
+.qtext{font-size:clamp(1.3rem,3.2vw,2.4rem);line-height:1.3;font-weight:700;text-wrap:pretty;margin:0}
+.venn{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;overflow-x:auto}
+.venn svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+.answer{background:var(--panel);border-left:4px solid var(--gold);border-radius:8px;padding:16px 18px}
+.answer .lab{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 6px}
+.answer .main{font-size:clamp(1.3rem,3vw,2.1rem);font-weight:700;margin:0}
+.answer .why{color:var(--muted);margin:8px 0 0;font-size:clamp(1rem,1.8vw,1.2rem)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.reveal{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700;font-size:1.1rem;padding:12px 22px}
+.award{display:flex;flex-direction:column;gap:10px}
+.award p{margin:0;color:var(--muted);font-size:.9rem}
+.award .grid{display:flex;flex-wrap:wrap;gap:8px}
+.award .tb{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.award .tb span{padding:8px 12px;font-weight:700;background:var(--panel)}
+.award .tb button{border:0;border-left:1px solid var(--line);border-radius:0;padding:8px 12px;font-weight:700}
+.award .tb button.plus{color:var(--good)}
+.award .tb button.minus{color:var(--bad)}
+.award .tb button.on{background:var(--tile)}
+kbd{font-family:var(--body);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:.8em}
+@media (max-width:520px){.cat{min-height:60px;padding:6px 3px;letter-spacing:.02em}.board{gap:4px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">Gestion des données · MDM4U · Révision</p>
+      <h1>Jeopardy <span>Probabilité</span></h1>
+    </div>
+    <div class="tools">
+      <button id="addTeam" type="button">+ Équipe</button>
+      <button id="reset" type="button" class="danger">Nouvelle partie</button>
+    </div>
+  </header>
+
+  <div class="board" id="board" role="grid" aria-label="Tableau de jeu"></div>
+
+  <div class="meta"><span id="left"></span><span>Clique une case · <kbd>Espace</kbd> révèle · <kbd>Échap</kbd> ferme</span></div>
+
+  <div class="scores" id="scores"></div>
+</div>
+
+<div class="overlay" id="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="qtext">
+  <div class="card">
+    <div class="tag"><span id="qcat"></span><b id="qval"></b></div>
+    <p class="qtext" id="qtext"></p>
+    <div class="venn" id="qvenn" hidden></div>
+    <div class="actions" id="revealRow"><button type="button" class="reveal" id="revealBtn">Afficher la réponse</button></div>
+    <div class="answer" id="ans" hidden>
+      <p class="lab">Réponse</p>
+      <p class="main" id="amain"></p>
+      <p class="why" id="awhy"></p>
+    </div>
+    <div class="award" id="award" hidden>
+      <p>Attribue les points, puis retourne au tableau.</p>
+      <div class="grid" id="awardGrid"></div>
+      <div class="actions"><button type="button" id="closeBtn">Retour au tableau</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Venn diagram builder (numbers in each region)
+function venn(o){
+  return `<svg viewBox="0 0 520 300" role="img" aria-label="Diagramme de Venn">
+  <rect x="6" y="6" width="508" height="288" rx="10" fill="none" stroke="var(--muted)" stroke-width="2"/>
+  <text x="22" y="34" fill="var(--muted)" font-size="18" font-family="var(--body)" font-weight="700">U${o.total!=null?' ('+o.total+')':''}</text>
+  <circle cx="200" cy="160" r="105" fill="var(--set-a)" stroke="var(--gold)" stroke-width="3"/>
+  <circle cx="320" cy="160" r="105" fill="var(--set-b)" stroke="#8fb8ff" stroke-width="3"/>
+  <text x="150" y="50" fill="var(--gold)" font-size="20" font-family="var(--body)" font-weight="700" text-anchor="middle">${o.la}</text>
+  <text x="370" y="50" fill="#8fb8ff" font-size="20" font-family="var(--body)" font-weight="700" text-anchor="middle">${o.lb}</text>
+  <g fill="var(--fg)" font-family="Anton,Impact,sans-serif" font-size="40" text-anchor="middle">
+    <text x="150" y="174">${o.oa}</text><text x="260" y="174">${o.ab}</text><text x="370" y="174">${o.ob}</text>
+    <text x="470" y="270" font-size="32">${o.n}</text>
+  </g></svg>`;
+}
+const V1 = venn({la:"Sport (S)",lb:"Musique (M)",oa:10,ab:6,ob:8,n:6,total:30});
+const V5 = venn({la:"Café (C)",lb:"Thé (T)",oa:18,ab:7,ob:11,n:4,total:40});
+
+const CATS = [
+ {name:"Probabilité de base", qs:[
+  {q:"On lance un dé à 6 faces. Quelle est la probabilité d’obtenir un 3 ?", a:"1/6", w:"Un seul résultat favorable sur 6 résultats possibles."},
+  {q:"On tire une carte d’un jeu de 52 cartes. Quelle est la probabilité de tirer un cœur ?", a:"13/52 = 1/4", w:"Il y a 13 cœurs dans un jeu de 52 cartes."},
+  {q:"La probabilité qu’il pleuve demain est de 0,35. Quelle est la probabilité qu’il ne pleuve pas ?", a:"0,65", w:"Événement complémentaire : P(A′) = 1 − P(A) = 1 − 0,35."},
+  {q:"On lance deux dés. Quelle est la probabilité d’obtenir un 4 sur le premier dé ET un 3 sur le deuxième ?", a:"1/36", w:"1/6 × 1/6 = 1/36. Un seul résultat, (4, 3), sur 36 possibles."},
+  {q:"On lance deux dés. Quelle est la probabilité que la somme soit 7 ?", a:"6/36 = 1/6", w:"(1,6), (2,5), (3,4), (4,3), (5,2), (6,1) : 6 résultats sur 36."}
+ ]},
+ {name:"Ensembles et n(A)", qs:[
+  {q:"Que représente la notation n(A) ?", a:"Le nombre d’éléments dans l’ensemble A", w:"On dit aussi le cardinal de A (card A)."},
+  {q:"A = {2, 4, 6, 8, 10} et B = {1, 2, 3, 4, 5}. Trouve A ∩ B.", a:"A ∩ B = {2, 4}", w:"L’intersection contient les éléments qui sont dans A ET dans B."},
+  {q:"Avec les mêmes ensembles A = {2, 4, 6, 8, 10} et B = {1, 2, 3, 4, 5}, trouve n(A ∪ B).", a:"n(A ∪ B) = 8", w:"5 + 5 − 2 = 8. A ∪ B = {1, 2, 3, 4, 5, 6, 8, 10}."},
+  {q:"Complète le principe d’inclusion et d’exclusion : n(A ∪ B) = ?", a:"n(A) + n(B) − n(A ∩ B)", w:"On soustrait l’intersection parce qu’elle a été comptée deux fois."},
+  {q:"U = {1, 2, 3, …, 10} et A = {les nombres pairs de U}. Trouve A′ et n(A′).", a:"A′ = {1, 3, 5, 7, 9}, n(A′) = 5", w:"Le complément contient tous les éléments de U qui ne sont pas dans A."}
+ ]},
+ {name:"Diagrammes de Venn", qs:[
+  {q:"Selon le diagramme, combien d’élèves font du sport ET de la musique ?", v:V1, a:"6", w:"C’est la région du milieu : n(S ∩ M) = 6."},
+  {q:"Selon le diagramme, trouve n(S).", v:V1, a:"n(S) = 16", w:"Tout le cercle S : 10 + 6 = 16."},
+  {q:"On choisit un élève au hasard. Quelle est la probabilité qu’il fasse seulement de la musique ?", v:V1, a:"8/30 = 4/15", w:"Seulement musique : 8 élèves sur 30."},
+  {q:"On choisit un élève au hasard. Trouve P(S ∪ M).", v:V1, a:"24/30 = 4/5", w:"10 + 6 + 8 = 24, ou 16 + 14 − 6 = 24."},
+  {q:"Dans un groupe de 40 élèves, 25 aiment le café, 18 aiment le thé et 7 aiment les deux. Construis le diagramme de Venn. Quelle est la probabilité qu’un élève n’aime ni l’un ni l’autre ?", a:"4/40 = 1/10", w:"n(C ∪ T) = 25 + 18 − 7 = 36, donc 40 − 36 = 4 n’aiment ni l’un ni l’autre.", va:V5}
+ ]},
+ {name:"Problèmes écrits", qs:[
+  {q:"On tire une carte d’un jeu de 52. Quelle est la probabilité de tirer un roi OU une reine ?", a:"8/52 = 2/13", w:"Événements incompatibles : 4/52 + 4/52."},
+  {q:"On tire une carte d’un jeu de 52. Quelle est la probabilité de tirer un cœur OU un roi ?", a:"16/52 = 4/13", w:"13/52 + 4/52 − 1/52. Le roi de cœur est compté une seule fois."},
+  {q:"P(A) = 0,5, P(B) = 0,4 et P(A et B) = 0,2. Trouve P(A ou B).", a:"0,7", w:"P(A ∪ B) = 0,5 + 0,4 − 0,2."},
+  {q:"Dans une école, 60 % des élèves ont un téléphone, 45 % ont une tablette et 30 % ont les deux. Quelle est la probabilité qu’un élève n’ait ni l’un ni l’autre ?", a:"0,25 (25 %)", w:"P(T ∪ Ta) = 0,60 + 0,45 − 0,30 = 0,75, puis 1 − 0,75."},
+  {q:"P(A ou B) = 0,8, P(A) = 0,5 et P(B) = 0,45. Trouve P(A et B).", a:"0,15", w:"0,8 = 0,5 + 0,45 − P(A ∩ B), donc P(A ∩ B) = 0,95 − 0,8."}
+ ]},
+ {name:"Incompatibles ?", qs:[
+  {q:"Que veut dire « deux événements incompatibles (disjoints) » ?", a:"Ils ne peuvent pas se produire en même temps", w:"A ∩ B = ∅, donc n(A ∩ B) = 0 et P(A ∩ B) = 0."},
+  {q:"On lance un dé. A : obtenir un nombre pair. B : obtenir un 3. A et B sont-ils incompatibles ?", a:"Oui", w:"A = {2, 4, 6} et B = {3} n’ont aucun résultat en commun."},
+  {q:"On tire une carte. A : tirer un cœur. B : tirer une figure (valet, dame, roi). A et B sont-ils incompatibles ?", a:"Non", w:"Le valet, la dame et le roi de cœur sont dans les deux : n(A ∩ B) = 3."},
+  {q:"P(A) = 0,3, P(B) = 0,5 et P(A ∪ B) = 0,8. A et B sont-ils incompatibles ? Justifie.", a:"Oui", w:"P(A ∩ B) = 0,3 + 0,5 − 0,8 = 0."},
+  {q:"A et B sont incompatibles. P(A) = 0,25 et P(A ∪ B) = 0,6. Trouve P(B).", a:"0,35", w:"Si incompatibles, P(A ∪ B) = P(A) + P(B), donc P(B) = 0,6 − 0,25."}
+ ]}
+];
+const VALUES=[100,200,300,400,500];
+const KEY="jeopardy-proba-mdm4u-v1";
+
+let S = defaultState();
+function defaultState(){return {used:{},teams:[{name:"Équipe 1",pts:0},{name:"Équipe 2",pts:0},{name:"Équipe 3",pts:0}]};}
+function load(d){ if(d&&d.teams&&d.used){S=d;return;} try{const r=localStorage.getItem(KEY); if(r){const p=JSON.parse(r); if(p.teams&&p.used) S=p;}}catch(e){} }
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+
+const $=id=>document.getElementById(id);
+function renderBoard(){
+  const b=$("board"); b.innerHTML="";
+  CATS.forEach(c=>{const d=document.createElement("div");d.className="cat";d.textContent=c.name;d.setAttribute("role","columnheader");b.appendChild(d);});
+  VALUES.forEach((v,r)=>CATS.forEach((c,ci)=>{
+    const k=ci+"-"+r, t=document.createElement("button");
+    t.type="button"; t.className="tile"+(S.used[k]?" used":""); t.textContent=v;
+    t.setAttribute("aria-label",c.name+", "+v+(S.used[k]?", déjà jouée":""));
+    t.id="tile-"+k;
+    t.addEventListener("click",()=>open(ci,r));
+    b.appendChild(t);
+  }));
+  const n=25-Object.keys(S.used).length;
+  $("left").textContent = n ? n+" question"+(n>1?"s":"")+" restante"+(n>1?"s":"") : "Partie terminée !";
+}
+function renderScores(){
+  const box=$("scores"); box.innerHTML="";
+  const max=Math.max(...S.teams.map(t=>t.pts));
+  S.teams.forEach((t,i)=>{
+    const el=document.createElement("div");
+    el.className="team"+(t.pts>0&&t.pts===max?" lead":"");
+    el.innerHTML=`<input id="team-${i}" aria-label="Nom de l’équipe" value="">
+      <div class="pts${t.pts<0?' neg':''}">${t.pts}</div>
+      <div class="row"><button type="button" data-d="-100">−100</button><button type="button" data-d="100">+100</button>${S.teams.length>1?'<button type="button" data-rm="1">Retirer</button>':''}</div>`;
+    const inp=el.querySelector("input"); inp.value=t.name;
+    inp.addEventListener("input",()=>{t.name=inp.value;save();});
+    el.querySelectorAll("[data-d]").forEach(btn=>btn.addEventListener("click",()=>{t.pts+=+btn.dataset.d;save();renderScores();}));
+    const rm=el.querySelector("[data-rm]");
+    if(rm) rm.addEventListener("click",()=>{ if(rm.dataset.armed){S.teams.splice(i,1);save();renderScores();} else {rm.dataset.armed=1;rm.textContent="Confirmer";rm.classList.add("danger");} });
+    box.appendChild(el);
+  });
+}
+
+let cur=null, awarded={};
+function open(ci,r){
+  const k=ci+"-"+r; if(S.used[k]) return;
+  const q=CATS[ci].qs[r]; cur={ci,r,k,q}; awarded={};
+  $("qcat").textContent=CATS[ci].name; $("qval").textContent=VALUES[r];
+  $("qtext").textContent=q.q;
+  const vb=$("qvenn"); if(q.v){vb.innerHTML=q.v;vb.hidden=false;} else {vb.innerHTML="";vb.hidden=true;}
+  $("ans").hidden=true; $("award").hidden=true; $("revealRow").hidden=false;
+  $("overlay").hidden=false; document.body.style.overflow="hidden"; $("revealBtn").focus();
+}
+function reveal(){
+  if(!cur||!$("ans").hidden) return;
+  const q=cur.q;
+  $("amain").textContent=q.a; $("awhy").textContent=q.w;
+  if(q.va){const vb=$("qvenn");vb.innerHTML=q.va;vb.hidden=false;}
+  $("ans").hidden=false; $("revealRow").hidden=true; $("award").hidden=false;
+  S.used[cur.k]=1; save(); renderBoard();
+  renderAward(); $("closeBtn").focus();
+}
+function renderAward(){
+  const g=$("awardGrid"); g.innerHTML=""; const v=VALUES[cur.r];
+  S.teams.forEach((t,i)=>{
+    const d=document.createElement("div"); d.className="tb";
+    d.innerHTML=`<span></span><button type="button" class="plus${awarded[i]===1?' on':''}">+${v}</button><button type="button" class="minus${awarded[i]===-1?' on':''}">−${v}</button>`;
+    d.querySelector("span").textContent=t.name;
+    const [p,m]=d.querySelectorAll("button");
+    p.addEventListener("click",()=>setAward(i,1)); m.addEventListener("click",()=>setAward(i,-1));
+    g.appendChild(d);
+  });
+}
+function setAward(i,dir){
+  const v=VALUES[cur.r], prev=awarded[i]||0;
+  const next = prev===dir ? 0 : dir;          // tap again to undo
+  S.teams[i].pts += (next-prev)*v; awarded[i]=next;
+  save(); renderAward(); renderScores();
+}
+function close(){
+  if(!cur) return;
+  $("overlay").hidden=true; document.body.style.overflow="";
+  const t=$("tile-"+cur.k); cur=null; if(t) t.focus();
+}
+$("revealBtn").addEventListener("click",reveal);
+$("closeBtn").addEventListener("click",close);
+document.addEventListener("keydown",e=>{
+  if($("overlay").hidden) return;
+  if(e.key==="Escape"){ if($("ans").hidden){$("overlay").hidden=true;document.body.style.overflow="";cur=null;} else close(); }
+  if(e.key===" "&&$("ans").hidden){e.preventDefault();reveal();}
+});
+$("addTeam").addEventListener("click",()=>{S.teams.push({name:"Équipe "+(S.teams.length+1),pts:0});save();renderScores();});
+$("reset").addEventListener("click",function(){
+  if(this.dataset.armed){S=defaultState();save();renderBoard();renderScores();delete this.dataset.armed;this.textContent="Nouvelle partie";}
+  else{this.dataset.armed=1;this.textContent="Confirmer : tout effacer ?";setTimeout(()=>{if(this.dataset.armed){delete this.dataset.armed;this.textContent="Nouvelle partie";}},4000);}
+});
+
+function start(d){ load(d); renderBoard(); renderScores(); }
+window.claude?.hot?.snapshot?.(()=>S);
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data);
+</script>
+</body>
+</html>
