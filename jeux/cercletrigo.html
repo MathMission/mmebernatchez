@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cercle trigonométrique – Triangles spéciaux</title>
+<style>
+:root{--bg:#fbfaf7;--ink:#1d2433;--mute:#6b7385;--grid:#c9ccd4;--blue:#2f6fed;--pink:#e5398f;--arc:#1d2433;--btn:#1d2433;--btnt:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171f;--ink:#eef0f5;--mute:#9aa1b2;--grid:#3a4050;--blue:#6c9bff;--pink:#ff6fb5;--arc:#eef0f5;--btn:#eef0f5;--btnt:#14171f}}
+:root[data-theme="dark"]{--bg:#14171f;--ink:#eef0f5;--mute:#9aa1b2;--grid:#3a4050;--blue:#6c9bff;--pink:#ff6fb5;--arc:#eef0f5;--btn:#eef0f5;--btnt:#14171f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+header{width:100%;max-width:760px;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px 0;flex-wrap:wrap}
+h1{font-size:clamp(20px,3.4vw,30px);margin:0;font-weight:700}
+button{font:600 16px system-ui,sans-serif;background:var(--btn);color:var(--btnt);border:0;border-radius:8px;padding:10px 18px;cursor:pointer}
+button:focus-visible,svg:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.read{font:600 clamp(18px,3vw,26px) Georgia,serif;text-align:center;padding:8px 16px 0}
+.read small{display:block;font:15px system-ui,sans-serif;color:var(--mute);margin-top:2px;min-height:20px}
+svg{width:min(96vw,74vh,720px);height:auto;touch-action:none;cursor:grab;user-select:none}
+svg.drag{cursor:grabbing}
+text{font-family:Georgia,serif;fill:var(--ink)}
+.hint{font:14px system-ui,sans-serif;color:var(--mute);padding:0 16px 16px;text-align:center}
+</style>
+</head>
+<body>
+<header><h1>Cercle trigonométrique</h1><button id="mode" type="button">Passer en radians</button></header>
+<div class="read" id="read"></div>
+<svg id="svg" viewBox="0 0 440 440" tabindex="0" role="img" aria-label="Cercle trigonométrique : faites glisser le rayon">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--arc)"/></marker></defs>
+<g id="axes" stroke="var(--grid)" stroke-width="1.5"><line x1="10" y1="220" x2="430" y2="220"/><line x1="220" y1="10" x2="220" y2="430"/></g>
+<circle cx="220" cy="220" r="150" fill="none" stroke="var(--ink)" stroke-width="2"/>
+<path id="tri" stroke-linejoin="round" stroke-width="2.5"/>
+<path id="sq" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+<line id="arm" x1="220" y1="220" stroke="var(--ink)" stroke-width="3"/>
+<path id="arc" fill="none" stroke="var(--arc)" stroke-width="2.5" marker-end="url(#ah)"/>
+<g id="labs" font-size="15" font-weight="700" text-anchor="middle" dominant-baseline="central"></g>
+<text id="lx" x="428" y="236" font-size="16" font-style="italic" text-anchor="end">x</text>
+<text x="232" y="22" font-size="16" font-style="italic">y</text>
+<text x="220" y="458" font-size="1"> </text>
+<circle id="knob" r="11" stroke="var(--bg)" stroke-width="3"/>
+</svg>
+<div class="hint">Faites glisser le rayon, ou utilisez les flèches ← → du clavier.</div>
+<script>
+const C=220,R=150,NS="http://www.w3.org/2000/svg";
+const A=[0,30,45,60,90,120,135,150,180,210,225,240,270,300,315,330];
+let deg=45,rad=false;
+const $=id=>document.getElementById(id);
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+function radTxt(d){if(d===0)return"0";const g=gcd(d,180),n=d/g,m=180/g;return(n===1?"":n)+"π"+(m===1?"":"/"+m)}
+const ang=d=>rad?radTxt(d):d+"°";
+const EX={0:["1","0"],30:["√3/2","1/2"],45:["√2/2","√2/2"],60:["1/2","√3/2"],90:["0","1"]};
+function ref(d){const r=d%180;return r>90?180-r:r}
+function pt(d,r){const t=d*Math.PI/180;return[C+r*Math.cos(t),C-r*Math.sin(t)]}
+function label(txt,x,y){const t=document.createElementNS(NS,"text");t.textContent=txt;t.setAttribute("x",x);t.setAttribute("y",y);$("labs").appendChild(t)}
+function toward(v,c,f){return[v[0]+(c[0]-v[0])*f,v[1]+(c[1]-v[1])*f]}
+function draw(){
+const rf=ref(deg),P=pt(deg,R),F=[P[0],C],O=[C,C];
+const quad=rf%90===0;
+$("labs").innerHTML="";
+$("arm").setAttribute("x2",P[0]);$("arm").setAttribute("y2",P[1]);
+$("knob").setAttribute("cx",P[0]);$("knob").setAttribute("cy",P[1]);
+const col=rf===45?"var(--pink)":"var(--blue)";
+$("knob").setAttribute("fill",quad?"var(--ink)":col);
+const tri=$("tri"),sq=$("sq");
+if(quad){tri.setAttribute("d","");sq.setAttribute("d","")}
+else{
+tri.setAttribute("d",`M${C} ${C}L${F[0]} ${C}L${P[0]} ${P[1]}Z`);
+tri.setAttribute("fill",col);tri.setAttribute("fill-opacity",".32");tri.setAttribute("stroke",col);
+const s=14,sx=Math.sign(C-F[0])||1,sy=Math.sign(P[1]-C)||1;
+sq.setAttribute("d",`M${F[0]+sx*s} ${C}L${F[0]+sx*s} ${C+sy*s}L${F[0]} ${C+sy*s}`);
+const cen=[(O[0]+F[0]+P[0])/3,(O[1]+F[1]+P[1])/3];
+const a=toward(O,cen,.62),b=toward(P,cen,.42),r=toward(F,cen,.5);
+label(ang(rf),a[0],a[1]);label(ang(90-rf),b[0],b[1]);label(ang(90),r[0],r[1]);
+}
+// arc from x-axis to terminal arm
+const r0=34,s=pt(0,r0),e=pt(deg,r0);
+$("arc").setAttribute("d",deg===0?"":`M${s[0]} ${s[1]}A${r0} ${r0} 0 ${deg>180?1:0} 0 ${e[0]} ${e[1]}`);
+// readout
+const q=Math.floor(deg/90)%4,sx=(q===1||q===2)?"−":"",sy=(q>=2)?"−":"";
+const c=EX[rf][0],sn=EX[rf][1];
+const fx=c==="0"?"0":sx+c,fy=sn==="0"?"0":sy+sn;
+$("read").innerHTML=`θ = ${ang(deg)} <span style="color:var(--mute);font-weight:400">= ${rad?deg+"°":radTxt(deg)}</span><small>(cos θ, sin θ) = (${fx}, ${fy})${quad?"":" · angle de référence "+ang(rf)}</small>`;
+$("mode").textContent=rad?"Passer en degrés":"Passer en radians";
+}
+function setFromEvent(ev){
+const sv=$("svg"),p=sv.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;
+const m=p.matrixTransform(sv.getScreenCTM().inverse());
+let d=Math.atan2(C-m.y,m.x-C)*180/Math.PI;if(d<0)d+=360;
+let best=A[0],bd=999;for(const a of A){const x=Math.min(Math.abs(a-d),360-Math.abs(a-d));if(x<bd){bd=x;best=a}}
+if(best!==deg){deg=best;draw()}
+}
+let down=false;const sv=$("svg");
+sv.addEventListener("pointerdown",e=>{down=true;sv.classList.add("drag");sv.setPointerCapture(e.pointerId);setFromEvent(e)});
+sv.addEventListener("pointermove",e=>{if(down)setFromEvent(e)});
+const up=()=>{down=false;sv.classList.remove("drag")};
+sv.addEventListener("pointerup",up);sv.addEventListener("pointercancel",up);
+sv.addEventListener("keydown",e=>{const i=A.indexOf(deg);
+if(e.key==="ArrowLeft"||e.key==="ArrowDown"){deg=A[(i+A.length-1)%A.length];draw();e.preventDefault()}
+if(e.key==="ArrowRight"||e.key==="ArrowUp"){deg=A[(i+1)%A.length];draw();e.preventDefault()}});
+$("mode").addEventListener("click",()=>{rad=!rad;draw()});
+draw();
+</script>
+</body>
+</html>
