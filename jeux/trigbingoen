@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Unit Circle Bingo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=STIX+Two+Text:wght@500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* Layout: graph-paper ground, one centred column: 1 set up & print, 2 call (projector), 3 check winners */
+:root{
+  --paper:#f4f7f6; --grid:rgba(31,122,114,.07); --ink:#1b2a3a; --muted:#5a6a76;
+  --surface:#ffffff; --line:#d4dde0; --accent:#c96f1c; --on-accent:#ffffff; --mark:#1f7a72; --on-mark:#ffffff;
+  --accent-soft:rgba(201,111,28,.12);
+  --purple:#7a3fc9; --purple-soft:rgba(122,63,201,.10); --orange:#e46a00; --orange-soft:rgba(228,106,0,.10); --mark-soft:rgba(31,122,114,.12);
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --f-math:"STIX Two Text","Cambria Math",Georgia,serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0f171d; --grid:rgba(63,181,168,.06); --ink:#e5edf0; --muted:#8fa1ad;
+  --surface:#16222b; --line:#29404b; --accent:#f0a347; --on-accent:#1a1206; --mark:#3fb5a8; --on-mark:#0b1418;
+  --accent-soft:rgba(240,163,71,.14); --purple:#b98cff; --purple-soft:rgba(185,140,255,.14); --orange:#ff9a3d; --orange-soft:rgba(255,154,61,.14); --mark-soft:rgba(63,181,168,.16); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f171d; --grid:rgba(63,181,168,.06); --ink:#e5edf0; --muted:#8fa1ad;
+  --surface:#16222b; --line:#29404b; --accent:#f0a347; --on-accent:#1a1206; --mark:#3fb5a8; --on-mark:#0b1418;
+  --accent-soft:rgba(240,163,71,.14); --purple:#b98cff; --purple-soft:rgba(185,140,255,.14); --orange:#ff9a3d; --orange-soft:rgba(255,154,61,.14); --mark-soft:rgba(63,181,168,.16); color-scheme:dark}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;}
+.wrap{max-width:760px;margin:0 auto;padding-block:20px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:20px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.7rem,5vw,2.4rem);line-height:1;margin:0;letter-spacing:-.02em;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent);font-family:var(--f-math)}
+.lede{margin:6px 0 0;color:var(--muted);max-width:60ch}
+h2{font-family:var(--f-display);font-weight:800;font-size:1.25rem;margin:0;display:flex;align-items:center;gap:10px}
+h2 .step{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:var(--ink);color:var(--paper);font-size:.8em}
+.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}
+button{font:inherit;font-weight:700;cursor:pointer;border-radius:10px;padding:10px 16px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button.dark{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.muted{color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.panel.main{border:2px solid var(--ink);box-shadow:6px 6px 0 var(--accent-soft)}
+input[type=number],input[type=text]{font:inherit;font-variant-numeric:tabular-nums;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);width:6.5em}
+label{font-weight:700}
+.levels{border:0;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.levels legend{font-weight:700;margin-bottom:6px}
+.levels label{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer;background:var(--paper);font-weight:400}
+.levels label:has(input:checked){border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.levels input{accent-color:var(--accent);margin-top:4px}
+.levels span{display:flex;flex-direction:column;min-width:0}
+.levels small{color:var(--muted);font-size:.8rem;line-height:1.3}
+@media (max-width:620px){.levels{grid-template-columns:1fr}}
+.gameinfo{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline}
+.code{font-family:var(--f-display);font-weight:800;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.status{min-height:1.5em;font-size:.95rem}
+.status.ok{color:var(--mark)} .status.err{color:var(--accent)}
+.setup{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;align-items:start}
+.setup>*{min-width:0}
+.preview{display:flex;flex-direction:column;gap:6px;align-items:center}
+.preview canvas{width:100%;max-width:190px;height:auto;border:1px solid var(--line);border-radius:6px;background:#fff;box-shadow:0 2px 0 var(--line)}
+
+/* fractions */
+.m{font-family:var(--f-math);font-weight:500;white-space:nowrap;display:inline-flex;align-items:center}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.05;margin:0 .08em}
+.fr>span:first-child{border-bottom:.07em solid currentColor;padding:0 .12em}
+.fr>span:last-child{padding:0 .12em}
+
+/* caller */
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.stage{background:var(--paper);border-radius:12px;padding:22px 18px;display:grid;grid-template-columns:1fr minmax(0,280px);gap:20px;align-items:center}
+.stage>*{min-width:0}
+.clue{font-size:clamp(2.6rem,11vw,5rem);line-height:1.15}
+.clue .fn{font-family:var(--f-math);font-style:italic;margin-right:.08em}
+.answer{margin-top:12px;font-size:clamp(1.4rem,5vw,2rem);color:var(--mark);min-height:1.6em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.answer .tag{font-size:.8rem;font-family:var(--f-body);color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.circle{width:min(280px,100%);display:flex;flex-direction:column;gap:8px}
+.circle svg{width:100%;height:auto;display:block}
+.circle .lg{font:700 15px var(--f-math)}
+.readout{display:flex;flex-direction:column;gap:6px;align-items:flex-start;font-size:1.05rem}
+.readout .pt{display:flex;align-items:center;flex-wrap:wrap;font-size:1.15rem}
+.hl{color:var(--mark);background:var(--mark-soft);border-radius:6px;padding:0 4px;font-weight:600}
+.rule{font-family:var(--f-math);font-style:italic;color:var(--mark)}
+.chip{font-size:.8rem;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid var(--line);color:var(--muted)}
+.chip.purple{color:var(--purple);border-color:var(--purple);background:var(--purple-soft)}
+.chip.orange{color:var(--orange);border-color:var(--orange);background:var(--orange-soft)}
+.called{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;list-style:none;margin:0;padding:0}
+.called li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:var(--paper)}
+.called li .n{font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums;min-width:1.5em}
+.called li .a{color:var(--mark)}
+
+/* checker card */
+.board{background:var(--surface);border:2px solid var(--ink);border-radius:12px;padding:8px;max-width:380px}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.cell{aspect-ratio:1;max-width:100%;border:1px solid var(--line);border-radius:8px;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:clamp(.75rem,3vw,1.05rem);padding:2px}
+.cell.small{font-size:clamp(.6rem,2.3vw,.85rem)}
+.cell.hit{background:var(--mark);border-color:var(--mark);color:var(--on-mark)}
+.cell.free{background:var(--ink);color:var(--paper);border-color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:.8rem}
+@media (max-width:560px){.stage{grid-template-columns:1fr}.circle{justify-self:center}.setup{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Unit Circle Bingo <em>π</em></h1>
+    <p class="lede">Exact trig ratios and degree-to-radian conversions. Print paper cards, call clues from the projector, check winners by card number.</p>
+  </header>
+
+  <section class="panel main" aria-labelledby="h-setup">
+    <h2 id="h-setup"><span class="step">1</span>Set up a game</h2>
+    <div class="setup">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <fieldset class="levels">
+          <legend>Level</legend>
+          <label><input type="radio" name="level" value="1"><span><b>Level 1</b><small>Acute angles · sin, cos, tan · 3×3 cards</small></span></label>
+          <label><input type="radio" name="level" value="2" checked><span><b>Level 2</b><small>All special angles · sin, cos, tan</small></span></label>
+          <label><input type="radio" name="level" value="3"><span><b>Level 3</b><small>All special angles · all six ratios</small></span></label>
+        </fieldset>
+        <div class="row">
+          <label for="size">Class size</label>
+          <input type="number" id="size" min="1" max="60" value="20">
+          <button id="generate" class="primary">Generate bingo game</button>
+        </div>
+        <div class="gameinfo">
+          <span class="eyebrow">Current game</span>
+          <span class="code">#<span id="gameCode">0000</span></span>
+          <span class="muted"><span id="gameLevel">Level 2</span> · <span id="gameSize">20</span> cards · <span id="clueCount">30</span> clues</span>
+        </div>
+        <div class="row">
+          <button id="download" class="dark">Download cards PDF</button>
+        </div>
+        <div class="status muted" id="status">One card per page, numbered 1 to <span id="sizeEcho">20</span>. The last page is a printable caller sheet with answers.</div>
+      </div>
+      <div class="preview">
+        <canvas id="preview" width="425" height="550" aria-label="Preview of card 1"></canvas>
+        <span class="muted" style="font-size:.85rem">Card 1 preview</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel main" aria-labelledby="h-call">
+    <div class="row" style="justify-content:space-between">
+      <h2 id="h-call"><span class="step">2</span>Call the game</h2>
+      <span class="muted" style="font-variant-numeric:tabular-nums">Clue <b id="idx">1</b> of <span id="total">35</span></span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+    <div class="stage">
+      <div>
+        <div class="eyebrow" id="prompt">Find the exact value</div>
+        <div class="clue" id="clue"></div>
+        <div class="answer" id="answer"></div>
+      </div>
+      <div class="circle" id="circle"></div>
+    </div>
+    <div class="row">
+      <button id="prev">Back</button>
+      <button id="reveal">Reveal answer</button>
+      <button id="next" class="primary">Next clue</button>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-check">
+    <h2 id="h-check"><span class="step">3</span>Check a winner</h2>
+    <div class="row">
+      <label for="checkInput">Card number</label>
+      <input type="text" id="checkInput" inputmode="numeric" maxlength="2" placeholder="e.g. 7">
+      <button id="checkBtn">Check card</button>
+    </div>
+    <div id="checkOut"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-called">
+    <h2 id="h-called">Called so far</h2>
+    <ul class="called" id="called"></ul>
+  </section>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const rng=seed=>()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const shuffle=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const newCode=()=>1000+Math.floor(Math.random()*9000);
+
+/* ---------- content ---------- */
+const R2=Math.SQRT2,R3=Math.sqrt(3);
+const VALS=[['0','',0],['1','2',.5],['-1','2',-.5],['√2','2',R2/2],['-√2','2',-R2/2],['√3','2',R3/2],['-√3','2',-R3/2],
+ ['1','',1],['-1','',-1],['√3','',R3],['-√3','',-R3],['√3','3',R3/3],['-√3','3',-R3/3],['2','',2],['-2','',-2],
+ ['√2','',R2],['-√2','',-R2],['2√3','3',2*R3/3],['-2√3','3',-2*R3/3]]
+ .map(([num,den,n],i)=>({id:'v'+i,kind:'val',sign:num[0]==='-'?'−':'',num:num.replace('-',''),den,n}));
+VALS.push({id:'vu',kind:'val',undef:true});
+const ANGLES=[[0,'0',''],[30,'π','6'],[45,'π','4'],[60,'π','3'],[90,'π','2'],[120,'2π','3'],[135,'3π','4'],[150,'5π','6'],
+ [180,'π',''],[210,'7π','6'],[225,'5π','4'],[240,'4π','3'],[270,'3π','2'],[300,'5π','3'],[315,'7π','4'],[330,'11π','6']]
+ .map(([deg,num,den])=>({deg,num,den,sign:''}));
+const RADS=ANGLES.filter(a=>a.deg>0).map(a=>({id:'r'+a.deg,kind:'rad',sign:'',num:a.num,den:a.den,deg:a.deg}));
+const DEGS=ANGLES.filter(a=>a.deg>0).map(a=>({id:'d'+a.deg,kind:'deg',sign:'',num:a.deg+'°',den:'',angle:a}));
+const BYID=Object.fromEntries([...VALS,...RADS,...DEGS].map(p=>[p.id,p]));
+const FN={sin:(s,c)=>s,cos:(s,c)=>c,tan:(s,c)=>c===0?null:s/c,csc:(s,c)=>s===0?null:1/s,sec:(s,c)=>c===0?null:1/c,cot:(s,c)=>s===0?null:c/s};
+const clean=x=>Math.abs(x)<1e-12?0:x;
+const ALLCLUES=[];
+ANGLES.forEach(a=>{const r=a.deg*Math.PI/180,s=clean(Math.sin(r)),c=clean(Math.cos(r));
+  for(const f in FN){const v=FN[f](s,c);const id=v===null?'vu':VALS.find(x=>!x.undef&&Math.abs(x.n-v)<1e-9).id;
+    ALLCLUES.push({type:'val',fn:f,angle:a,answer:id});}});
+
+const LEVELS={
+  1:{name:'Level 1',desc:'Acute angles · sin, cos, tan',angles:[30,45,60],fns:['sin','cos','tan'],deg:true,grid:3},
+  2:{name:'Level 2',desc:'All special angles · sin, cos, tan',angles:ANGLES.map(a=>a.deg),fns:['sin','cos','tan'],deg:false,grid:5},
+  3:{name:'Level 3',desc:'All special angles · all six ratios',angles:ANGLES.map(a=>a.deg),fns:['sin','cos','tan','csc','sec','cot'],deg:false,grid:5}};
+const SPEC={};
+for(const L in LEVELS){const lv=LEVELS[L],clues={};
+  ALLCLUES.filter(c=>lv.angles.includes(c.angle.deg)&&lv.fns.includes(c.fn)).forEach(c=>(clues[c.answer]=clues[c.answer]||[]).push(c));
+  const pool=[...VALS.filter(v=>clues[v.id]),...RADS.filter(r=>lv.angles.includes(r.deg)),...(lv.deg?DEGS.filter(d=>lv.angles.includes(d.angle.deg)):[])];
+  const g=lv.grid,lines=[];for(let i=0;i<g;i++){lines.push([...Array(g)].map((_,j)=>i*g+j));lines.push([...Array(g)].map((_,j)=>j*g+i))}
+  lines.push([...Array(g)].map((_,j)=>j*g+j));lines.push([...Array(g)].map((_,j)=>j*g+(g-1-j)));
+  SPEC[L]={...lv,clues,pool,lines,cells:g*g,free:(g*g-1)/2};}
+
+const deck=(code,L)=>{const sp=SPEC[L],r=rng(code*104729);return shuffle(sp.pool,r).map(p=>
+  p.kind==='rad'?{type:'rad',deg:p.deg,answer:p.id}:p.kind==='deg'?{type:'deg',angle:p.angle,answer:p.id}:sp.clues[p.id][Math.floor(r()*sp.clues[p.id].length)])};
+const makeCard=(code,n,L)=>{const sp=SPEC[L],ids=shuffle(sp.pool,rng((code*1000+n)*7919)).slice(0,sp.cells-1).map(p=>p.id);ids.splice(sp.free,0,'FREE');return ids};
+const countLines=(hit,L)=>SPEC[L].lines.filter(l=>l.every(i=>hit(i))).length;
+
+/* ---------- HTML rendering ---------- */
+const F=it=>{if(it.undef)return '<span class="m" style="font-family:var(--f-body);font-weight:700;font-size:.62em">undefined</span>';
+  const inner=it.den?`<span class="fr"><span>${it.num}</span><span>${it.den}</span></span>`:it.num;
+  return `<span class="m">${it.sign||''}${inner}</span>`};
+const isSmall=id=>{const p=BYID[id];return p&&(p.undef||(p.num+p.den).length>4)};
+const angleInline=a=>a.deg===0?'0':(a.den?`<span class="fr"><span>${a.num}</span><span>${a.den}</span></span>`:a.num);
+const angTxt=a=>a.deg===0?'0':(a.den?a.num+'/'+a.den:a.num);
+const clueHTML=c=>c.type==='rad'?`<span class="m">${c.deg}°</span>`:c.type==='deg'?`<span class="m">${angleInline(c.angle)}</span>`
+  :`<span class="fn">${c.fn}</span><span class="m">(${angleInline(c.angle)})</span>`;
+const clueText=c=>c.type==='rad'?`${c.deg}° → radians`:c.type==='deg'?`${angTxt(c.angle)} → degrees`:`${c.fn}(${angTxt(c.angle)})`;
+const ansText=id=>{const p=BYID[id];return p.undef?'undefined':p.sign+(p.den?p.num+'/'+p.den:p.num)};
+const clueSmall=c=>`<span class="m">${c.type==='rad'?c.deg+'°':c.type==='deg'?angTxt(c.angle)+' →°':'<i>'+c.fn+'</i>&nbsp;'+angTxt(c.angle)}</span>`;
+const promptFor=c=>c.type==='rad'?'Convert to radians':c.type==='deg'?'Convert to degrees':'Find the exact value';
+
+/* ---------- state ---------- */
+let game=store.get('tb-game3');
+if(!game||!game.code||!game.size||!SPEC[game.level]){game={code:newCode(),size:20,level:2,idx:1,shown:false}}
+let DECK=deck(game.code,game.level);
+
+/* ---------- canvas card (print + preview) ---------- */
+const FM='"STIX Two Text","Cambria Math",Georgia,serif', FS='"Atkinson Hyperlegible",Arial,sans-serif', FD='"Bricolage Grotesque",Arial,sans-serif';
+function drawFrac(ctx,item,cx,cy,u){
+  ctx.fillStyle='#1b2a3a';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  if(item.undef){ctx.font=`400 ${13*u}px ${FS}`;ctx.fillText('undefined',cx,cy+4.5*u);return}
+  const t=item.sign+item.num;
+  if(!item.den){const fs=(t.length<4?24:20)*u;ctx.font=`500 ${fs}px ${FM}`;ctx.fillText(t,cx,cy+fs*.33);return}
+  const fs=(Math.max(item.num.length,item.den.length)<3?19:16)*u;ctx.font=`500 ${fs}px ${FM}`;
+  const w=Math.max(ctx.measureText(item.num).width,ctx.measureText(item.den).width)+6*u;
+  const sw=item.sign?ctx.measureText(item.sign).width:0;
+  const x0=cx-(w+sw)/2+sw, mid=x0+w/2;
+  if(item.sign){ctx.textAlign='left';ctx.fillText(item.sign,x0-sw-1*u,cy+fs*.33);ctx.textAlign='center'}
+  ctx.fillText(item.num,mid,cy-5*u);ctx.fillText(item.den,mid,cy+fs*.95);
+  ctx.fillRect(x0,cy-1*u,w,1.4*u);
+}
+function drawCard(cv,code,n,L){
+  const ctx=cv.getContext('2d'),u=cv.width/612,sp=SPEC[L],g=sp.grid;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  const ink='#1b2a3a',grey='#5a6a76',light='#d4dde0';
+  ctx.textBaseline='alphabetic';ctx.fillStyle=ink;ctx.textAlign='left';
+  ctx.font=`800 ${28*u}px ${FD}`;ctx.fillText('Unit Circle Bingo',48*u,70*u);
+  ctx.textAlign='right';ctx.font=`800 ${26*u}px ${FD}`;ctx.fillText(`Card ${n}`,564*u,70*u);
+  ctx.font=`400 ${10*u}px ${FS}`;ctx.fillStyle=grey;ctx.fillText(`Game #${code} · ${sp.name}: ${sp.desc} · no calculators`,564*u,90*u);
+  ctx.textAlign='left';ctx.font=`400 ${11*u}px ${FS}`;ctx.fillText('Name: ____________________________',48*u,90*u);
+  const Spt=g===5?76:112,S=Spt*u,GX=(cv.width-g*S)/2,TOP=126*u,k0=u*(g===5?1:1.3);
+  ctx.fillStyle=ink;ctx.textAlign='center';ctx.font=`800 ${26*u}px ${FD}`;
+  if(g===5)'BINGO'.split('').forEach((Lt,i)=>ctx.fillText(Lt,GX+S*i+S/2,TOP-10*u));
+  const ids=makeCard(code,n,L);
+  ids.forEach((id,i)=>{const x=GX+(i%g)*S,y=TOP+Math.floor(i/g)*S;
+    if(id==='FREE'){ctx.fillStyle='#e3e9ec';ctx.fillRect(x,y,S,S);ctx.fillStyle=ink;ctx.font=`800 ${15*k0}px ${FD}`;ctx.textAlign='center';ctx.fillText('FREE',x+S/2,y+S/2+5*k0)}
+    else drawFrac(ctx,BYID[id],x+S/2,y+S/2,k0)});
+  ctx.strokeStyle=ink;ctx.lineWidth=1*u;
+  for(let i=0;i<=g;i++){ctx.beginPath();ctx.moveTo(GX+i*S,TOP);ctx.lineTo(GX+i*S,TOP+g*S);ctx.moveTo(GX,TOP+i*S);ctx.lineTo(GX+g*S,TOP+i*S);ctx.stroke()}
+  ctx.lineWidth=2.4*u;ctx.strokeRect(GX,TOP,g*S,g*S);
+  let wy=TOP+g*S+34*u;ctx.fillStyle=ink;ctx.textAlign='left';ctx.font=`700 ${12*u}px ${FS}`;
+  ctx.fillText('Working: write each clue and your answer, then cross off the square.',48*u,wy);
+  const total=sp.pool.length,perCol=Math.ceil(total/3);
+  const colw=(612-96)/3*u,lh=(g===5?14.6:20)*u;ctx.font=`400 ${(g===5?9.5:11)*u}px ${FS}`;let k=1;
+  for(let col=0;col<3;col++)for(let row=0;row<perCol;row++){if(k>total)break;
+    const x=48*u+col*colw,y=wy+24*u+row*lh;ctx.fillStyle=grey;ctx.textAlign='right';ctx.fillText(k+'.',x+16*u,y);
+    ctx.textAlign='left';ctx.fillText('=',x+colw*.6,y);ctx.fillStyle=light;
+    ctx.fillRect(x+22*u,y+1.5*u,colw*.58-22*u,.9*u);ctx.fillRect(x+colw*.66,y+1.5*u,colw*.34-10*u,.9*u);k++}
+}
+function drawCallerSheet(cv,code){
+  const ctx=cv.getContext('2d'),u=cv.width/612;ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.fillStyle='#1b2a3a';ctx.textAlign='left';ctx.font=`800 ${24*u}px ${FD}`;ctx.fillText(`Caller sheet · Game #${code} · ${SPEC[game.level].name}`,48*u,66*u);
+  ctx.font=`400 ${10.5*u}px ${FS}`;ctx.fillStyle='#5a6a76';
+  ctx.fillText('Same order as the projector screen. Tick each clue as you call it. Teacher copy, answers included.',48*u,86*u);
+  const colw=258*u;
+  DECK.forEach((c,i)=>{const col=i<18?0:1,row=i<18?i:i-18,x=48*u+col*(colw+20*u),y=122*u+row*34*u;
+    ctx.fillStyle=row%2?'#ffffff':'#f1f5f6';ctx.fillRect(x,y-20*u,colw,30*u);
+    ctx.strokeStyle='#5a6a76';ctx.lineWidth=1*u;ctx.strokeRect(x+8*u,y-11*u,12*u,12*u);
+    ctx.fillStyle='#5a6a76';ctx.font=`400 ${10*u}px ${FS}`;ctx.fillText(String(i+1),x+28*u,y);
+    ctx.fillStyle='#1b2a3a';ctx.font=`500 ${15*u}px ${FM}`;ctx.fillText(clueText(c),x+50*u,y);
+    ctx.textAlign='right';ctx.fillStyle='#1f7a72';ctx.fillText(ansText(c.answer),x+colw-10*u,y);ctx.textAlign='left'});
+}
+let fontsReady=null;
+const loadFonts=()=>fontsReady||(fontsReady=Promise.all([`500 20px "STIX Two Text"`,`800 20px "Bricolage Grotesque"`,`400 20px "Atkinson Hyperlegible"`,`700 20px "Atkinson Hyperlegible"`]
+  .map(f=>document.fonts.load(f,'π√BINGO'))).catch(()=>{}));
+function renderPreview(){loadFonts().then(()=>drawCard($('preview'),game.code,1,game.level))}
+
+/* ---------- setup ---------- */
+function renderSetup(){
+  $('gameCode').textContent=game.code;$('gameSize').textContent=game.size;$('sizeEcho').textContent=game.size;
+  $('size').value=game.size;$('checkInput').placeholder=`1 to ${game.size}`;$('gameLevel').textContent=SPEC[game.level].name;$('clueCount').textContent=SPEC[game.level].pool.length;
+  const r=document.querySelector(`input[name=level][value="${game.level}"]`);if(r)r.checked=true;renderPreview();
+}
+const setStatus=(t,cls)=>{const s=$('status');s.className='status '+(cls||'muted');s.textContent=t};
+let armed=0;
+$('generate').onclick=()=>{
+  const n=Math.max(1,Math.min(60,parseInt($('size').value,10)||20));
+  if(game.idx>1&&!armed){$('generate').textContent='Tap again to replace this game';armed=setTimeout(()=>{armed=0;$('generate').textContent='Generate bingo game'},3500);return}
+  clearTimeout(armed);armed=0;$('generate').textContent='Generate bingo game';
+  const lvl=+document.querySelector('input[name=level]:checked').value;game={code:newCode(),size:n,level:lvl,idx:1,shown:false};DECK=deck(game.code,game.level);$('checkOut').innerHTML='';
+  renderSetup();renderCaller();setStatus(`New ${SPEC[lvl].name} game #${game.code} with ${n} cards and a fresh clue order. Download the PDF to print.`,'ok');
+};
+
+let dl=null;
+const inClaude=!!(window.claude&&window.claude.use);
+if(inClaude)window.claude.use('downloads').then(d=>{dl=d}).catch(()=>{});
+$('download').onclick=async()=>{
+  if(!dl&&inClaude){setStatus('Downloading is not available in this view. Open the page in claude.ai to save the PDF.','err');return}
+  if(!window.jspdf){setStatus('The PDF tool did not load. Check your connection and reload the page.','err');return}
+  const btn=$('download');btn.disabled=true;setStatus(`Building ${game.size} cards…`);
+  try{
+    await loadFonts();
+    const doc=new window.jspdf.jsPDF({unit:'pt',format:'letter',compress:true});
+    const cv=document.createElement('canvas');cv.width=1275;cv.height=1650;
+    for(let n=1;n<=game.size;n++){if(n>1)doc.addPage();drawCard(cv,game.code,n,game.level);doc.addImage(cv.toDataURL('image/png'),'PNG',0,0,612,792,undefined,'FAST');
+      if(n%5===0){setStatus(`Building card ${n} of ${game.size}…`);await new Promise(r=>setTimeout(r,0))}}
+    doc.addPage();drawCallerSheet(cv,game.code);doc.addImage(cv.toDataURL('image/png'),'PNG',0,0,612,792,undefined,'FAST');
+    doc.setProperties({title:`Unit Circle Bingo – Game ${game.code}`});
+    const fname=`Unit_Circle_Bingo_L${game.level}_Game_${game.code}_${game.size}_cards.pdf`;
+    if(dl)await dl.save({filename:fname,data:doc.output('blob')});else doc.save(fname);
+    setStatus(`Saved: ${game.size} cards plus the caller sheet for game #${game.code}.`,'ok');
+  }catch(e){const c=e&&e.code;
+    setStatus(c==='declined'?'Download cancelled.':c==='rate_limited'?'A save prompt is already open. Finish it, then try again.':'The PDF could not be saved here. Try again in claude.ai.','err');}
+  finally{btn.disabled=false}
+};
+
+/* ---------- caller ---------- */
+const exactOf=v=>Math.abs(v)<1e-9?BYID.v0:VALS.find(x=>!x.undef&&Math.abs(x.n-v)<1e-9);
+const RULE={sin:'sin θ = y',cos:'cos θ = x',tan:'tan θ = y / x',csc:'csc θ = 1 / y',sec:'sec θ = 1 / x',cot:'cot θ = x / y'};
+const HL={sin:'y',csc:'y',cos:'x',sec:'x',tan:'xy',cot:'xy'};
+function circlePanel(c){
+  const a=c.type==='rad'?ANGLES.find(x=>x.deg===c.deg):c.angle,deg=a.deg,r=deg*Math.PI/180;
+  const co=clean(Math.cos(r)),si=clean(Math.sin(r));
+  let ref=deg%180;ref=ref>90?180-ref:ref;
+  const fam=ref===45?'orange':(ref===30||ref===60)?'purple':null;
+  const hl=c.type==='val'?HL[c.fn]:'';
+  const R=95,cx=130,cy=130,px=cx+R*co,py=cy-R*si,f=v=>v.toFixed(2);
+  const col=fam?`var(--${fam})`:'var(--ink)';
+  const ar=22,large=deg>180?1:0;
+  const arc=deg===0?'':`<path d="M${cx+ar} ${cy} A${ar} ${ar} 0 ${large} 0 ${f(cx+ar*co)} ${f(cy-ar*si)}" fill="none" stroke="var(--muted)" stroke-width="2"/>`;
+  const ticks=ANGLES.map(t=>{const q=t.deg*Math.PI/180;return `<line x1="${f(cx+(R-4)*Math.cos(q))}" y1="${f(cy-(R-4)*Math.sin(q))}" x2="${f(cx+(R+4)*Math.cos(q))}" y2="${f(cy-(R+4)*Math.sin(q))}" stroke="var(--line)" stroke-width="1.5"/>`}).join('');
+  let tri='';
+  if(fam){
+    const xw=hl.includes('x')?6:3,yw=hl.includes('y')?6:3;
+    const xc=hl.includes('x')?'var(--mark)':col,yc=hl.includes('y')?'var(--mark)':col;
+    const mx=(cx+px)/2,my=(cy+py)/2;let nx=si,ny=co;if(nx*(px-mx)+ny*(cy-my)>0){nx=-nx;ny=-ny}
+    const hx=mx+nx*13,hy=my+ny*13+5;
+    const lx=cx+(px-cx)*.68,ly=cy+(si>=0?19:-9),vx=px+(co>=0?12:-12),vy=(cy+py)/2+5;
+    tri=`<polygon points="${cx},${cy} ${f(px)},${cy} ${f(px)},${f(py)}" fill="${col}" fill-opacity=".16" stroke="none"/>
+     <line x1="${cx}" y1="${cy}" x2="${f(px)}" y2="${cy}" stroke="${xc}" stroke-width="${xw}" stroke-linecap="round"/>
+     <line x1="${f(px)}" y1="${cy}" x2="${f(px)}" y2="${f(py)}" stroke="${yc}" stroke-width="${yw}" stroke-linecap="round"/>
+     <rect x="${f(px-(co>=0?9:0))}" y="${si>=0?cy-9:cy}" width="9" height="9" fill="none" stroke="${col}" stroke-width="1.2"/>
+     <text x="${f(lx)}" y="${f(ly)}" text-anchor="middle" class="lg" fill="${xc}">x</text>
+     <text x="${f(vx)}" y="${f(vy)}" text-anchor="middle" class="lg" fill="${yc}">y</text>
+     <text x="${f(hx)}" y="${f(hy)}" text-anchor="middle" class="lg" fill="${col}">1</text>`;}
+  const svg=`<svg viewBox="0 0 260 260" role="img" aria-label="Unit circle at ${deg} degrees">
+   <line x1="14" y1="${cy}" x2="246" y2="${cy}" stroke="var(--line)" stroke-width="1.5"/><line x1="${cx}" y1="14" x2="${cx}" y2="246" stroke="var(--line)" stroke-width="1.5"/>
+   <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--ink)" stroke-width="2"/>${ticks}${tri}${arc}
+   <line x1="${cx}" y1="${cy}" x2="${f(px)}" y2="${f(py)}" stroke="${col}" stroke-width="3" stroke-linecap="round"/>
+   <circle cx="${f(px)}" cy="${f(py)}" r="6.5" fill="var(--ink)"/></svg>`;
+  const X=F(exactOf(co)),Y=F(exactOf(si));
+  const xs=hl.includes('x')?`<span class="hl">${X}</span>`:X, ys=hl.includes('y')?`<span class="hl">${Y}</span>`:Y;
+  const chip=fam==='purple'?`<span class="chip purple">30°–60°–90° triangle · <span class="m">π/6, π/3</span></span>`
+    :fam==='orange'?`<span class="chip orange">45°–45°–90° triangle · <span class="m">π/4</span></span>`
+    :`<span class="chip">Quadrantal angle · point on an axis</span>`;
+  return `${svg}<div class="readout">
+    <div><span class="m">θ = ${deg}° = ${a.deg===0?'0':angleInline(a)}</span></div>
+    <div class="pt"><span class="m">P(x, y) = (</span>${xs}<span class="m">,&nbsp;</span>${ys}<span class="m">)</span></div>
+    ${c.type==='val'?`<div class="rule">${RULE[c.fn]}</div>`:''}${chip}</div>`;
+}
+function renderCaller(){
+  const c=DECK[game.idx-1];
+  $('idx').textContent=game.idx;$('total').textContent=DECK.length;
+  $('bar').style.width=(game.idx/DECK.length*100)+'%';
+  $('prompt').textContent=promptFor(c);
+  $('clue').innerHTML=clueHTML(c);
+  $('answer').innerHTML=game.shown?`<span class="tag">Answer</span>${F(BYID[c.answer])}`:'';
+  $('circle').innerHTML=game.shown?circlePanel(c):'';
+  $('reveal').textContent=game.shown?'Hide answer':'Reveal answer';
+  $('prev').disabled=game.idx<=1;$('next').disabled=game.idx>=DECK.length;
+  const done=DECK.slice(0,game.idx-(game.shown?0:1));
+  $('called').innerHTML=done.length?done.map((d,i)=>`<li><span class="n">${i+1}</span>${clueSmall(d)}<span class="a">${F(BYID[d.answer])}</span></li>`).reverse().join('')
+    :'<li class="muted">Answers appear here once revealed.</li>';
+  store.set('tb-game2',game);
+}
+$('reveal').onclick=()=>{game.shown=!game.shown;renderCaller()};
+$('next').onclick=()=>{if(game.idx<DECK.length){game.idx++;game.shown=false;renderCaller()}};
+$('prev').onclick=()=>{if(game.idx>1){game.idx--;game.shown=true;renderCaller()}};
+
+/* ---------- checker ---------- */
+function checkCard(){
+  const v=parseInt($('checkInput').value,10),out=$('checkOut');
+  if(!(v>=1&&v<=game.size)){out.innerHTML=`<p class="muted" style="margin:0">Enter a card number from 1 to ${game.size}. It's printed at the top right of each card.</p>`;return}
+  const called=new Set(DECK.slice(0,game.idx-(game.shown?0:1)).map(d=>d.answer));
+  const ids=makeCard(game.code,v,game.level),hit=i=>ids[i]==='FREE'||called.has(ids[i]),n=countLines(hit,game.level);
+  out.innerHTML=`<p style="margin:0 0 8px"><b>Card ${v}:</b> ${n?`<span style="color:var(--mark)">${n} complete line${n>1?'s':''}. Valid Bingo.</span>`:'No complete line yet with the revealed clues.'}</p>
+   <div class="board"><div class="grid" style="grid-template-columns:repeat(${SPEC[game.level].grid},minmax(0,1fr))">${ids.map((id,i)=>id==='FREE'?'<div class="cell free">FREE</div>'
+   :`<div class="cell${isSmall(id)?' small':''}${hit(i)?' hit':''}">${F(BYID[id])}</div>`).join('')}</div></div>`}
+$('checkBtn').onclick=checkCard;
+$('checkInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkCard()});
+
+renderSetup();renderCaller();
+})();
+</script>
+
+</body>
+</html>
