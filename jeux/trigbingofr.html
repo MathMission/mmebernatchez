@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Bingo du cercle trigonométrique</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=STIX+Two+Text:wght@500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* Layout: graph-paper ground; 1 set up & print, 2 call all three levels side by side (projector), 3 check winners */
+:root{
+  --paper:#f4f7f6; --grid:rgba(31,122,114,.07); --ink:#1b2a3a; --muted:#5a6a76;
+  --surface:#ffffff; --line:#d4dde0; --accent:#c96f1c; --on-accent:#ffffff; --mark:#1f7a72; --on-mark:#ffffff;
+  --accent-soft:rgba(201,111,28,.12);
+  --purple:#7a3fc9; --purple-soft:rgba(122,63,201,.10); --orange:#e46a00; --orange-soft:rgba(228,106,0,.10); --mark-soft:rgba(31,122,114,.12);
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --f-math:"STIX Two Text","Cambria Math",Georgia,serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0f171d; --grid:rgba(63,181,168,.06); --ink:#e5edf0; --muted:#8fa1ad;
+  --surface:#16222b; --line:#29404b; --accent:#f0a347; --on-accent:#1a1206; --mark:#3fb5a8; --on-mark:#0b1418;
+  --accent-soft:rgba(240,163,71,.14); --purple:#b98cff; --purple-soft:rgba(185,140,255,.14); --orange:#ff9a3d; --orange-soft:rgba(255,154,61,.14); --mark-soft:rgba(63,181,168,.16); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f171d; --grid:rgba(63,181,168,.06); --ink:#e5edf0; --muted:#8fa1ad;
+  --surface:#16222b; --line:#29404b; --accent:#f0a347; --on-accent:#1a1206; --mark:#3fb5a8; --on-mark:#0b1418;
+  --accent-soft:rgba(240,163,71,.14); --purple:#b98cff; --purple-soft:rgba(185,140,255,.14); --orange:#ff9a3d; --orange-soft:rgba(255,154,61,.14); --mark-soft:rgba(63,181,168,.16); color-scheme:dark}
+
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;}
+.wrap{max-width:1120px;margin:0 auto;padding-block:20px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:20px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.7rem,5vw,2.4rem);line-height:1;margin:0;letter-spacing:-.02em;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent);font-family:var(--f-math)}
+.lede{margin:6px 0 0;color:var(--muted);max-width:70ch}
+h2{font-family:var(--f-display);font-weight:800;font-size:1.25rem;margin:0;display:flex;align-items:center;gap:10px}
+h2 .step{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:var(--ink);color:var(--paper);font-size:.8em}
+.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}
+button{font:inherit;font-weight:700;cursor:pointer;border-radius:10px;padding:10px 16px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button.dark{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.muted{color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.panel.main{border:2px solid var(--ink);box-shadow:6px 6px 0 var(--accent-soft)}
+input[type=number],input[type=text]{font:inherit;font-variant-numeric:tabular-nums;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);width:6.5em}
+label{font-weight:700}
+.gameinfo{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline}
+.code{font-family:var(--f-display);font-weight:800;font-size:1.6rem;font-variant-numeric:tabular-nums}
+.status{min-height:1.5em;font-size:.95rem}
+.status.ok{color:var(--mark)} .status.err{color:var(--accent)}
+.setup{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:20px;align-items:start}
+.setup>*{min-width:0}
+.preview{display:flex;flex-direction:column;gap:8px;align-items:center}
+.preview canvas{width:100%;max-width:200px;height:auto;border:1px solid var(--line);border-radius:6px;background:#fff;box-shadow:0 2px 0 var(--line)}
+.openrow{border-top:1px dashed var(--line);padding-top:14px}
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.rules div{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--paper);display:flex;flex-direction:column;gap:2px;min-width:0}
+.rules small{color:var(--muted);line-height:1.35}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pills button{padding:6px 12px;font-size:.9rem;border-radius:999px}
+.pills button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.dots{letter-spacing:.1em;color:var(--accent)}
+
+/* fractions */
+.m{font-family:var(--f-math);font-weight:500;white-space:nowrap;display:inline-flex;align-items:center}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.05;margin:0 .08em}
+.fr>span:first-child{border-bottom:.07em solid currentColor;padding:0 .12em}
+.fr>span:last-child{padding:0 .12em}
+
+/* caller */
+.callhead{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.stage{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.col{background:var(--paper);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0;border-top:5px solid var(--ink)}
+.col h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.15rem;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.col h3 small{font-family:var(--f-body);font-weight:400;font-size:.8rem;color:var(--muted)}
+.clue{font-size:clamp(2rem,4.2vw,3.2rem);line-height:1.15;min-height:1.6em;display:flex;align-items:center;flex-wrap:wrap}
+.clue .fn{font-family:var(--f-math);font-style:italic;margin-right:.08em}
+.clue.done{font-size:1rem;color:var(--muted);font-family:var(--f-body)}
+.answer{font-size:clamp(1.3rem,2.6vw,1.8rem);color:var(--mark);min-height:1.6em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.answer .tag{font-size:.75rem;font-family:var(--f-body);color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.circle{width:100%;max-width:280px;display:flex;flex-direction:column;gap:8px}
+.circle svg{width:100%;height:auto;display:block}
+.circle .lg{font:700 15px var(--f-math)}
+.readout{display:flex;flex-direction:column;gap:6px;align-items:flex-start;font-size:1rem}
+.readout .pt{display:flex;align-items:center;flex-wrap:wrap;font-size:1.1rem}
+.hl{color:var(--mark);background:var(--mark-soft);border-radius:6px;padding:0 4px;font-weight:600}
+.rule{font-family:var(--f-math);font-style:italic;color:var(--mark)}
+.chip{font-size:.78rem;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid var(--line);color:var(--muted)}
+.chip.purple{color:var(--purple);border-color:var(--purple);background:var(--purple-soft)}
+.chip.orange{color:var(--orange);border-color:var(--orange);background:var(--orange-soft)}
+.tablewrap{overflow-x:auto}
+table.calls{border-collapse:collapse;width:100%;min-width:520px;font-variant-numeric:tabular-nums}
+table.calls th,table.calls td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.calls th{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+table.calls td .a{color:var(--mark);margin-left:6px}
+table.calls td.n{color:var(--muted);width:2.5em}
+
+/* checker card */
+.board{background:var(--surface);border:2px solid var(--ink);border-radius:12px;padding:8px;max-width:380px}
+.grid{display:grid;gap:5px}
+.cell{aspect-ratio:1;max-width:100%;border:1px solid var(--line);border-radius:8px;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:clamp(.75rem,3vw,1.05rem);padding:2px}
+.cell.small{font-size:clamp(.6rem,2.3vw,.85rem)}
+.cell.hit{background:var(--mark);border-color:var(--mark);color:var(--on-mark)}
+.cell.free{background:var(--ink);color:var(--paper);border-color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:.8rem}
+@media (max-width:860px){.stage{grid-template-columns:1fr}.rules{grid-template-columns:1fr}}
+@media (max-width:600px){.setup{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Bingo du cercle trigonométrique <em>π</em></h1>
+    <p class="lede">Une partie, trois niveaux appelés en même temps. Chaque élève choisit une carte de niveau 1, 2 ou 3 et répond seulement à l’indice de son niveau. On peut changer de niveau entre les manches.</p>
+  </header>
+
+  <section class="panel main" aria-labelledby="h-setup">
+    <h2 id="h-setup"><span class="step">1</span>Préparer la partie</h2>
+    <div class="rules" id="rules"></div>
+    <div class="setup">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="gameinfo">
+          <span class="eyebrow">Numéro de partie</span>
+          <span class="code">#<span id="gameCode">0000</span></span>
+        </div>
+        <div class="row">
+          <label for="size">Cartes par niveau</label>
+          <input type="number" id="size" min="1" max="60" value="20">
+          <button id="generate" class="primary">Nouvelle partie</button>
+        </div>
+        <div class="row">
+          <button id="download" class="dark">Télécharger feuilles d’appel + cartes (PDF)</button>
+        </div>
+        <div class="row openrow">
+          <label for="openCode">Ouvrir une partie par numéro</label>
+          <input type="text" id="openCode" inputmode="numeric" maxlength="4" placeholder="ex. 4821">
+          <button id="openBtn">Ouvrir la partie</button>
+        </div>
+        <div class="status muted" id="status">Imprime une fois et réutilise les cartes : chaque manche a un nouvel ordre d’appel. Pour rejouer plus tard sur n’importe quel ordinateur, entre le numéro de partie imprimé sur les cartes.</div>
+      </div>
+      <div class="preview">
+        <canvas id="preview" width="425" height="550" aria-label="Aperçu de la carte 1"></canvas>
+        <div class="pills" id="prevPills"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel main" aria-labelledby="h-call">
+    <div class="callhead">
+      <h2 id="h-call"><span class="step">2</span>Animer la partie</h2>
+      <div class="row">
+        <span class="eyebrow">Manche</span><div class="pills" id="roundPills"></div>
+      </div>
+      <span class="muted" style="font-variant-numeric:tabular-nums">Appel <b id="idx">1</b> / <span id="total">35</span></span>
+    </div>
+    <div class="progress"><i id="bar"></i></div>
+    <div class="stage" id="stage"></div>
+    <div class="row">
+      <button id="prev">Précédent</button>
+      <button id="reveal">Afficher les réponses</button>
+      <button id="next" class="primary">Appel suivant</button>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-check">
+    <h2 id="h-check"><span class="step">3</span>Vérifier un gagnant</h2>
+    <div class="row">
+      <span class="eyebrow">Niveau</span><div class="pills" id="checkPills"></div>
+      <label for="checkInput">Numéro de carte</label>
+      <input type="text" id="checkInput" inputmode="numeric" maxlength="2" placeholder="ex. 7">
+      <button id="checkBtn">Vérifier la carte</button>
+    </div>
+    <div id="checkOut"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-called">
+    <h2 id="h-called">Appelés dans cette manche</h2>
+    <div class="tablewrap"><table class="calls"><thead><tr><th>#</th><th>Niveau 1</th><th>Niveau 2</th><th>Niveau 3</th></tr></thead><tbody id="called"></tbody></table></div>
+  </section>
+</div>
+
+<script>
+(function(){
+const T={key:'tb-diff-fr',title:'Bingo du cercle trigonométrique',cardTitleSize:20,
+ lvName:L=>'Niveau '+L,lvDesc:{1:'Angles aigus · sin, cos, tan',2:'Tous les angles remarquables · sin, cos, tan',3:'Tous les angles remarquables · les six rapports'},
+ win:{full:'carte pleine',line:'une ligne'},toWin:'Pour gagner :',grid:g=>'carte '+g+'×'+g,
+ undef:'non définie',undefSize:11,free:'LIBRE',card:'Carte',game:'Partie',round:'Manche',noCalc:'sans calculatrice',
+ nameLine:'Nom : ______________________________',
+ working:'Brouillon',
+ sheet:'Feuille d’appel',sheetNote:'Lis les trois indices à chaque appel. Les élèves répondent seulement à leur niveau. Copie de l’enseignante, réponses incluses.',
+ toRad:'Convertis en radians',toDeg:'Convertis en degrés',exact:'Trouve la valeur exacte',
+ answer:'Réponse',reveal:'Afficher les réponses',hide:'Masquer les réponses',levelDone:'Tous les indices du niveau 1 sont appelés. Toutes les cartes de niveau 1 sont pleines.',
+ calledEmpty:'Les réponses s’affichent ici une fois révélées.',
+ again:'Touche encore pour remplacer',gen:'Nouvelle partie',
+ newGame:c=>`Nouvelle partie #${c} : nouvelles cartes et nouveaux ordres d’appel pour les 3 manches. Télécharge le PDF pour imprimer.`,
+ opened:c=>`Partie #${c} ouverte. Manche 1, appel 1.`,badCode:'Entre le numéro de partie à 4 chiffres imprimé sur les cartes.',
+ building:(k,t)=>`Création de la page ${k} sur ${t}…`,
+ saved:(c,n)=>`Partie #${c} enregistrée : 3 feuilles d’appel et ${n} cartes par niveau.`,
+ noDl:'Le téléchargement n’est pas disponible ici. Ouvre la page dans claude.ai pour enregistrer le PDF.',
+ noPdf:'L’outil PDF ne s’est pas chargé. Vérifie ta connexion et recharge la page.',
+ cancelled:'Téléchargement annulé.',rate:'Une demande d’enregistrement est déjà ouverte. Termine-la, puis réessaie.',
+ fail:'Le PDF n’a pas pu être enregistré ici. Réessaie dans claude.ai.',
+ fname:c=>`Bingo_cercle_trigo_Partie_${c}.pdf`,
+ range:m=>`Entre un numéro de carte de 1 à ${m}. Il est imprimé en haut à droite de chaque carte.`,ph:m=>`1–${m}`,
+ valid:'Bingo valide.',noLine:'Aucune ligne complète avec les indices révélés.',notFull:k=>`Pas encore pleine : il reste ${k} case${k>1?'s':''}.`,
+ circleAria:d=>`Cercle trigonométrique à ${d} degrés`,tri3060:'triangle 30°–60°–90°',tri45:'triangle 45°–45°–90°',quad:'Angle quadrantal · point sur un axe'};
+const $=id=>document.getElementById(id);
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const rng=seed=>()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const shuffle=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* ---------- content ---------- */
+const R2=Math.SQRT2,R3=Math.sqrt(3);
+const VALS=[['0','',0],['1','2',.5],['-1','2',-.5],['√2','2',R2/2],['-√2','2',-R2/2],['√3','2',R3/2],['-√3','2',-R3/2],
+ ['1','',1],['-1','',-1],['√3','',R3],['-√3','',-R3],['√3','3',R3/3],['-√3','3',-R3/3],['2','',2],['-2','',-2],
+ ['√2','',R2],['-√2','',-R2],['2√3','3',2*R3/3],['-2√3','3',-2*R3/3]]
+ .map(([num,den,n],i)=>({id:'v'+i,kind:'val',sign:num[0]==='-'?'−':'',num:num.replace('-',''),den,n}));
+VALS.push({id:'vu',kind:'val',undef:true});
+const ANGLES=[[0,'0',''],[30,'π','6'],[45,'π','4'],[60,'π','3'],[90,'π','2'],[120,'2π','3'],[135,'3π','4'],[150,'5π','6'],
+ [180,'π',''],[210,'7π','6'],[225,'5π','4'],[240,'4π','3'],[270,'3π','2'],[300,'5π','3'],[315,'7π','4'],[330,'11π','6']]
+ .map(([deg,num,den])=>({deg,num,den,sign:''}));
+const RADS=ANGLES.filter(a=>a.deg>0).map(a=>({id:'r'+a.deg,kind:'rad',sign:'',num:a.num,den:a.den,deg:a.deg}));
+const DEGS=ANGLES.filter(a=>a.deg>0).map(a=>({id:'d'+a.deg,kind:'deg',sign:'',num:a.deg+'°',den:'',angle:a}));
+const BYID=Object.fromEntries([...VALS,...RADS,...DEGS].map(p=>[p.id,p]));
+const FN={sin:(s,c)=>s,cos:(s,c)=>c,tan:(s,c)=>c===0?null:s/c,csc:(s,c)=>s===0?null:1/s,sec:(s,c)=>c===0?null:1/c,cot:(s,c)=>s===0?null:c/s};
+const clean=x=>Math.abs(x)<1e-12?0:x;
+const ALLCLUES=[];
+ANGLES.forEach(a=>{const r=a.deg*Math.PI/180,s=clean(Math.sin(r)),c=clean(Math.cos(r));
+  for(const f in FN){const v=FN[f](s,c);const id=v===null?'vu':VALS.find(x=>!x.undef&&Math.abs(x.n-v)<1e-9).id;
+    ALLCLUES.push({type:'val',fn:f,angle:a,answer:id});}});
+
+const LEVELS={
+  1:{angles:[30,45,60],fns:['sin','cos','tan'],deg:true,grid:3,win:'full'},
+  2:{angles:ANGLES.map(a=>a.deg),fns:['sin','cos','tan'],deg:false,grid:5,win:'line'},
+  3:{angles:ANGLES.map(a=>a.deg),fns:['sin','cos','tan','csc','sec','cot'],deg:false,grid:5,win:'line'}};
+const SPEC={};
+for(const L in LEVELS){const lv=LEVELS[L],clues={};
+  ALLCLUES.filter(c=>lv.angles.includes(c.angle.deg)&&lv.fns.includes(c.fn)).forEach(c=>(clues[c.answer]=clues[c.answer]||[]).push(c));
+  const pool=[...VALS.filter(v=>clues[v.id]),...RADS.filter(r=>lv.angles.includes(r.deg)),...(lv.deg?DEGS.filter(d=>lv.angles.includes(d.angle.deg)):[])];
+  const g=lv.grid,lines=[];for(let i=0;i<g;i++){lines.push([...Array(g)].map((_,j)=>i*g+j));lines.push([...Array(g)].map((_,j)=>j*g+i))}
+  lines.push([...Array(g)].map((_,j)=>j*g+j));lines.push([...Array(g)].map((_,j)=>j*g+(g-1-j)));
+  SPEC[L]={...lv,name:T.lvName(L),desc:T.lvDesc[L],winText:T.win[lv.win],clues,pool,lines,cells:g*g,free:(g*g-1)/2};}
+const MAXCALLS=Math.max(...[1,2,3].map(L=>SPEC[L].pool.length));
+const ROUNDS=3;
+
+const deck=(code,round,L)=>{const sp=SPEC[L],r=rng(((code*10+round)*4+ +L)*104729);return shuffle(sp.pool,r).map(p=>
+  p.kind==='rad'?{type:'rad',deg:p.deg,answer:p.id}:p.kind==='deg'?{type:'deg',angle:p.angle,answer:p.id}:sp.clues[p.id][Math.floor(r()*sp.clues[p.id].length)])};
+const makeCard=(code,L,n)=>{const sp=SPEC[L],ids=shuffle(sp.pool,rng(((code*4+ +L)*100+n)*7919)).slice(0,sp.cells-1).map(p=>p.id);ids.splice(sp.free,0,'FREE');return ids};
+const isWin=(hit,L)=>SPEC[L].win==='full'?[...Array(SPEC[L].cells).keys()].every(hit):SPEC[L].lines.some(l=>l.every(hit));
+const countLines=(hit,L)=>SPEC[L].lines.filter(l=>l.every(hit)).length;
+
+/* ---------- HTML rendering ---------- */
+const F=it=>{if(it.undef)return `<span class="m" style="font-family:var(--f-body);font-weight:700;font-size:.62em">${T.undef}</span>`;
+  const inner=it.den?`<span class="fr"><span>${it.num}</span><span>${it.den}</span></span>`:it.num;
+  return `<span class="m">${it.sign||''}${inner}</span>`};
+const isSmall=id=>{const p=BYID[id];return p&&(p.undef||(p.num+p.den).length>4)};
+const angleInline=a=>a.deg===0?'0':(a.den?`<span class="fr"><span>${a.num}</span><span>${a.den}</span></span>`:a.num);
+const angTxt=a=>a.deg===0?'0':(a.den?a.num+'/'+a.den:a.num);
+const clueHTML=c=>c.type==='rad'?`<span class="m">${c.deg}°</span>`:c.type==='deg'?`<span class="m">${angleInline(c.angle)}</span>`
+  :`<span class="fn">${c.fn}</span><span class="m">(${angleInline(c.angle)})</span>`;
+const clueText=c=>c.type==='rad'?`${c.deg}° → rad`:c.type==='deg'?`${angTxt(c.angle)} → °`:`${c.fn}(${angTxt(c.angle)})`;
+const ansText=id=>{const p=BYID[id];return p.undef?T.undef:p.sign+(p.den?p.num+'/'+p.den:p.num)};
+const promptFor=c=>c.type==='rad'?T.toRad:c.type==='deg'?T.toDeg:T.exact;
+const dots=L=>'●'.repeat(L)+'○'.repeat(3-L);
+
+/* ---------- state ---------- */
+const newCode=()=>1000+Math.floor(Math.random()*9000);
+const blank=(code,n)=>({code,size:n,round:1,prog:{1:{idx:1,shown:false},2:{idx:1,shown:false},3:{idx:1,shown:false}}});
+let game=store.get(T.key);
+if(!game||!game.code||!game.prog)game=blank(newCode(),20);
+let DECKS={};const loadDecks=()=>{DECKS={1:deck(game.code,game.round,1),2:deck(game.code,game.round,2),3:deck(game.code,game.round,3)}};loadDecks();
+const P=()=>game.prog[game.round];
+const persist=()=>store.set(T.key,game);
+let prevLevel=2,checkLevel=2;
+
+/* ---------- canvas card (print + preview) ---------- */
+const FM='"STIX Two Text","Cambria Math",Georgia,serif', FS='"Atkinson Hyperlegible",Arial,sans-serif', FD='"Bricolage Grotesque",Arial,sans-serif';
+function drawFrac(ctx,item,cx,cy,u){
+  ctx.fillStyle='#1b2a3a';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  if(item.undef){ctx.font=`400 ${T.undefSize*u}px ${FS}`;ctx.fillText(T.undef,cx,cy+4.5*u);return}
+  const t=item.sign+item.num;
+  if(!item.den){const fs=(t.length<4?24:20)*u;ctx.font=`500 ${fs}px ${FM}`;ctx.fillText(t,cx,cy+fs*.33);return}
+  const fs=(Math.max(item.num.length,item.den.length)<3?19:16)*u;ctx.font=`500 ${fs}px ${FM}`;
+  const w=Math.max(ctx.measureText(item.num).width,ctx.measureText(item.den).width)+6*u;
+  const sw=item.sign?ctx.measureText(item.sign).width:0;
+  const x0=cx-(w+sw)/2+sw, mid=x0+w/2;
+  if(item.sign){ctx.textAlign='left';ctx.fillText(item.sign,x0-sw-1*u,cy+fs*.33);ctx.textAlign='center'}
+  ctx.fillText(item.num,mid,cy-5*u);ctx.fillText(item.den,mid,cy+fs*.95);
+  ctx.fillRect(x0,cy-1*u,w,1.4*u);
+}
+function drawCard(cv,code,L,n){
+  const ctx=cv.getContext('2d'),u=cv.width/612,sp=SPEC[L],g=sp.grid;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  const ink='#1b2a3a',grey='#5a6a76',light='#d4dde0';
+  ctx.textBaseline='alphabetic';ctx.fillStyle=ink;ctx.textAlign='left';
+  ctx.font=`800 ${17*u}px ${FD}`;ctx.fillText(T.title,48*u,52*u);
+  ctx.textAlign='right';ctx.font=`400 ${16*u}px ${FS}`;ctx.fillStyle='#c96f1c';ctx.fillText(dots(L),564*u,52*u);
+  ctx.fillStyle=ink;ctx.textAlign='left';ctx.font=`800 ${28*u}px ${FD}`;ctx.fillText(`${sp.name} · ${T.card} ${n}`,48*u,84*u);
+  ctx.fillStyle=grey;ctx.font=`400 ${10.5*u}px ${FS}`;
+  ctx.fillText(`${T.game} #${code} · ${sp.desc} · ${T.noCalc}`,48*u,102*u);
+  ctx.font=`400 ${11*u}px ${FS}`;ctx.fillText(T.nameLine,48*u,128*u);
+  ctx.textAlign='right';ctx.font=`700 ${11.5*u}px ${FS}`;ctx.fillStyle=ink;ctx.fillText(`${T.toWin} ${sp.winText}`,564*u,128*u);
+  const Spt=g===5?76:112,S=Spt*u,GX=(cv.width-g*S)/2,TOP=170*u,k0=u*(g===5?1:1.3);
+  ctx.fillStyle=ink;ctx.textAlign='center';ctx.font=`800 ${26*u}px ${FD}`;
+  if(g===5)'BINGO'.split('').forEach((Lt,i)=>ctx.fillText(Lt,GX+S*i+S/2,TOP-10*u));
+  const ids=makeCard(code,L,n);
+  ids.forEach((id,i)=>{const x=GX+(i%g)*S,y=TOP+Math.floor(i/g)*S;
+    if(id==='FREE'){ctx.fillStyle='#e3e9ec';ctx.fillRect(x,y,S,S);ctx.fillStyle=ink;ctx.font=`800 ${15*k0}px ${FD}`;ctx.textAlign='center';ctx.fillText(T.free,x+S/2,y+S/2+5*k0)}
+    else drawFrac(ctx,BYID[id],x+S/2,y+S/2,k0)});
+  ctx.strokeStyle=ink;ctx.lineWidth=1*u;
+  for(let i=0;i<=g;i++){ctx.beginPath();ctx.moveTo(GX+i*S,TOP);ctx.lineTo(GX+i*S,TOP+g*S);ctx.moveTo(GX,TOP+i*S);ctx.lineTo(GX+g*S,TOP+i*S);ctx.stroke()}
+  ctx.lineWidth=2.4*u;ctx.strokeRect(GX,TOP,g*S,g*S);
+  const wy=TOP+g*S+36*u;ctx.fillStyle=ink;ctx.textAlign='left';ctx.font=`700 ${13*u}px ${FS}`;
+  ctx.fillText(T.working,48*u,wy);
+  ctx.strokeStyle=light;ctx.lineWidth=1.2*u;ctx.strokeRect(48*u,wy+10*u,516*u,744*u-wy-10*u);
+}
+function drawCallerSheet(cv,code,round){
+  const ctx=cv.getContext('2d'),u=cv.width/612;ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  const D={1:deck(code,round,1),2:deck(code,round,2),3:deck(code,round,3)};
+  ctx.fillStyle='#1b2a3a';ctx.textAlign='left';ctx.font=`800 ${22*u}px ${FD}`;ctx.fillText(`${T.sheet} · ${T.game} #${code} · ${T.round} ${round}`,48*u,60*u);
+  ctx.font=`400 ${10*u}px ${FS}`;ctx.fillStyle='#5a6a76';ctx.fillText(T.sheetNote,48*u,78*u);
+  const x0=48*u,cw=[22*u,148*u,170*u,176*u],top=104*u,rh=18.6*u;
+  const cx=[x0,x0+cw[0],x0+cw[0]+cw[1],x0+cw[0]+cw[1]+cw[2]];
+  ctx.font=`700 ${9.5*u}px ${FS}`;ctx.fillStyle='#5a6a76';['#',`${T.lvName(1)} ${dots(1)}`,`${T.lvName(2)} ${dots(2)}`,`${T.lvName(3)} ${dots(3)}`].forEach((h,i)=>ctx.fillText(h,cx[i]+4*u,top));
+  for(let i=0;i<MAXCALLS;i++){const y=top+14*u+i*rh;
+    ctx.fillStyle=i%2?'#ffffff':'#f1f5f6';ctx.fillRect(x0,y-12.5*u,516*u,rh);
+    ctx.fillStyle='#5a6a76';ctx.font=`400 ${9.5*u}px ${FS}`;ctx.fillText(String(i+1),cx[0]+4*u,y);
+    [1,2,3].forEach((L,j)=>{const c=D[L][i];if(!c)return;
+      ctx.font=`500 ${11*u}px ${FM}`;ctx.fillStyle='#1b2a3a';ctx.fillText(clueText(c),cx[j+1]+4*u,y);
+      const w=ctx.measureText(clueText(c)+'  ').width;ctx.fillStyle='#1f7a72';ctx.fillText('= '+ansText(c.answer),cx[j+1]+4*u+w,y);});}
+}
+let fontsReady=null;
+const loadFonts=()=>fontsReady||(fontsReady=Promise.all([`500 20px "STIX Two Text"`,`800 20px "Bricolage Grotesque"`,`400 20px "Atkinson Hyperlegible"`,`700 20px "Atkinson Hyperlegible"`]
+  .map(f=>document.fonts.load(f,'π√BINGO'))).catch(()=>{}));
+function renderPreview(){loadFonts().then(()=>drawCard($('preview'),game.code,prevLevel,1))}
+
+/* ---------- setup ---------- */
+const pills=(el,items,cur,onPick)=>{el.innerHTML=items.map(([v,l])=>`<button data-v="${v}" aria-pressed="${v===cur}">${l}</button>`).join('');
+  el.onclick=e=>{const b=e.target.closest('button[data-v]');if(b)onPick(+b.dataset.v)}};
+function renderSetup(){
+  $('gameCode').textContent=game.code;$('size').value=game.size;$('checkInput').placeholder=T.ph(game.size);
+  $('rules').innerHTML=[1,2,3].map(L=>`<div><b>${SPEC[L].name} <span class="dots">${dots(L)}</span></b><small>${SPEC[L].desc}</small><small>${T.toWin} <b>${SPEC[L].winText}</b> · ${T.grid(SPEC[L].grid)}</small></div>`).join('');
+  pills($('prevPills'),[1,2,3].map(L=>[L,SPEC[L].name]),prevLevel,L=>{prevLevel=L;renderSetup()});
+  pills($('checkPills'),[1,2,3].map(L=>[L,String(L)]),checkLevel,L=>{checkLevel=L;renderSetup();if($('checkInput').value)checkCard()});
+  pills($('roundPills'),[...Array(ROUNDS)].map((_,i)=>[i+1,String(i+1)]),game.round,r=>{game.round=r;loadDecks();$('checkOut').innerHTML='';renderSetup();renderCaller()});
+  renderPreview();
+}
+const setStatus=(t,cls)=>{const s=$('status');s.className='status '+(cls||'muted');s.textContent=t};
+const sizeVal=()=>Math.max(1,Math.min(60,parseInt($('size').value,10)||20));
+$('size').addEventListener('change',()=>{game.size=sizeVal();persist();renderSetup()});
+let armed=0;
+const started=()=>[1,2,3].some(r=>game.prog[r].idx>1||game.prog[r].shown);
+$('generate').onclick=()=>{
+  if(started()&&!armed){$('generate').textContent=T.again;armed=setTimeout(()=>{armed=0;$('generate').textContent=T.gen},3500);return}
+  clearTimeout(armed);armed=0;$('generate').textContent=T.gen;
+  game=blank(newCode(),sizeVal());loadDecks();$('checkOut').innerHTML='';renderSetup();renderCaller();setStatus(T.newGame(game.code),'ok');
+};
+function openGame(){
+  const v=parseInt($('openCode').value,10);
+  if(!(v>=1000&&v<=9999)){setStatus(T.badCode,'err');return}
+  if(v!==game.code){game=blank(v,sizeVal());loadDecks()}
+  $('checkOut').innerHTML='';$('openCode').value='';renderSetup();renderCaller();setStatus(T.opened(v),'ok');
+}
+$('openBtn').onclick=openGame;
+$('openCode').addEventListener('keydown',e=>{if(e.key==='Enter')openGame()});
+
+let dl=null;
+const inClaude=!!(window.claude&&window.claude.use);
+if(inClaude)window.claude.use('downloads').then(d=>{dl=d}).catch(()=>{});
+$('download').onclick=async()=>{
+  if(!dl&&inClaude){setStatus(T.noDl,'err');return}
+  if(!window.jspdf){setStatus(T.noPdf,'err');return}
+  const btn=$('download');btn.disabled=true;
+  const total=3*game.size+ROUNDS;let k=0;
+  try{
+    await loadFonts();
+    const doc=new window.jspdf.jsPDF({unit:'pt',format:'letter',compress:true});
+    const cv=document.createElement('canvas');cv.width=1275;cv.height=1650;
+    const add=async()=>{if(k>0)doc.addPage();doc.addImage(cv.toDataURL('image/png'),'PNG',0,0,612,792,undefined,'FAST');k++;
+      if(k%5===0){setStatus(T.building(k,total));await new Promise(r=>setTimeout(r,0))}};
+    for(let r=1;r<=ROUNDS;r++){drawCallerSheet(cv,game.code,r);await add()}
+    for(const L of [1,2,3])for(let n=1;n<=game.size;n++){drawCard(cv,game.code,L,n);await add()}
+    doc.setProperties({title:`${T.title} – ${T.game} ${game.code}`});
+    const fname=T.fname(game.code);
+    if(dl)await dl.save({filename:fname,data:doc.output('blob')});else doc.save(fname);
+    setStatus(T.saved(game.code,game.size),'ok');
+  }catch(e){const c=e&&e.code;setStatus(c==='declined'?T.cancelled:c==='rate_limited'?T.rate:T.fail,'err')}
+  finally{btn.disabled=false}
+};
+
+/* ---------- caller ---------- */
+const exactOf=v=>Math.abs(v)<1e-9?BYID.v0:VALS.find(x=>!x.undef&&Math.abs(x.n-v)<1e-9);
+const RULE={sin:'sin θ = y',cos:'cos θ = x',tan:'tan θ = y / x',csc:'csc θ = 1 / y',sec:'sec θ = 1 / x',cot:'cot θ = x / y'};
+const HL={sin:'y',csc:'y',cos:'x',sec:'x',tan:'xy',cot:'xy'};
+function circlePanel(c){
+  const a=c.type==='rad'?ANGLES.find(x=>x.deg===c.deg):c.angle,deg=a.deg,r=deg*Math.PI/180;
+  const co=clean(Math.cos(r)),si=clean(Math.sin(r));
+  let ref=deg%180;ref=ref>90?180-ref:ref;
+  const fam=ref===45?'orange':(ref===30||ref===60)?'purple':null;
+  const hl=c.type==='val'?HL[c.fn]:'';
+  const R=95,cx=130,cy=130,px=cx+R*co,py=cy-R*si,f=v=>v.toFixed(2);
+  const col=fam?`var(--${fam})`:'var(--ink)';
+  const ar=22,large=deg>180?1:0;
+  const arc=deg===0?'':`<path d="M${cx+ar} ${cy} A${ar} ${ar} 0 ${large} 0 ${f(cx+ar*co)} ${f(cy-ar*si)}" fill="none" stroke="var(--muted)" stroke-width="2"/>`;
+  const ticks=ANGLES.map(t=>{const q=t.deg*Math.PI/180;return `<line x1="${f(cx+(R-4)*Math.cos(q))}" y1="${f(cy-(R-4)*Math.sin(q))}" x2="${f(cx+(R+4)*Math.cos(q))}" y2="${f(cy-(R+4)*Math.sin(q))}" stroke="var(--line)" stroke-width="1.5"/>`}).join('');
+  let tri='';
+  if(fam){
+    const xw=hl.includes('x')?6:3,yw=hl.includes('y')?6:3;
+    const xc=hl.includes('x')?'var(--mark)':col,yc=hl.includes('y')?'var(--mark)':col;
+    const mx=(cx+px)/2,my=(cy+py)/2;let nx=si,ny=co;if(nx*(px-mx)+ny*(cy-my)>0){nx=-nx;ny=-ny}
+    const hx=mx+nx*13,hy=my+ny*13+5;
+    const lx=cx+(px-cx)*.68,ly=cy+(si>=0?19:-9),vx=px+(co>=0?12:-12),vy=(cy+py)/2+5;
+    tri=`<polygon points="${cx},${cy} ${f(px)},${cy} ${f(px)},${f(py)}" fill="${col}" fill-opacity=".16" stroke="none"/>
+     <line x1="${cx}" y1="${cy}" x2="${f(px)}" y2="${cy}" stroke="${xc}" stroke-width="${xw}" stroke-linecap="round"/>
+     <line x1="${f(px)}" y1="${cy}" x2="${f(px)}" y2="${f(py)}" stroke="${yc}" stroke-width="${yw}" stroke-linecap="round"/>
+     <rect x="${f(px-(co>=0?9:0))}" y="${si>=0?cy-9:cy}" width="9" height="9" fill="none" stroke="${col}" stroke-width="1.2"/>
+     <text x="${f(lx)}" y="${f(ly)}" text-anchor="middle" class="lg" fill="${xc}">x</text>
+     <text x="${f(vx)}" y="${f(vy)}" text-anchor="middle" class="lg" fill="${yc}">y</text>
+     <text x="${f(hx)}" y="${f(hy)}" text-anchor="middle" class="lg" fill="${col}">1</text>`;}
+  const svg=`<svg viewBox="0 0 260 260" role="img" aria-label="${T.circleAria(deg)}">
+   <line x1="14" y1="${cy}" x2="246" y2="${cy}" stroke="var(--line)" stroke-width="1.5"/><line x1="${cx}" y1="14" x2="${cx}" y2="246" stroke="var(--line)" stroke-width="1.5"/>
+   <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--ink)" stroke-width="2"/>${ticks}${tri}${arc}
+   <line x1="${cx}" y1="${cy}" x2="${f(px)}" y2="${f(py)}" stroke="${col}" stroke-width="3" stroke-linecap="round"/>
+   <circle cx="${f(px)}" cy="${f(py)}" r="6.5" fill="var(--ink)"/></svg>`;
+  const X=F(exactOf(co)),Y=F(exactOf(si));
+  const xs=hl.includes('x')?`<span class="hl">${X}</span>`:X, ys=hl.includes('y')?`<span class="hl">${Y}</span>`:Y;
+  const chip=fam==='purple'?`<span class="chip purple">${T.tri3060} · <span class="m">π/6, π/3</span></span>`
+    :fam==='orange'?`<span class="chip orange">${T.tri45} · <span class="m">π/4</span></span>`
+    :`<span class="chip">${T.quad}</span>`;
+  return `${svg}<div class="readout">
+    <div><span class="m">θ = ${deg}° = ${a.deg===0?'0':angleInline(a)}</span></div>
+    <div class="pt"><span class="m">P(x, y) = (</span>${xs}<span class="m">,&nbsp;</span>${ys}<span class="m">)</span></div>
+    ${c.type==='val'?`<div class="rule">${RULE[c.fn]}</div>`:''}${chip}</div>`;
+}
+
+function renderCaller(){
+  const p=P();
+  $('idx').textContent=p.idx;$('total').textContent=MAXCALLS;
+  $('bar').style.width=(p.idx/MAXCALLS*100)+'%';
+  $('stage').innerHTML=[1,2,3].map(L=>{const c=DECKS[L][p.idx-1],sp=SPEC[L];
+    const head=`<h3><span>${sp.name} <span class="dots">${dots(L)}</span></span><small>${T.toWin} ${sp.winText}</small></h3>`;
+    if(!c)return `<div class="col">${head}<div class="clue done">${T.levelDone}</div></div>`;
+    return `<div class="col">${head}<div class="eyebrow">${promptFor(c)}</div><div class="clue">${clueHTML(c)}</div>
+      <div class="answer">${p.shown?`<span class="tag">${T.answer}</span>${F(BYID[c.answer])}`:''}</div>
+      ${p.shown?`<div class="circle">${circlePanel(c)}</div>`:''}</div>`}).join('');
+  $('reveal').textContent=p.shown?T.hide:T.reveal;
+  $('prev').disabled=p.idx<=1;$('next').disabled=p.idx>=MAXCALLS;
+  const n=p.idx-(p.shown?0:1);
+  const cell=(L,i)=>{const c=DECKS[L][i];return c?`<span class="m">${clueText(c)}</span><span class="a">${F(BYID[c.answer])}</span>`:''};
+  $('called').innerHTML=n?[...Array(n).keys()].reverse().map(i=>`<tr><td class="n">${i+1}</td><td>${cell(1,i)}</td><td>${cell(2,i)}</td><td>${cell(3,i)}</td></tr>`).join('')
+    :`<tr><td colspan="4" class="muted">${T.calledEmpty}</td></tr>`;
+  persist();
+}
+$('reveal').onclick=()=>{P().shown=!P().shown;renderCaller()};
+$('next').onclick=()=>{const p=P();if(p.idx<MAXCALLS){p.idx++;p.shown=false;renderCaller()}};
+$('prev').onclick=()=>{const p=P();if(p.idx>1){p.idx--;p.shown=true;renderCaller()}};
+
+/* ---------- checker ---------- */
+function checkCard(){
+  const v=parseInt($('checkInput').value,10),out=$('checkOut'),L=checkLevel,sp=SPEC[L];
+  if(!(v>=1&&v<=60)){out.innerHTML=`<p class="muted" style="margin:0">${T.range(game.size)}</p>`;return}
+  const p=P(),called=new Set(DECKS[L].slice(0,p.idx-(p.shown?0:1)).map(d=>d.answer));
+  const ids=makeCard(game.code,L,v),hit=i=>ids[i]==='FREE'||called.has(ids[i]);
+  const won=isWin(hit,L),msg=won?`<span style="color:var(--mark)">${T.valid}</span>`:sp.win==='full'?T.notFull(ids.filter((id,i)=>!hit(i)).length):T.noLine;
+  out.innerHTML=`<p style="margin:0 0 8px"><b>${sp.name} · ${T.card} ${v} · ${T.round} ${game.round}:</b> ${msg}</p>
+   <div class="board"><div class="grid" style="grid-template-columns:repeat(${sp.grid},minmax(0,1fr))">${ids.map((id,i)=>id==='FREE'?`<div class="cell free">${T.free}</div>`
+   :`<div class="cell${isSmall(id)?' small':''}${hit(i)?' hit':''}">${F(BYID[id])}</div>`).join('')}</div></div>`}
+$('checkBtn').onclick=checkCard;
+$('checkInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkCard()});
+
+renderSetup();renderCaller();
+})();
+</script>
+
+</body>
+</html>
