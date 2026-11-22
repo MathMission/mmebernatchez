@@ -1,24 +1,12 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-<title>Club de course ESMO · Mme Bernatchez</title>
+<title>Mme Bernatchez</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Club de course de l'École secondaire Michelle-O'Bonsawin : plans d'entraînement, allures et calendriers.">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-[hidden]{display:none!important}
-.opt{display:inline-block;margin:0 6px 6px 0;cursor:pointer}
-.opt input{position:absolute;opacity:0;width:1px;height:1px}
-.opt input:checked+.w3-button{background-color:#009688!important;color:#fff!important;border-color:#009688!important}
-.opt input:focus-visible+.w3-button{outline:3px solid #009688;outline-offset:2px}
-.opt small{display:block;font-size:11px;opacity:.8}
-.tm input{width:80px;display:inline-block;text-align:center;font-size:22px}
-.box{max-width:1000px;margin:0 auto 32px;text-align:left}
-details summary::-webkit-details-marker{color:#009688}
-</style>
 </head>
 <body id="myPage">
 
@@ -27,9 +15,9 @@ details summary::-webkit-details-marker{color:#009688}
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-display-topright w3-text-teal">Close
     <i class="fa fa-remove"></i>
   </a>
-  <a href="../mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
-  <a href="../mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
-  <a href="./" class="w3-bar-item w3-button">Club de course</a>
+  <a href="mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
+  <a href="mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
+  <a href="club-de-course/" class="w3-bar-item w3-button">Club de course</a>
   <a href="#contact" class="w3-bar-item w3-button">Contact</a>
 </nav>
 
@@ -37,18 +25,19 @@ details summary::-webkit-details-marker{color:#009688}
 <div class="w3-top">
  <div class="w3-bar w3-theme-d2 w3-left-align">
   <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-  <a href="../index.html" class="w3-bar-item w3-button w3-teal"><i class="fa fa-home w3-margin-right"></i>Mme Bernatchez</a>
-  <a href="../mhf4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MHF4U</a>
-  <a href="../mdm4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MDM4U</a>
-  <a href="./" class="w3-bar-item w3-button w3-hide-small w3-white">Club de course</a>
+  <a href="index.html" class="w3-bar-item w3-button w3-teal"><i class="fa fa-home w3-margin-right"></i>Mme Bernatchez</a>
+  <a href="mhf4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MHF4U</a>
+  <a href="mdm4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MDM4U</a>
+  <a href="club-de-course/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Club de course</a>
   <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Pour me joindre</a>
+  <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-teal" title="Search"><i class="fa fa-search"></i></a>
  </div>
 
  <!-- Navbar on small screens -->
  <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium">
-    <a href="../mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
-    <a href="../mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
-    <a href="./" class="w3-bar-item w3-button">Club de course</a>
+    <a href="mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
+    <a href="mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
+    <a href="club-de-course/" class="w3-bar-item w3-button">Club de course</a>
     <a href="#contact" class="w3-bar-item w3-button">Pour me joindre</a>
   </div>
 </div>
@@ -59,106 +48,54 @@ details summary::-webkit-details-marker{color:#009688}
   style="position:absolute;top:-28px;right:24px">+</a>
 </div>
 
-<div class="w3-row-padding w3-padding-64">
-  <div class="w3-center">
-    <h2>Club de course ESMO</h2>
-    <p>Ton plan d'entraînement, tes allures et ton calendrier</p><br>
-  </div>
+<!-- Course Boxes -->
+<div class="w3-row-padding w3-center w3-padding-64" id="pricing">
+  <h2>Mme Bernatchez</h2>
 
-  <!-- 1. Plan -->
-  <div class="box">
-    <ul class="w3-ul w3-border w3-hover-shadow">
-      <li class="w3-theme"><p class="w3-xlarge">1. Ton plan</p></li>
-      <li class="w3-padding-16">
-        <label for="race"><b>Ta course</b></label>
-        <select class="w3-select w3-border w3-margin-top" id="race" style="max-width:460px">
-          <option value="mtl21">Montréal · semi-marathon · 18 avril</option>
-          <option value="mtl10">Montréal · 10 km · 17 avril</option>
-          <option value="sl10">Sporting Life · 10 km · 9 mai</option>
-          <option value="twr10">Toronto Women's Run · 10 km · 22 mai</option>
-          <option value="twr5">Toronto Women's Run · 5 km · 22 mai</option>
-          <option value="autre">Autre course…</option>
-        </select>
-        <p class="w3-small w3-text-grey" id="race-info"></p>
-        <div id="custom" hidden>
-          <label for="cdate"><b>Date de ta course</b></label>
-          <input class="w3-input w3-border w3-margin-bottom" type="date" id="cdate" style="max-width:260px">
-          <p style="margin:0 0 6px"><b id="l-dist">Distance</b></p>
-          <div role="radiogroup" aria-labelledby="l-dist">
-            <label class="opt"><input type="radio" name="cdist" value="5"><span class="w3-button w3-border w3-round">5 km</span></label>
-            <label class="opt"><input type="radio" name="cdist" value="10" checked><span class="w3-button w3-border w3-round">10 km</span></label>
-            <label class="opt"><input type="radio" name="cdist" value="21"><span class="w3-button w3-border w3-round">Semi-marathon</span></label>
-          </div>
-        </div>
-        <p style="margin:12px 0 6px"><b id="l-plan"></b></p>
-        <div role="radiogroup" aria-labelledby="l-plan" id="plans"></div>
-        <div class="w3-panel w3-pale-red w3-leftbar w3-border-red" id="warn" hidden></div>
-      </li>
-    </ul>
-  </div>
+  <div class="w3-row-padding w3-center w3-margin-top" style="max-width:1200px; margin:auto;">
 
-  <!-- 2. Calendrier -->
-  <div class="box">
-    <ul class="w3-ul w3-border w3-hover-shadow">
-      <li class="w3-theme"><p class="w3-xlarge">2. Ton calendrier</p></li>
-      <li class="w3-padding-16">
-        <button type="button" class="w3-button w3-teal w3-padding-large w3-margin-bottom" id="dl-pdf" disabled><i class="fa fa-file-pdf-o"></i> Télécharger mon plan (PDF)</button><br>
-        <button type="button" class="w3-button w3-border w3-margin-bottom" id="dl-ics" disabled><i class="fa fa-calendar"></i> Ajouter à mon calendrier (iPhone, Outlook)</button>
-        <button type="button" class="w3-button w3-border w3-margin-bottom" id="dl-csv" disabled><i class="fa fa-google"></i> Ajouter à Google Agenda</button>
-        <details class="w3-small w3-margin-bottom"><summary><b>iPhone ou Outlook : comment ça marche ?</b></summary>
-          <p>Sur iPhone, touche le bouton puis « Tout ajouter » : tes séances arrivent dans l'app Calendrier. Sur ordinateur, ouvre le fichier .ics téléchargé : Outlook ou Calendrier l'importe.</p></details>
-        <details class="w3-small"><summary><b>Comment importer dans Google Agenda ?</b></summary>
-          <ol><li>Sur un ordinateur, ouvre calendar.google.com.</li><li>Crée un agenda « Entraînement » (Paramètres › Ajouter un agenda).</li><li>Paramètres › Importer et exporter › choisis le fichier et cet agenda › Importer.</li></ol>
-          <p>Tes séances et le conseil du jour apparaissent ensuite dans l'application Google Agenda sur ton téléphone.</p></details>
-        <p class="w3-small w3-text-teal" id="status" role="status"></p>
-      </li>
-    </ul>
-  </div>
+    <!-- MHF4U Box -->
+    <div class="w3-third w3-margin-bottom">
+      <ul class="w3-ul w3-border w3-hover-shadow">
+        <li class="w3-theme">
+          <p class="w3-xlarge">MHF4U</p>
+        </li>
+        <li class="w3-padding-16">Fonctions avancées, 12e</li>
+        <li class="w3-padding-16"><span class="w3-opacity">Préuniversitaire</span></li>
+        <li class="w3-theme-l5 w3-padding-24">
+          <a href="mhf4u.html" class="w3-button w3-teal w3-padding-large"><i class="fa fa-check"></i> Entrez</a>
+        </li>
+      </ul>
+    </div>
 
-  <!-- 3. Allures -->
-  <div class="box">
-    <ul class="w3-ul w3-border w3-hover-shadow">
-      <li class="w3-theme"><p class="w3-xlarge">3. Tes allures</p></li>
-      <li class="w3-padding-16">
-        <div class="w3-panel w3-pale-green w3-leftbar w3-border-teal" style="margin-top:0">
-          <p><b id="test-title"></b><br>Cours 5 km le plus vite possible en gardant une allure régulière (après 10 minutes d'échauffement). Ta coach te dira où le faire. Écris ton temps ici pour voir tes allures.</p>
-        </div>
-        <p style="margin:0 0 6px"><b id="l-time">Ton temps au test de 5 km</b> <span class="w3-small w3-text-grey">(quand tu l'auras fait)</span></p>
-        <div class="tm" role="group" aria-labelledby="l-time">
-          <input class="w3-input w3-border" type="text" id="min" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="--" aria-label="Minutes" autocomplete="off"> min
-          <input class="w3-input w3-border" type="text" id="sec" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="--" aria-label="Secondes" autocomplete="off"> s
-        </div>
-        <p class="w3-text-red" id="err" role="alert"></p>
-        <div class="w3-row-padding" id="paces" style="margin:0 -8px" aria-live="polite"></div>
-        <p class="w3-small w3-text-grey" id="predict"></p>
-      </li>
-    </ul>
-  </div>
+    <!-- MDM4U Box -->
+    <div class="w3-third w3-margin-bottom">
+      <ul class="w3-ul w3-border w3-hover-shadow">
+        <li class="w3-theme">
+          <p class="w3-xlarge">MDM4U</p>
+        </li>
+        <li class="w3-padding-16">Gestion des données, 12e</li>
+        <li class="w3-padding-16"><span class="w3-opacity">Préuniversitaire</span></li>
+        <li class="w3-theme-l5 w3-padding-24">
+          <a href="mdm4u.html" class="w3-button w3-teal w3-padding-large"><i class="fa fa-check"></i> Entrez</a>
+        </li>
+      </ul>
+    </div>
 
-  <!-- 4. Aperçu -->
-  <div class="box">
-    <ul class="w3-ul w3-border w3-hover-shadow">
-      <li class="w3-theme"><p class="w3-xlarge">4. Aperçu de ton plan</p></li>
-      <li class="w3-padding-16">
-        <div class="w3-panel w3-sand w3-leftbar w3-border-amber" style="margin-top:0">
-          <p><b id="base-title"></b><br>Cours au moins 3 fois par semaine, 30 minutes minimum chaque fois. C'est le strict minimum pour être prêt à commencer le plan.</p>
-        </div>
-        <div id="chips" style="margin-bottom:8px"></div>
-        <div id="legend" style="margin-bottom:8px"></div>
-        <p class="w3-small w3-text-grey" id="note"></p>
-        <div id="weeks"></div>
-      </li>
-    </ul>
-  </div>
+    <!-- Club de course Box -->
+    <div class="w3-third w3-margin-bottom">
+      <ul class="w3-ul w3-border w3-hover-shadow">
+        <li style="background:#0f1f3d;color:#fff">
+          <p class="w3-xlarge">Club de course <span style="color:#f2b63c">ESMO</span></p>
+        </li>
+        <li class="w3-padding-16">Plans d'entraînement, allures et calendriers</li>
+        <li class="w3-padding-16"><span class="w3-opacity">5 km · 10 km · semi-marathon</span></li>
+        <li class="w3-theme-l5 w3-padding-24">
+          <a href="club-de-course/" class="w3-button w3-padding-large" style="background:#f2b63c;color:#0f1f3d"><i class="fa fa-check"></i> Entrez</a>
+        </li>
+      </ul>
+    </div>
 
-  <div class="box w3-small w3-text-grey">
-    <details><summary><b>Comment on calcule tes allures ?</b></summary>
-      <p>On utilise la <b>formule de Riegel</b> (1977), une fonction puissance qui prédit ton temps sur une distance à partir de ton test de 5 km :</p>
-      <p class="w3-large w3-text-black">T<sub>2</sub> = T<sub>1</sub> × (D<sub>2</sub> ÷ D<sub>1</sub>)<sup>1,06</sup></p>
-      <ul><li>T<sub>1</sub> : ton temps au test de 5 km</li><li>D<sub>1</sub> : 5 km</li><li>D<sub>2</sub> : la distance visée (10 km, 21,1 km ou 42,2 km)</li><li>T<sub>2</sub> : ton temps prédit sur cette distance</li></ul>
-      <p>L'exposant 1,06, un peu plus grand que 1, traduit la fatigue : plus la course est longue, plus l'allure ralentit légèrement. L'allure visée est T<sub>2</sub> ÷ D<sub>2</sub>. L'allure EF correspond à ton allure 5 km plus 75 à 120 secondes par kilomètre.</p>
-    </details>
-    <p id="credit"></p>
   </div>
 </div>
 
@@ -168,256 +105,45 @@ details summary::-webkit-details-marker{color:#009688}
     <div class="w3-col m5">
     <div class="w3-padding-16"><span class="w3-xlarge w3-border-teal w3-bottombar">Pour me joindre</span></div>
       <p><i class="fa fa-map-marker w3-text-teal w3-xlarge"></i>  École secondaire Michelle-O'Bonsawin, Toronto</p>
-      <p><i class="fa fa-envelope-o w3-text-teal w3-xlarge"></i>  bernatcheza@csviamonde.ca</p>
+      <p><i class="fa fa-envelope-o w3-text-teal w3-xlarge"></i>  bernatcheza@csviamonde.ca</p>
     </div>
-  </div>
 </div>
 
 <!-- Footer -->
 <footer class="w3-container w3-padding-32 w3-theme-d1 w3-center">
   <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+
   <div style="position:relative;bottom:100px;z-index:1;" class="w3-tooltip w3-right">
-    <span class="w3-text w3-padding w3-teal w3-hide-small">Retour</span>
+    <span class="w3-text w3-padding w3-teal w3-hide-small">Retour</span>   
     <a class="w3-button w3-theme" href="#myPage"><span class="w3-xlarge">
     <i class="fa fa-chevron-circle-up"></i></span></a>
   </div>
 </footer>
 
 <script>
-function w3_open() { var x = document.getElementById("mySidebar"); x.style.width = "300px"; x.style.paddingTop = "10%"; x.style.display = "block"; }
-function w3_close() { document.getElementById("mySidebar").style.display = "none"; }
-function openNav() { var x = document.getElementById("navDemo"); if (x.className.indexOf("w3-show") == -1) { x.className += " w3-show"; } else { x.className = x.className.replace(" w3-show", ""); } }
+// Script for side navigation
+function w3_open() {
+  var x = document.getElementById("mySidebar");
+  x.style.width = "300px";
+  x.style.paddingTop = "10%";
+  x.style.display = "block";
+}
+
+// Close side navigation
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+
+// Used to toggle the menu on smaller screens when clicking on the menu button
+function openNav() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-<script>
-(function(){
-"use strict";
-var LIB = {"semi-3x": {"dist": "21,1 km", "niveau": "3 fois par semaine", "nb": 12, "src": "ra", "s": [[1, 11, 2, "int", "Fractionné · 50’", "20’ EF › 8×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Premier fractionné : vise ton allure 5 km sans chercher de record. Si c’est trop facile, cours la récupération un peu plus vite plutôt que d’accélérer les fractions.", ""], [1, 11, 4, "ef", "Footing · 45’", "45’ EF", "Footing vraiment relax pour récupérer du fractionné. Courir trop vite ici ne t’aide pas.", ""], [1, 11, 6, "long", "Sortie longue · 1h10", "30’ EF › 5×5’ allure 42 km récup 3’ EF › 5’ EF", "Une sortie longue facile pour habituer le corps à l’effort long. Les blocs à allure marathon ajoutent du rythme sans être difficiles.", ""], [2, 10, 2, "int", "Fractionné · 55’", "20’ EF › 10×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Même séance que la semaine passée, avec 2 répétitions de plus. Si ça pique à la fin, garde le haut du corps détendu.", ""], [2, 10, 4, "ef", "Footing · 45’", "45’ EF", "Tu devrais finir ce footing en te sentant mieux qu’au départ. On enchaîne les kilomètres, sans stress et sans fatigue.", ""], [2, 10, 6, "long", "Sortie longue · 1h20", "40’ EF › 4×7’ allure 42 km récup 2’ EF › 5’ EF", "10 minutes de plus : c’est une durée typique de sortie longue pour un semi. Reste bien relâché dans les segments plus rapides.", ""], [3, 9, 2, "int", "Fractionné · 1h", "20’ EF › 12×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Dernier fractionné du premier bloc, avec 12 répétitions. Ne lâche pas dans les dernières : c’est là que ça travaille.", ""], [3, 9, 4, "ef", "Footing · 45’", "45’ EF", "Le footing facile est le bon moment pour travailler ta technique : choisis un point précis et concentre-toi dessus.", ""], [3, 9, 6, "long", "Sortie longue · 1h30", "50’ EF › 3×10’ allure 42 km récup 2’ EF › 5’ EF", "La sortie et les blocs s’allongent. Si c’est difficile, c’est l’endurance qui manque encore : on continue de la bâtir.", ""], [4, 8, 2, "ef", "Footing · 30’", "30’ EF", "Semaine de récupération : le volume et l’intensité baissent. Footing lent et relax.", "Récupération"], [4, 8, 4, "int", "Fractionné · 40’", "15’ EF › 8×1’ allure 10 km récup 1’ EF › 10’ EF", "Fractionné volontairement facile cette semaine. N’en fais pas plus, c’est normal.", "Récupération"], [4, 8, 6, "long", "Sortie longue · 1h15", "1h15 EF", "Sortie longue plus courte pour recharger les batteries avant le prochain bloc.", "Récupération"], [5, 7, 2, "int", "Fractionné · 50’", "20’ EF › 5×4’ allure 10 km récup 1’30 EF › 5’ EF", "Nouvelle allure : le 10 km. Plus lente, mais avec des fractions deux fois plus longues. Une séance classique et efficace.", ""], [5, 7, 4, "ef", "Footing · 45’", "45’ EF", "Footing de récupération : cours le plus relâché possible, sans jamais forcer.", ""], [5, 7, 6, "long", "Sortie longue · 1h30", "50’ EF › 4×5’ allure 21 km récup 2’ EF › 15’ EF", "Premières portions à ton allure de course. Apprends à la reconnaître et à la mémoriser.", ""], [6, 6, 2, "int", "Fractionné · 55’", "20’ EF › 5×5’ allure 10 km récup 1’30 EF › 5’ EF", "Une minute de plus par fraction que la semaine passée. Rien d’insurmontable !", ""], [6, 6, 4, "ef", "Footing · 45’", "45’ EF", "Footing EF relâché, en soignant ta technique pour économiser de l’énergie. Ce sera la clé le jour J.", ""], [6, 6, 6, "long", "Sortie longue · 1h35", "50’ EF › 4×6’ allure 21 km récup 2’ EF › 15’ EF", "L’allure semi arrive en 2e moitié de sortie, pour la pratiquer fatigué, comme en fin de course.", ""], [7, 5, 2, "int", "Fractionné · 1h", "20’ EF › 5×6’ allure 10 km récup 1’30 EF › 5’ EF", "Dernière séance à allure 10 km. Les blocs de 6 minutes sont exigeants, mais tu en es capable.", ""], [7, 5, 4, "ef", "Footing · 45’", "45’ EF", "Ce footing devrait commencer à sembler facile, même avec les jambes lourdes du fractionné.", ""], [7, 5, 6, "long", "Sortie longue · 1h40", "50’ EF › 4×7’ allure 21 km récup 2’ EF › 15’ EF", "Dernière sortie longue du bloc. Courir avec un peu de fatigue te rendra plus efficace en fin de semi.", ""], [8, 4, 2, "ef", "Footing · 40’", "40’ EF", "On fait tourner les jambes sans forcer : cette semaine, on récupère avant les dernières grosses semaines du plan.", "Récupération"], [8, 4, 4, "int", "Fractionné · 40’", "15’ EF › 5×2’ allure 10 km récup 1’ › 10’ EF", "Même fractionné facile que lors de la première semaine de récupération. Profites-en pour courir relâché.", "Récupération"], [8, 4, 6, "long", "Sortie longue · 1h15", "1h15 EF", "Après une semaine de récupération, ça devrait être facile. Sinon, prends le temps de comprendre d’où vient la fatigue.", "Récupération"], [9, 3, 2, "int", "Fractionné · 1h05", "20’ EF › 3×10’ allure 21 km récup 2’ EF › 10’ EF", "Grosse semaine ! 30 minutes à allure semi au total. La dernière fraction sera exigeante.", ""], [9, 3, 4, "ef", "Footing · 45’", "45’ EF", "Footing de récupération tout doux, en pensant aux détails de ta technique.", ""], [9, 3, 6, "long", "Sortie longue · 1h40", "1h20 EF › 15’ progressif allure 42 km → 10 km › 5’ EF", "Finale progressive à adapter à ta forme. Fatigué : 10’ allure 42 km, 3’ allure 21 km, 2’ allure 10 km. En forme : 5’ / 5’ / 5’.", ""], [10, 2, 2, "int", "Fractionné · 1h", "20’ EF › 2×15’ allure 21 km récup 2’ EF › 10’ EF", "Grosse séance avant le test de la semaine prochaine. 2×15’ à allure semi, c’est intense : si c’est dur, ça se passe dans la tête !", ""], [10, 2, 4, "ef", "Footing · 45’", "45’ EF", "Footing bien lent pour récupérer avant les dernières séances clés. Reste le plus relax possible.", ""], [10, 2, 6, "long", "Sortie longue · 1h45", "1h20 EF › 20’ progressif allure 42 km → 10 km › 5’ EF", "Départ très facile, finale en accélération. Garde-la progressive et contrôlée pour ne pas finir à bout de souffle.", ""], [11, 1, 2, "int", "Fractionné · 1h05", "20’ EF › 2×20’ allure 21 km récup 2’ EF › 5’ EF", "Séance test ! Ajuste ton allure cible selon tes dernières séances. La fin doit être difficile, mais tenable. Sinon, revois ton objectif.", "Affûtage"], [11, 1, 4, "ef", "Footing · 40’", "40’ EF", "La priorité maintenant : récupérer et garder un maximum d’énergie pour le jour J.", "Affûtage"], [11, 1, 6, "long", "Sortie longue · 1h", "30’ EF › 3×5’ allure 21 km récup 5’ EF › 5’ EF", "Une « sortie longue » d’une heure, avec un rappel d’allure semi qui devrait sembler vraiment facile.", "Affûtage"], [12, 0, 2, "cote", "Accélérations · 30’", "25’ EF › 6×100 m accélération progressive (option)", "On bouge juste un peu, très relax. Si tu fais les 100 m : progressifs et sans forcer.", "Affûtage"], [12, 0, 4, "int", "Fractionné · 25’", "15’ EF › 3×2’ allure 21 km récup 2’ lent › 5’ EF", "Dernier rappel d’allure semi pour bien mémoriser ton rythme de course.", "Affûtage"], [12, 0, 6, "race", "Jour de course", "", "Profite : 12 semaines d’entraînement pour ce moment ! Respecte ton plan : la course commence vraiment vers 12–13 km. Avant, c’est normal que ce soit facile, alors n’accélère pas !", "Affûtage"]]}, "semi-4x": {"dist": "21,1 km", "niveau": "4 fois par semaine", "nb": 12, "src": "ra", "s": [[1, 11, 1, "int", "Fractionné · 50’", "20’ EF › 8×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Premier fractionné : vise ton allure 5 km sans chercher de record. Si c’est trop facile, cours la récupération un peu plus vite plutôt que d’accélérer les fractions.", ""], [1, 11, 3, "ef", "Footing · 40’", "40’ EF", "Footing vraiment relax pour récupérer du fractionné. Courir trop vite ici ne t’aide pas.", ""], [1, 11, 5, "cote", "Côtes · 35’", "20’ EF › 6×10″ sprint en côte récup 1’30 lent › 5’ EF", "Côtes très courtes, mais à fond pendant 10 secondes. Fais quelques drills et accélérations progressives avant de commencer.", ""], [1, 11, 6, "long", "Sortie longue · 1h10", "30’ EF › 5×5’ allure 42 km récup 3’ EF › 5’ EF", "Une sortie longue facile pour habituer le corps à l’effort long. Les blocs à allure marathon ajoutent du rythme sans être difficiles.", ""], [2, 10, 1, "int", "Fractionné · 55’", "20’ EF › 10×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Même séance que la semaine passée, avec 2 répétitions de plus. Si ça pique à la fin, garde le haut du corps détendu.", ""], [2, 10, 3, "ef", "Footing · 40’", "40’ EF", "Le footing facile est le bon moment pour travailler ta technique : choisis un point précis et concentre-toi dessus.", ""], [2, 10, 5, "cote", "Côtes · 40’", "20’ EF › 8×10″ sprint en côte récup 1’30 lent › 5’ EF", "Ces sprints très courts apprennent au corps à activer toutes ses fibres musculaires, ce qui t’aidera à tenir les 21 km.", ""], [2, 10, 6, "long", "Sortie longue · 1h20", "40’ EF › 4×7’ allure 42 km récup 2’ EF › 5’ EF", "10 minutes de plus : c’est une durée typique de sortie longue pour un semi. Reste bien relâché dans les segments plus rapides.", ""], [3, 9, 1, "int", "Fractionné · 1h", "20’ EF › 12×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Dernier fractionné du premier bloc, avec 12 répétitions. Ne lâche pas dans les dernières : c’est là que ça travaille.", ""], [3, 9, 3, "ef", "Footing · 40’", "40’ EF", "Footing technique : un point de ta technique de course à la fois.", ""], [3, 9, 5, "cote", "Côtes · 45’", "20’ EF › 10×10″ sprint en côte récup 1’30 lent › 5’ EF", "Fin du cycle de côtes courtes : pousse fort sur les jambes jusqu’au bout de chaque sprint.", ""], [3, 9, 6, "long", "Sortie longue · 1h30", "50’ EF › 3×10’ allure 42 km récup 2’ EF › 5’ EF", "La sortie et les blocs s’allongent. Si c’est difficile, c’est l’endurance qui manque encore : on continue de la bâtir.", ""], [4, 8, 1, "ef", "Footing · 40’", "40’ EF", "Semaine de récupération : le volume et l’intensité baissent. Footing lent et relax.", "Récupération"], [4, 8, 3, "int", "Fractionné · 40’", "15’ EF › 5×2’ allure 10 km récup 1’ › 10’ EF", "Fractionné volontairement facile cette semaine. N’en fais pas plus, c’est normal.", "Récupération"], [4, 8, 5, "rest", "Repos", "", "", "Récupération"], [4, 8, 6, "long", "Sortie longue · 1h15", "1h15 EF", "Sortie longue plus courte pour recharger les batteries avant le prochain bloc.", "Récupération"], [5, 7, 1, "int", "Fractionné · 50’", "20’ EF › 5×4’ allure 10 km récup 1’30 › 5’ EF", "Nouvelle allure : le 10 km. Plus lente, mais avec des fractions deux fois plus longues. Une séance classique et efficace.", ""], [5, 7, 3, "ef", "Footing · 45’", "45’ EF", "Footing de récupération : cours le plus relâché possible, sans jamais forcer.", ""], [5, 7, 5, "cote", "Côtes · 50’", "30’ EF › 10×30″ en côte récup en descente › 5’ EF", "Côtes plus longues, un peu plus vite que l’allure 5 km, sans te vider : il y a la sortie longue demain.", ""], [5, 7, 6, "long", "Sortie longue · 1h30", "50’ EF › 4×5’ allure 21 km récup 2’ EF › 15’ EF", "Premières portions à ton allure de course. Apprends à la reconnaître et à la mémoriser.", ""], [6, 6, 1, "int", "Fractionné · 55’", "20’ EF › 5×5’ allure 10 km récup 1’30 EF › 5’ EF", "Une minute de plus par fraction que la semaine passée. Rien d’insurmontable !", ""], [6, 6, 3, "ef", "Footing · 45’", "45’ EF", "Footing EF relâché, en soignant ta technique pour économiser de l’énergie. Ce sera la clé le jour J.", ""], [6, 6, 5, "cote", "Côtes · 55’", "30’ EF › 12×30″ en côte récup en descente › 5’ EF", "12 côtes : pousse bien à chaque foulée sans aller à fond. Garde de l’énergie pour demain.", ""], [6, 6, 6, "long", "Sortie longue · 1h35", "50’ EF › 4×6’ allure 21 km récup 2’ EF › 15’ EF", "L’allure semi arrive en 2e moitié de sortie, pour la pratiquer fatigué, comme en fin de course.", ""], [7, 5, 1, "int", "Fractionné · 1h", "20’ EF › 5×6’ allure 10 km récup 1’30 › 5’ EF", "Dernière séance à allure 10 km. Les blocs de 6 minutes sont exigeants, mais tu en es capable.", ""], [7, 5, 3, "ef", "Footing · 45’", "45’ EF", "Ce footing devrait commencer à sembler facile, même avec les jambes lourdes du fractionné.", ""], [7, 5, 5, "cote", "Côtes · 1h", "30’ EF › 14×30″ en côte récup en descente › 5’ EF", "14 côtes : pars progressivement pour ne pas être vidé à la 10e, et garde- en pour demain.", ""], [7, 5, 6, "long", "Sortie longue · 1h40", "50’ EF › 4×7’ allure 21 km récup 2’ EF › 15’ EF", "Dernière sortie longue du bloc. Courir avec un peu de fatigue te rendra plus efficace en fin de semi.", ""], [8, 4, 1, "ef", "Footing · 40’", "40’ EF", "Semaine de récupération avant la semaine la plus exigeante du plan. On fait tourner les jambes, sans forcer.", "Récupération"], [8, 4, 3, "int", "Fractionné · 40’", "15’ EF › 5×2’ allure 10 km récup 1’ EF › 10’ EF", "Même fractionné facile que lors de la première semaine de récupération. Profites-en pour courir relâché.", "Récupération"], [8, 4, 5, "cote", "Accélérations · 40’", "30’ EF › 8×100 m accélération progressive", "Footing léger avec quelques lignes droites en accélération progressive, sans forcer.", "Récupération"], [8, 4, 6, "long", "Sortie longue · 1h15", "1h15 EF", "Après une semaine de récupération, ça devrait être facile. Sinon, prends le temps de comprendre d’où vient la fatigue.", "Récupération"], [9, 3, 1, "int", "Fractionné · 1h05", "20’ EF › 3×10’ allure 21 km récup 2’ › 10’ EF", "Grosse semaine ! 30 minutes à allure semi au total. La dernière fraction sera exigeante.", ""], [9, 3, 3, "ef", "Footing · 45’", "45’ EF", "Footing de récupération tout doux, en pensant aux détails de ta technique.", ""], [9, 3, 5, "cote", "Côtes · 50’", "30’ EF › 8×45″ en côte récup en descente › 5’ EF", "Côtes à intensité 5 km (aux sensations), pas plus vite. Le renforcement fait la différence en fin de semi.", ""], [9, 3, 6, "long", "Sortie longue · 1h40", "1h20 EF › 15’ progressif allure 42 km → 10 km › 5’ EF", "Finale progressive à adapter à ta forme. Fatigué : 10’ allure 42 km, 3’ allure 21 km, 2’ allure 10 km. En forme : 5’ / 5’ / 5’.", ""], [10, 2, 1, "ef", "Footing · 45’", "45’ EF", "Footing de récupération après la grosse semaine. Reste le plus relax possible.", ""], [10, 2, 3, "int", "Fractionné · 1h", "20’ EF › 2×15’ allure 21 km récup 2’ EF › 10’ EF", "Dernière grosse séance de fractionné. 2×15’ à allure semi, c’est intense : si c’est dur, ça se passe dans la tête !", ""], [10, 2, 5, "ef", "Footing · 45’", "45’ EF", "Fini les côtes. Endurance fondamentale, relâchement et technique.", ""], [10, 2, 6, "long", "Sortie longue · 1h45", "1h20 EF › 20’ progressif allure 42 km → 10 km › 5’ EF", "Départ facile, finale en accélération. Garde-la progressive et contrôlée : séance test dans 2 jours !", ""], [11, 1, 1, "int", "Fractionné · 1h05", "20’ EF › 2×20’ allure 21 km récup 2’ EF › 5’ EF", "Séance test ! Ajuste ton allure cible selon tes dernières séances. La fin doit être difficile, mais tenable. Sinon, revois ton objectif.", "Affûtage"], [11, 1, 3, "ef", "Footing · 40’", "40’ EF", "La priorité maintenant : récupérer et garder un maximum d’énergie pour le jour J.", "Affûtage"], [11, 1, 5, "cote", "Accélérations · 30’", "25’ EF › 6×100 m accélération progressive (option)", "Mini footing pour faire tourner les jambes. Accélérations de 10 à 15 secondes en option.", "Affûtage"], [11, 1, 6, "long", "Sortie longue · 1h", "30’ EF › 3×5’ allure 21 km récup 5’ EF › 5’ EF", "Une « sortie longue » d’une heure, avec un rappel d’allure semi qui devrait sembler vraiment facile.", "Affûtage"], [12, 0, 1, "cote", "Accélérations · 30’", "25’ EF › 6×100 m accélération progressive (option)", "On bouge juste un peu, très relax. Si tu fais les 100 m : progressifs et sans forcer.", "Affûtage"], [12, 0, 3, "int", "Fractionné · 30’", "15’ EF › 3×2’ allure 21 km récup 2’ EF › 5’ EF", "Dernier rappel d’allure semi pour bien mémoriser ton rythme de course.", "Affûtage"], [12, 0, 5, "rest", "Repos", "", "", "Affûtage"], [12, 0, 6, "race", "Jour de course", "", "Profite : 12 semaines d’entraînement pour ce moment ! Respecte ton plan : la course commence vraiment vers 12–13 km. Avant, c’est normal que ce soit facile, alors n’accélère pas !", "Affûtage"]]}, "semi-5x": {"dist": "21,1 km", "niveau": "5 fois par semaine", "nb": 12, "src": "ra", "s": [[1, 11, 1, "ef", "Footing · 40’", "40’ EF", "On commence par un simple footing. Il reviendra chaque semaine : c’est la base du plan pour faire du volume sans trop de fatigue.", ""], [1, 11, 2, "int", "Fractionné · 50’", "20’ EF › 8×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Premier fractionné : vise ton allure 5 km sans chercher de record. Si c’est trop facile, cours la récupération un peu plus vite plutôt que d’accélérer les fractions.", ""], [1, 11, 3, "ef", "Footing · 40’", "40’ EF", "Footing vraiment relax pour récupérer du fractionné. Courir trop vite ici ne t’aide pas.", ""], [1, 11, 5, "cote", "Côtes · 35’", "20’ EF › 6×10″ sprint en côte récup 1’30 lent › 5’ EF", "Côtes très courtes, mais à fond pendant 10 secondes. Fais quelques drills et accélérations progressives avant de commencer.", ""], [1, 11, 6, "long", "Sortie longue · 1h10", "30’ EF › 5×5’ allure 42 km récup 3’ EF › 5’ EF", "Une sortie longue facile pour habituer le corps à l’effort long. Les blocs à allure marathon ajoutent du rythme sans être difficiles.", ""], [2, 10, 1, "ef", "Footing · 45’", "45’ EF", "Tu devrais finir ce footing en te sentant mieux qu’au départ. On enchaîne les kilomètres, sans stress et sans fatigue.", ""], [2, 10, 2, "int", "Fractionné · 55’", "20’ EF › 10×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Même séance que la semaine passée, avec 2 répétitions de plus. Si ça pique à la fin, garde le haut du corps détendu.", ""], [2, 10, 3, "ef", "Footing · 40’", "40’ EF", "Comme mardi, mais en partant vraiment doucement pour récupérer du fractionné de la veille.", ""], [2, 10, 5, "cote", "Côtes · 40’", "20’ EF › 8×10″ sprint en côte récup 1’30 lent › 5’ EF", "Ces sprints très courts apprennent au corps à activer toutes ses fibres musculaires, ce qui t’aidera à tenir les 21 km.", ""], [2, 10, 6, "long", "Sortie longue · 1h20", "40’ EF › 4×7’ allure 42 km récup 2’ EF › 5’ EF", "10 minutes de plus : c’est une durée typique de sortie longue pour un semi. Reste bien relâché dans les segments plus rapides.", ""], [3, 9, 1, "ef", "Footing · 50’", "50’ EF", "Le footing facile est le bon moment pour travailler ta technique : choisis un point précis et concentre-toi dessus.", ""], [3, 9, 2, "int", "Fractionné · 1h", "20’ EF › 12×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Dernier fractionné du premier bloc, avec 12 répétitions. Ne lâche pas dans les dernières : c’est là que ça travaille.", ""], [3, 9, 3, "ef", "Footing · 40’", "40’ EF", "Ce footing du lendemain de fractionné a toujours le même but : courir lentement et relâché pour récupérer.", ""], [3, 9, 5, "cote", "Côtes · 45’", "20’ EF › 10×10″ sprint en côte récup 1’30 lent › 5’ EF", "Fin du cycle de côtes courtes : pousse fort sur les jambes jusqu’au bout de chaque sprint.", ""], [3, 9, 6, "long", "Sortie longue · 1h30", "50’ EF › 3×10’ allure 42 km récup 2’ EF › 5’ EF", "La sortie et les blocs s’allongent. Si c’est difficile, c’est l’endurance qui manque encore : on continue de la bâtir.", ""], [4, 8, 1, "ef", "Footing · 30’", "30’ EF", "Semaine de récupération : le volume et l’intensité baissent. Footing lent et relax.", "Récupération"], [4, 8, 2, "int", "Fractionné · 40’", "15’ EF › 5×2’ allure 10 km récup 1’ EF › 10’ EF", "Fractionné volontairement facile cette semaine. N’en fais pas plus, c’est normal.", "Récupération"], [4, 8, 3, "ef", "Footing · 40’", "40’ EF", "Le footing classique de 40 minutes : relâchement et technique efficace.", "Récupération"], [4, 8, 5, "cote", "Accélérations · 40’", "30’ EF › 8×100 m accélération progressive", "Pas de côtes en semaine de récupération, mais quelques 100 m progressifs pour garder l’habitude du rythme rapide.", "Récupération"], [4, 8, 6, "long", "Sortie longue · 1h15", "1h15 EF", "Sortie longue plus courte pour recharger les batteries avant le prochain bloc.", "Récupération"], [5, 7, 1, "ef", "Footing · 55’", "55’ EF", "Footing relâché, en soignant ta technique pour économiser de l’énergie : ça fait la différence en fin de course.", ""], [5, 7, 2, "int", "Fractionné · 50’", "20’ EF › 5×4’ allure 10 km récup 1’30 EF › 5’ EF", "Nouvelle allure : le 10 km. Plus lente, mais avec des fractions deux fois plus longues. Une séance classique et efficace.", ""], [5, 7, 3, "ef", "Footing · 40’", "40’ EF", "Ce footing devrait commencer à sembler facile, même avec les jambes lourdes de la veille.", ""], [5, 7, 5, "cote", "Côtes · 50’", "30’ EF › 10×30″ en côte récup en descente › 5’ EF", "Côtes plus longues, un peu plus vite que l’allure 5 km, sans te vider : il y a la sortie longue demain.", ""], [5, 7, 6, "long", "Sortie longue · 1h30", "50’ EF › 4×5’ allure 21 km récup 2’ EF › 15’ EF", "Premières portions à ton allure de course. Apprends à la reconnaître et à la mémoriser.", ""], [6, 6, 1, "ef", "Footing · 1h", "1h EF", "Premier footing d’une heure. L’augmentation a été progressive, ça devrait bien passer. Toujours sans forcer !", ""], [6, 6, 2, "int", "Fractionné · 55’", "20’ EF › 5×5’ allure 10 km récup 1’30 EF › 5’ EF", "Une minute de plus par fraction que la semaine passée. Rien d’insurmontable !", ""], [6, 6, 3, "ef", "Footing · 40’", "40’ EF", "Récup, récup, récup ! Plus le volume augmente, plus il faut y aller doucement sur ce footing.", ""], [6, 6, 5, "cote", "Côtes · 55’", "30’ EF › 12×30″ en côte récup en descente › 5’ EF", "12 côtes : pousse bien à chaque foulée sans aller à fond. Garde de l’énergie pour la sortie longue.", ""], [6, 6, 6, "long", "Sortie longue · 1h35", "50’ EF › 4×6’ allure 21 km récup 2’ EF › 15’ EF", "L’allure semi arrive en 2e moitié de sortie, pour la pratiquer fatigué, comme en fin de course.", ""], [7, 5, 1, "ef", "Footing · 1h", "1h EF", "Encore une heure pour bâtir ton endurance. Couru lentement, ça ne fatigue pas. Sinon, tu cours peut-être un peu trop vite.", ""], [7, 5, 2, "int", "Fractionné · 1h", "20’ EF › 5×6’ allure 10 km récup 1’30 EF › 5’ EF", "Dernière séance à allure 10 km. Les blocs de 6 minutes sont exigeants, mais tu en es capable.", ""], [7, 5, 3, "ef", "Footing · 40’", "40’ EF", "Footing de récupération : cours le plus relâché possible, sans jamais forcer.", ""], [7, 5, 5, "cote", "Côtes · 50’", "30’ EF › 14×30″ en côte récup en descente › 5’ EF", "14 côtes : pars progressivement pour ne pas être vidé à la 10e, et garde-en pour demain.", ""], [7, 5, 6, "long", "Sortie longue · 1h40", "50’ EF › 4×7’ allure 21 km récup 2’ EF › 15’ EF", "Dernière sortie longue du bloc. Courir avec un peu de fatigue te rendra plus efficace en fin de semi.", ""], [8, 4, 1, "ef", "Footing · 40’", "40’ EF", "Semaine de récupération avant la semaine la plus exigeante du plan. On fait tourner les jambes, sans forcer.", "Récupération"], [8, 4, 2, "int", "Fractionné · 40’", "15’ EF › 5×2’ allure 10 km récup 1’ EF › 10’ EF", "Même fractionné facile que lors de la première semaine de récupération. Profites-en pour courir relâché.", "Récupération"], [8, 4, 3, "ef", "Footing · 40’", "40’ EF", "Détends-toi et profite de cette semaine facile pour faire le plein d’énergie avant le dernier gros bloc.", "Récupération"], [8, 4, 5, "cote", "Accélérations · 30’", "30’ EF › 8×100 m accélération progressive", "Footing léger avec quelques lignes droites en accélération progressive, sans forcer.", "Récupération"], [8, 4, 6, "long", "Sortie longue · 1h15", "1h15 EF", "Après une semaine de récupération, ça devrait être facile. Sinon, prends le temps de comprendre d’où vient la fatigue.", "Récupération"], [9, 3, 1, "ef", "Footing · 1h", "1h EF", "Le footing classique d’une heure : laisse-toi porter en gardant le cardio sous contrôle.", ""], [9, 3, 2, "int", "Fractionné · 1h05", "20’ EF › 3×10’ allure 21 km récup 2’ EF › 10’ EF", "Grosse semaine ! 30 minutes à allure semi au total. La dernière fraction sera exigeante.", ""], [9, 3, 3, "ef", "Footing · 40’", "40’ EF", "Footing de récupération tout doux, en pensant aux détails de ta technique.", ""], [9, 3, 5, "cote", "Côtes · 50’", "30’ EF › 8×45″ en côte récup en descente › 5’ EF", "On garde des côtes pour le travail musculaire, clé de la fin de course. Intensité allure semi, pour garder de l’énergie.", ""], [9, 3, 6, "long", "Sortie longue · 1h40", "1h20 EF › 15’ progressif allure 42 km → 10 km › 5’ EF", "Finale progressive à adapter à ta forme. Fatigué : 10’ allure 42 km, 3’ allure 21 km, 2’ allure 10 km. En forme : 5’ / 5’ / 5’.", ""], [10, 2, 1, "ef", "Footing · 50’", "50’ EF", "Footing plus court pour récupérer de la grosse sortie de dimanche. Reste le plus relax possible.", ""], [10, 2, 2, "int", "Fractionné · 1h", "20’ EF › 2×15’ allure 21 km récup 2’ EF › 10’ EF", "Grosse séance avant le test de la semaine prochaine. 2×15’ à allure semi, c’est intense : si c’est dur, ça se passe dans la tête !", ""], [10, 2, 3, "ef", "Footing · 30’", "30’ EF", "Presque au bout de la préparation ! Vas-y vraiment lentement pour ne pas te fatiguer.", ""], [10, 2, 5, "cote", "Côtes · 45’", "20’ EF › 10×45″ en côte récup en descente › 5’ EF", "Dernière séance de côtes avant l’affûtage. Reste « en contrôle » : c’est du travail musculaire.", ""], [10, 2, 6, "long", "Sortie longue · 1h45", "1h20 EF › 20’ progressif allure 42 km → 10 km › 5’ EF", "Départ très facile, finale en accélération. Garde-la progressive et contrôlée pour ne pas finir à bout de souffle.", ""], [11, 1, 1, "ef", "Footing · 45’", "45’ EF", "Veille de la dernière grosse séance : vas-y doucement, et raccourcis même ce footing si tu te sens fatigué.", "Affûtage"], [11, 1, 2, "int", "Fractionné · 1h05", "20’ EF › 2×20’ allure 21 km récup 2’ EF › 5’ EF", "Séance test ! Ajuste ton allure cible selon tes dernières séances. La fin doit être difficile, mais tenable. Sinon, revois ton objectif.", "Affûtage"], [11, 1, 3, "ef", "Footing · 40’", "40’ EF", "La priorité maintenant : récupérer et garder un maximum d’énergie pour le jour J.", "Affûtage"], [11, 1, 5, "cote", "Accélérations · 25’", "25’ EF › 6×100 m accélération progressive (option)", "Mini footing pour faire tourner les jambes. Accélérations de 10 à 15 secondes en option.", "Affûtage"], [11, 1, 6, "long", "Sortie longue · 1h", "30’ EF › 3×5’ allure 21 km récup 5’ EF › 5’ EF", "Une « sortie longue » d’une heure, avec un rappel d’allure semi qui devrait sembler vraiment facile.", "Affûtage"], [12, 0, 1, "ef", "Footing · 30’", "30’ EF", "On bouge juste un peu pour garder le corps habitué au rythme de la course.", "Affûtage"], [12, 0, 2, "rest", "Repos", "", "", "Affûtage"], [12, 0, 3, "int", "Fractionné · 30’", "15’ EF › 3×2’ allure 21 km récup 2’ EF lent › 5’ EF", "Dernier rappel d’allure semi pour bien mémoriser ton rythme de course.", "Affûtage"], [12, 0, 5, "cote", "Accélérations · 25’", "20’ EF › 6×100 m accélération progressive", "À faire la veille ou l’avant-veille selon ton horaire. Séance minimaliste pour te mettre l’allure du jour J en tête.", "Affûtage"], [12, 0, 6, "race", "Jour de course", "", "Profite : 12 semaines d’entraînement pour ce moment ! Respecte ton plan : la course commence vraiment vers 12–13 km. Avant, c’est normal que ce soit facile, alors n’accélère pas !", "Affûtage"]]}, "10k-niveau1": {"dist": "10 km", "niveau": "Niveau 1 · course et marche", "nb": 10, "src": "sr", "s": [[1, 9, 0, "ef", "Footing · 3–4×5’", "Échauffement + activation + drills › 3–4×5’ jogging marche 1–2’ entre chaque", "", ""], [1, 9, 2, "cote", "Accélérations", "Échauffement + drills › 10–15’ course facile › 4 lignes droites", "", ""], [1, 9, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", ""], [1, 9, 5, "long", "Sortie longue · 4 km", "4 km", "Garde la même allure à la fin qu’au début.", ""], [2, 8, 0, "ef", "Footing · 3–4×6’", "Échauffement + drills › 3–4×6’ jogging marche 1–2’ entre chaque", "", "Progression"], [2, 8, 2, "int", "Fractionné", "Échauffement + drills › 8’ facile › 2’ marche › 5×1’ plus vite marche 1’ › 5’ facile", "", "Progression"], [2, 8, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [2, 8, 5, "long", "Sortie longue · 5 km", "5 km", "Jusqu’à 2 pauses marche au besoin.", "Progression"], [3, 7, 0, "ef", "Footing · 4–5×5’", "Échauffement + drills › 4–5×5’ jogging marche 1–2’ entre chaque", "", "Progression"], [3, 7, 2, "int", "Fractionné", "Échauffement + drills › 7’ facile › 2’ marche › 3×2’ plus vite marche 1–2’ › 5’ facile", "", "Progression"], [3, 7, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [3, 7, 5, "long", "Sortie longue · 6 km", "6 km", "Jusqu’à 3 pauses marche au besoin.", "Progression"], [4, 6, 0, "ef", "Footing · 3×7’", "Échauffement + drills › 3×7’ jogging marche 2’ entre chaque", "", "Progression"], [4, 6, 2, "int", "Fractionné", "Échauffement + drills › 7’ facile › 2’ marche › 3×3’ plus vite marche 1–2’ › 5’ facile", "", "Progression"], [4, 6, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [4, 6, 5, "long", "Sortie longue · 6 km", "6 km", "Jusqu’à 3 pauses marche au besoin.", "Progression"], [5, 5, 0, "ef", "Footing · 5–6×2’", "Échauffement + drills › 5–6×2’ jogging marche 1’ entre chaque", "", "Récupération"], [5, 5, 2, "int", "Fractionné", "Échauffement + drills › 8’ facile › 2’ marche › 5×1’ plus vite marche 1’ › 5’ facile", "", "Récupération"], [5, 5, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Récupération"], [5, 5, 5, "long", "Sortie longue · 4 km", "4 km", "Jusqu’à 2 pauses marche au besoin.", "Récupération"], [6, 4, 0, "ef", "Footing · 3×7’", "Échauffement + drills › 3×7’ jogging marche 2–3’ entre chaque", "", "Progression"], [6, 4, 2, "int", "Fractionné", "Échauffement + drills › 7’ facile › 2’ marche › 3×4’ plus vite marche 1–2’ › 5’ facile", "", "Progression"], [6, 4, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [6, 4, 5, "long", "Sortie longue · 6 km", "6 km", "Jusqu’à 3 pauses marche au besoin.", "Progression"], [7, 3, 0, "ef", "Footing · 3×8’", "Échauffement + drills › 3×8’ jogging marche 2–3’ entre chaque", "", "Progression"], [7, 3, 2, "int", "Fractionné", "Échauffement + drills › 7’ facile › 2’ marche › 5’-4’-3’ plus vite marche 2’ entre › 5’ facile", "", "Progression"], [7, 3, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [7, 3, 5, "long", "Sortie longue · 7 km", "7 km", "Jusqu’à 3 pauses marche au besoin.", "Progression"], [8, 2, 0, "ef", "Footing · 3×10’", "Échauffement + drills › 3×10’ jogging marche 2–3’ entre chaque", "", ""], [8, 2, 2, "int", "Fractionné", "Échauffement + drills › 7’ facile › 2’ marche › 5×3’ plus vite marche 1–2’ › 5’ facile", "", ""], [8, 2, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", ""], [8, 2, 5, "long", "Sortie longue · 8 km", "8 km", "Jusqu’à 3 pauses marche au besoin.", ""], [9, 1, 0, "ef", "Footing · 3×7’", "Échauffement + drills › 3×7’ jogging marche 2’ entre chaque", "", "Récupération"], [9, 1, 2, "int", "Fractionné", "Échauffement + drills › 7’ facile › 2’ marche › 5×2’ plus vite marche 1–2’ › 5’ facile", "", "Récupération"], [9, 1, 4, "cross", "Entraînement croisé · 20–30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Récupération"], [9, 1, 5, "long", "Sortie longue · 5 km", "5 km", "Tous niveaux : allure régulière et confortable.", "Récupération"], [10, 0, 0, "ef", "Footing · 3×5’", "Échauffement + drills › 3×5’ jogging marche 2’ entre chaque", "", "Affûtage"], [10, 0, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 6–8×1’ plus vite marche 1–2’ › 5’ facile", "", "Affûtage"], [10, 0, 4, "cote", "Accélérations · 10–15’", "Repos ou drills › 10–15’ jogging › 4 lignes droites", "Séance optionnelle : juste de quoi réveiller les jambes avant la course.", "Affûtage"], [10, 0, 5, "race", "Jour de course", "", "Bonne course ! Pars à une allure confortable, garde de l’énergie pour la deuxième moitié et profite de l’ambiance.", "Affûtage"]]}, "10k-niveau2": {"dist": "10 km", "niveau": "Niveau 2 · course continue", "nb": 10, "src": "sr", "s": [[1, 9, 0, "ef", "Footing · 15–20’", "Échauffement + activation + drills › 15–20’ jogging", "", ""], [1, 9, 2, "cote", "Accélérations · 20’", "Échauffement + drills › 20’ course facile › 4 lignes droites", "", ""], [1, 9, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", ""], [1, 9, 5, "long", "Sortie longue · 4 km", "4 km", "Jusqu’à deux pauses marche d’1 minute au besoin. Garde une allure constante.", ""], [2, 8, 0, "ef", "Footing · 20–25’", "Échauffement + drills › 20–25’ jogging", "", "Progression"], [2, 8, 2, "int", "Fractionné · 25’", "Échauffement + drills › 25’ course facile › dont 5–8×1’ plus vite 1’ facile entre", "", "Progression"], [2, 8, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [2, 8, 5, "long", "Sortie longue · 5 km", "5 km", "Bien régulier, allure constante.", "Progression"], [3, 7, 0, "ef", "Footing · 20–25’", "Échauffement + drills › 20–25’ jogging", "", "Progression"], [3, 7, 2, "int", "Fractionné · 25’", "Échauffement + drills › 25’ course facile › dont 5–6×2’ plus vite 2’ facile entre", "", "Progression"], [3, 7, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [3, 7, 5, "long", "Sortie longue · 6 km", "6 km", "Bien régulier, allure constante.", "Progression"], [4, 6, 0, "ef", "Footing · 25–30’", "Échauffement + drills › 25–30’ jogging", "", "Progression"], [4, 6, 2, "int", "Fractionné · 25–30’", "Échauffement + drills › 25–30’ course facile › dont 5–6×3’ plus vite 2’ facile entre", "", "Progression"], [4, 6, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [4, 6, 5, "long", "Sortie longue · 6 km", "6 km", "Bien régulier, allure constante.", "Progression"], [5, 5, 0, "ef", "Footing · 15–20’", "Échauffement + drills › 15–20’ jogging", "", "Récupération"], [5, 5, 2, "int", "Fractionné · 25–30’", "Échauffement + drills › 25–30’ course facile › dont 5–8×1’ plus vite 1’ facile entre", "", "Récupération"], [5, 5, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Récupération"], [5, 5, 5, "long", "Sortie longue · 4 km", "4 km", "Bien régulier, allure constante.", "Récupération"], [6, 4, 0, "ef", "Footing · 20–25’", "Échauffement + drills › 20–25’ jogging", "", "Progression"], [6, 4, 2, "int", "Fractionné · 30–35’", "Échauffement + drills › 30–35’ course facile › dont 4–5×4’ plus vite 2’ facile entre", "", "Progression"], [6, 4, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [6, 4, 5, "long", "Sortie longue · 6 km", "6 km", "Bien régulier, allure constante.", "Progression"], [7, 3, 0, "ef", "Footing · 25–30’", "Échauffement + drills › 25–30’ jogging", "", "Progression"], [7, 3, 2, "int", "Fractionné · 30–35’", "Échauffement + drills › 30–35’ course facile › dont 4×(3’-2’-1’) plus vite 1’ facile entre, 3’ entre les séries", "", "Progression"], [7, 3, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [7, 3, 5, "long", "Sortie longue · 7 km", "7 km", "Régulier, ou accélère légèrement en 2e moitié.", "Progression"], [8, 2, 0, "ef", "Footing · 25–30’", "Échauffement + drills › 25–30’ jogging", "", ""], [8, 2, 2, "int", "Fractionné · 30–35’", "Échauffement + drills › 30–35’ course facile › dont 7–8×3’ plus vite 90″ facile entre", "", ""], [8, 2, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", ""], [8, 2, 5, "long", "Sortie longue · 8 km", "8 km", "Régulier, ou accélère légèrement en 2e moitié.", ""], [9, 1, 0, "ef", "Footing · 20–25’", "Échauffement + drills › 20–25’ jogging", "", "Récupération"], [9, 1, 2, "int", "Fractionné · 30–35’", "Échauffement + drills › 30–35’ course facile › dont 7–8×2’ plus vite 90″ facile entre", "", "Récupération"], [9, 1, 4, "cross", "Entraînement croisé · 20–30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Récupération"], [9, 1, 5, "long", "Sortie longue · 5 km", "5 km", "Tous niveaux : allure régulière et confortable.", "Récupération"], [10, 0, 0, "ef", "Footing · 15–20’", "Échauffement + drills › 15–20’ jogging", "", "Affûtage"], [10, 0, 2, "int", "Fractionné · 30–35’", "Échauffement + drills › 30–35’ course facile › dont 6–8×1’ plus vite 1’ facile entre", "", "Affûtage"], [10, 0, 4, "cote", "Accélérations · 10–15’", "Repos ou drills › 10–15’ jogging › 4 lignes droites", "Séance optionnelle : juste de quoi réveiller les jambes avant la course.", "Affûtage"], [10, 0, 5, "race", "Jour de course", "", "Bonne course ! Pars à une allure confortable, garde de l’énergie pour la deuxième moitié et profite de l’ambiance.", "Affûtage"]]}, "10k-niveau3": {"dist": "10 km", "niveau": "Niveau 3 · 5 sorties par semaine", "nb": 12, "src": "ra", "s": [[1, 11, 1, "ef", "Footing · 40’", "40’ EF", "On commence ce plan 10 km par un simple footing. Il reviendra chaque semaine : c’est la base pour faire du volume sans trop de fatigue.", ""], [1, 11, 2, "int", "Fractionné · 50’", "20’ EF › 8×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Premier fractionné : vise ton allure 5 km sans chercher de record. Si c’est trop facile, cours la récupération un peu plus vite plutôt que d’accélérer les fractions.", ""], [1, 11, 3, "ef", "Footing · 40’", "40’ EF", "Footing vraiment relax pour récupérer du fractionné. Courir trop vite ici ne t’aide pas.", ""], [1, 11, 5, "cote", "Côtes · 40’", "20’ EF › 6×10″ sprint en côte récup 2’30 lent › 5’ EF", "Côtes très courtes, en vrai sprint pendant 10 secondes. Fais quelques drills et accélérations progressives avant de commencer.", ""], [1, 11, 6, "long", "Sortie longue · 1h05", "30’ EF › 4×5’ allure 42 km récup 3’ EF › 10’ EF", "Une sortie longue facile pour habituer le corps à l’effort long. Les blocs à allure marathon ajoutent du rythme sans être difficiles.", ""], [2, 10, 1, "ef", "Footing · 45’", "45’ EF", "Tu devrais finir ce footing en te sentant mieux qu’au départ. On enchaîne les kilomètres, sans stress et sans fatigue.", ""], [2, 10, 2, "int", "Fractionné · 55’", "20’ EF › 10×1’30 allure 5 km récup 1’30 EF › 5’ EF", "2 répétitions de plus que la semaine passée. Ça va piquer à la fin, c’est normal : on court plus vite que l’allure 10 km pour travailler la résistance.", ""], [2, 10, 3, "ef", "Footing · 40’", "40’ EF", "Comme mardi, mais en partant vraiment doucement pour récupérer du fractionné de la veille.", ""], [2, 10, 5, "cote", "Côtes · 45’", "20’ EF › 8×10″ sprint en côte récup 2’30 lent › 5’ EF", "Ces sprints très courts apprennent au corps à activer toutes ses fibres musculaires, pour rester fort jusqu’au bout du 10 km, même quand ça fait mal.", ""], [2, 10, 6, "long", "Sortie longue · 1h10", "30’ EF › 4×6’ allure 42 km récup 2’ EF › 10’ EF", "5 minutes de plus. Reste bien relâché dans les segments à allure marathon.", ""], [3, 9, 1, "ef", "Footing · 50’", "50’ EF", "Le footing facile est le bon moment pour travailler ta technique : choisis un point précis et concentre-toi dessus.", ""], [3, 9, 2, "int", "Fractionné · 1h", "20’ EF › 12×1’30 allure 5 km récup 1’30 EF › 5’ EF", "Dernier fractionné du premier bloc, avec 12 répétitions. Ne lâche pas dans les dernières : pense à la fin de ton 10 km !", ""], [3, 9, 3, "ef", "Footing · 40’", "40’ EF", "Ce footing du lendemain de fractionné a toujours le même but : courir lentement, sans regarder le chrono, pour récupérer.", ""], [3, 9, 5, "cote", "Côtes · 50’", "20’ EF › 10×10″ sprint en côte récup 2’30 lent › 5’ EF", "Fin du cycle de côtes courtes : pousse fort sur les jambes jusqu’au bout de chaque sprint.", ""], [3, 9, 6, "long", "Sortie longue · 1h20", "45’ EF › 3×8’ allure 42 km récup 2’ EF › 5’ EF", "La sortie et les blocs s’allongent. Si c’est difficile, c’est l’endurance qui manque encore : on continue de la bâtir.", ""], [4, 8, 1, "ef", "Footing · 30’", "30’ EF", "Semaine de récupération : le volume et l’intensité baissent. Footing lent et relax.", "Récupération"], [4, 8, 2, "int", "Fractionné · 40’", "15’ EF › 5×2’ allure 10 km récup 1’ EF › 5’ EF", "Fractionné volontairement facile cette semaine. N’en fais pas plus, c’est normal.", "Récupération"], [4, 8, 3, "ef", "Footing · 40’", "40’ EF", "Le footing classique de 40 minutes : relâchement et technique efficace.", "Récupération"], [4, 8, 5, "cote", "Accélérations · 40’", "30’ EF › 8×100 m accélération progressive › 5’ EF", "Pas de côtes en semaine de récupération, mais quelques 100 m progressifs pour garder l’habitude du rythme rapide.", "Récupération"], [4, 8, 6, "long", "Sortie longue · 1h", "1h EF", "Sortie d’une heure seulement pour recharger les batteries avant le prochain bloc.", "Récupération"], [5, 7, 1, "ef", "Footing · 45’", "45’ EF", "Footing relâché, en soignant ta technique pour économiser de l’énergie : ça fait la différence en fin de course.", ""], [5, 7, 2, "int", "Fractionné · 50’", "20’ EF › 5×4’ allure 10 km récup 1’30 EF › 5’ EF", "Place à l’allure 10 km, ton allure de course ! Plus lente que le 5 km, mais avec des fractions bien plus longues.", ""], [5, 7, 3, "ef", "Footing · 40’", "40’ EF", "Ce footing devrait commencer à sembler facile, même avec les jambes lourdes de la veille.", ""], [5, 7, 5, "cote", "Côtes · 50’", "30’ EF › 10×30″ en côte récup en descente › 5’ EF", "Côtes plus longues, à peu près à l’intensité du fractionné 5 km. Reste relâché et puissant au sol.", ""], [5, 7, 6, "long", "Sortie longue · 1h15", "40’ EF › 4×5’ allure 21 km récup 2’ EF › 10’ EF", "L’allure semi remplace l’allure marathon. Apprivoise-la en restant relâché : ça travaille pour ton 10 km.", ""], [6, 6, 1, "ef", "Footing · 45’", "45’ EF", "Le footing de base d’une préparation 10 km. Sans forcer : on garde l’énergie pour le fractionné.", ""], [6, 6, 2, "int", "Fractionné · 55’", "20’ EF › 5×5’ allure 10 km récup 2’ EF › 5’ EF", "Une minute de plus par fraction. Si c’est vraiment trop dur, ton allure 10 km visée est peut-être un peu optimiste : ajuste-la.", ""], [6, 6, 3, "ef", "Footing · 40’", "40’ EF", "Récup, récup, récup ! Plus le volume augmente, plus il faut y aller doucement sur ce footing.", ""], [6, 6, 5, "cote", "Côtes · 45’", "20’ EF › 12×30″ en côte récup en descente › 5’ EF", "12 côtes : pousse bien à chaque foulée en restant bien placé, sans te mettre dans le rouge.", ""], [6, 6, 6, "long", "Sortie longue · 1h15", "30’ EF › 4×6’ allure 21 km récup 2’ EF › 15’ EF", "L’allure semi arrive en 2e moitié de sortie, pour la travailler fatigué : utile pour la fin du 10 km.", ""], [7, 5, 1, "ef", "Footing · 45’", "45’ EF", "Encore 45 minutes pour bâtir ton endurance. Couru lentement, ça ne fatigue pas. Sinon, tu cours peut-être un peu trop vite.", ""], [7, 5, 2, "int", "Fractionné · 1h", "15’ EF › 5×6’ allure 10 km récup 2’ EF › 5’ EF", "Dernière belle séance à allure 10 km de ce bloc. Les blocs de 6 minutes sont exigeants, mais tu en es capable.", ""], [7, 5, 3, "ef", "Footing · 40’", "40’ EF", "Footing de récupération : cours le plus relâché possible, sans jamais forcer.", ""], [7, 5, 5, "cote", "Côtes · 50’", "20’ EF › 14×30″ en côte récup en descente › 5’ EF", "14 côtes : pars progressivement pour ne pas être vidé à la 10e, et garde-en pour demain.", ""], [7, 5, 6, "long", "Sortie longue · 1h20", "30’ EF › 4×7’ allure 21 km récup 2’ EF › 15’ EF", "Dernière sortie longue du bloc. Courir avec un peu de fatigue te rendra plus efficace en fin de 10 km.", ""], [8, 4, 1, "ef", "Footing · 40’", "40’ EF", "Semaine de récupération avant la semaine la plus exigeante du plan. On fait tourner les jambes, sans forcer.", "Récupération"], [8, 4, 2, "int", "Fractionné · 40’", "15’ EF › 5×2’ allure 10 km récup 1’ EF › 10’ EF", "Même fractionné facile que lors de la première semaine de récupération. Profites-en pour courir relâché.", "Récupération"], [8, 4, 3, "ef", "Footing · 40’", "40’ EF", "Détends-toi et profite de cette semaine facile pour faire le plein d’énergie avant le dernier gros bloc.", "Récupération"], [8, 4, 5, "cote", "Accélérations · 40’", "30’ EF › 8×100 m accélération progressive › 5’ EF", "Footing léger avec quelques lignes droites en accélération progressive, sans forcer.", "Récupération"], [8, 4, 6, "long", "Sortie longue · 1h10", "1h10 EF", "Après une semaine de récupération, ça devrait être facile. Sinon, prends le temps de comprendre d’où vient la fatigue.", "Récupération"], [9, 3, 1, "ef", "Footing · 45’", "45’ EF", "Le footing classique : laisse-toi porter en gardant le cardio sous contrôle.", ""], [9, 3, 2, "int", "Fractionné · 1h", "20’ EF › 4×7’ allure 10 km récup 2’ EF › 5’ EF", "Grosse semaine ! 28 minutes à allure 10 km au total. La dernière fraction sera exigeante.", ""], [9, 3, 3, "ef", "Footing · 40’", "40’ EF", "Footing de récupération tout doux, en pensant aux détails de ta technique.", ""], [9, 3, 5, "cote", "Côtes · 50’", "30’ EF › 8×45″ en côte récup en descente › 5’ EF", "Le travail en côte t’aidera à tenir quand ce sera difficile en fin de 10 km. Intensité 5 km (aux sensations), pas plus vite.", ""], [9, 3, 6, "long", "Sortie longue · 1h20", "1h EF › 15’ progressif allure 42 km → 10 km › 5’ EF", "Finale progressive à adapter à ta forme. Fatigué : 10’ allure 42 km, 3’ allure 21 km, 2’ allure 10 km. En forme : 5’ de chaque.", ""], [10, 2, 1, "ef", "Footing · 45’", "45’ EF", "Footing plus court pour récupérer de la grosse sortie de dimanche. Reste le plus relax possible.", ""], [10, 2, 2, "int", "Fractionné · 1h", "15’ EF › 4×8’ allure 10 km récup 2’ EF › 5’ EF", "La séance avec le plus de temps à allure 10 km. Si tu la réussis, tu peux être confiant. Crois en toi !", ""], [10, 2, 3, "ef", "Footing · 45’", "45’ EF", "Presque au bout de la préparation ! Vas-y vraiment lentement pour ne pas te fatiguer.", ""], [10, 2, 5, "cote", "Côtes · 45’", "20’ EF › 10×45″ en côte récup en descente › 5’ EF", "Dernière séance de côtes avant l’affûtage. Reste « en contrôle » : c’est du travail musculaire.", ""], [10, 2, 6, "long", "Sortie longue · 1h25", "1h EF › 20’ progressif allure 42 km → 10 km › 5’ EF", "Départ facile, finale en accélération progressive et contrôlée. Le but : finir solide, pas épuisé.", ""], [11, 1, 1, "ef", "Footing · 40’", "40’ EF", "Veille de la dernière grosse séance : vas-y doucement, et raccourcis même ce footing si tu te sens fatigué.", "Affûtage"], [11, 1, 2, "int", "Fractionné · 1h", "20’ EF › 2×12’ allure 10 km récup 2’ EF › 10’ EF", "Séance test ! Passer à des blocs de 12 minutes avec seulement 2’ de récup change tout. Si tu la finis, tu es prêt. Sinon, ajuste ton allure.", "Affûtage"], [11, 1, 3, "ef", "Footing · 30’", "30’ EF", "La priorité maintenant : récupérer et garder un maximum d’énergie pour le jour J.", "Affûtage"], [11, 1, 5, "cote", "Accélérations · 25’", "25’ EF › 5–6×100 m accélération progressive (option)", "Mini footing pour faire tourner les jambes. Quelques accélérations d’environ 100 m en option.", "Affûtage"], [11, 1, 6, "long", "Sortie longue · 50’", "15’ EF › 5×3’ allure 10 km récup 3’ EF › 5’ EF", "Une sortie de 50 minutes avec un rappel d’allure 10 km qui devrait sembler facile après les 12’ de mercredi.", "Affûtage"], [12, 0, 1, "ef", "Footing · 30’", "30’ EF", "On bouge juste un peu pour garder le corps habitué au rythme de la course.", "Affûtage"], [12, 0, 2, "rest", "Repos", "", "", "Affûtage"], [12, 0, 3, "int", "Fractionné · 30’", "15’ EF › 5×1’ allure 10 km récup 1’ EF lent › 5’ EF", "Dernier rappel d’allure 10 km pour mémoriser ton rythme et dynamiser ta foulée.", "Affûtage"], [12, 0, 4, "cote", "Accélérations · 25’", "20’ EF › 6×100 m accélération progressive", "La veille de la course : séance minimaliste pour te mettre l’allure du jour J en tête.", "Affûtage"], [12, 0, 5, "race", "Jour de course", "", "Profite : 12 semaines d’entraînement pour ce moment ! Respecte ton plan : sur 10 km, la course commence vraiment après le 6e km. Avant, c’est normal que ce soit facile, alors n’accélère pas !", "Affûtage"]]}, "5k-niveau1": {"dist": "5 km", "niveau": "Niveau 1 · course et marche", "nb": 12, "src": "sr", "s": [[1, 11, 0, "ef", "Footing · 3–4×2’", "Échauffement + activation + drills › 3–4×2’ jogging marche 1–2’ entre chaque", "", ""], [1, 11, 2, "cote", "Accélérations", "Échauffement + drills › 2×5’ course facile › 4 lignes droites", "", ""], [1, 11, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", ""], [1, 11, 5, "long", "Sortie longue · 20’", "20’ de course", "Jusqu’à 4 pauses marche au besoin.", ""], [2, 10, 0, "ef", "Footing · 3–4×3’", "Échauffement + drills › 3–4×3’ jogging marche 1–2’ entre chaque", "", "Progression"], [2, 10, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 5×1’ plus vite marche 1’ › 5’ facile", "", "Progression"], [2, 10, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [2, 10, 5, "long", "Sortie longue · 22’", "22’ de course", "Jusqu’à 4 pauses marche au besoin.", "Progression"], [3, 9, 0, "ef", "Footing · 4–5×4’", "Échauffement + drills › 4–5×4’ jogging marche 1–2’ entre chaque", "", "Progression"], [3, 9, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 3×2’ plus vite marche 1–2’ › 5’ facile", "", "Progression"], [3, 9, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [3, 9, 5, "long", "Sortie longue · 25’", "25’ de course", "Jusqu’à 4 pauses marche au besoin.", "Progression"], [4, 8, 0, "ef", "Footing · 3–4×5’", "Échauffement + drills › 3–4×5’ jogging marche 2’ entre chaque", "", "Progression"], [4, 8, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 3×3’ plus vite marche 1–2’ › 5’ facile", "", "Progression"], [4, 8, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [4, 8, 5, "long", "Sortie longue · 25’", "25’ de course", "Jusqu’à 3 pauses marche au besoin.", "Progression"], [5, 7, 0, "ef", "Footing · 5–6×2’", "Échauffement + drills › 5–6×2’ jogging marche 1’ entre chaque", "", "Récupération"], [5, 7, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 5×1’ plus vite marche 1’ › 5’ facile", "", "Récupération"], [5, 7, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Récupération"], [5, 7, 5, "long", "Sortie longue · 20’", "20’ de course", "Jusqu’à 2 pauses marche au besoin.", "Récupération"], [6, 6, 0, "ef", "Footing · 3×6’", "Échauffement + drills › 3×6’ jogging marche 2–3’ entre chaque", "", "Progression"], [6, 6, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 3×4’ plus vite marche 1–2’ › 5’ facile", "", "Progression"], [6, 6, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [6, 6, 5, "long", "Sortie longue · 25’", "25’ de course", "Jusqu’à 3 pauses marche au besoin.", "Progression"], [7, 5, 0, "ef", "Footing · 3×7’", "Échauffement + drills › 3×7’ jogging marche 2–3’ entre chaque", "", "Progression"], [7, 5, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 5’-4’-3’ plus vite marche 2’ entre › 5’ facile", "", "Progression"], [7, 5, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [7, 5, 5, "long", "Sortie longue · 28’", "28’ de course", "Jusqu’à 3 pauses marche au besoin.", "Progression"], [8, 4, 0, "ef", "Footing · 3×8’", "Échauffement + drills › 3×8’ jogging marche 2–3’ entre chaque", "", "Progression"], [8, 4, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 5×3’ plus vite marche 1–2’ › 5’ facile", "", "Progression"], [8, 4, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [8, 4, 5, "long", "Sortie longue · 30’", "30’ de course", "Jusqu’à 3 pauses marche au besoin.", "Progression"], [9, 3, 0, "ef", "Footing · 3×9’", "Échauffement + drills › 3×9’ jogging marche 2’ entre chaque", "", "Progression"], [9, 3, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 3×5’ plus vite marche 1–2’ › 5’ facile", "", "Progression"], [9, 3, 4, "cross", "Entraînement croisé · 20–30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [9, 3, 5, "long", "Sortie longue · 30’", "30’ de course", "Tous niveaux : allure régulière et confortable.", "Progression"], [10, 2, 0, "ef", "Footing · 3×10’", "Échauffement + drills › 3×10’ jogging marche 2’ entre chaque", "", "Progression"], [10, 2, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 3×4’ puis 2×2’ plus vite marche 1–2’ › 5’ facile", "", "Progression"], [10, 2, 4, "cross", "Entraînement croisé · 20–30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [10, 2, 5, "long", "Sortie longue · 25’", "25’ de course", "Course régulière, avec 4–5 lignes droites à la fin.", "Progression"], [11, 1, 0, "ef", "Footing · 3×7’", "Échauffement + drills › 3×7’ jogging marche 2’ entre chaque", "", "Récupération"], [11, 1, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 7–8×2’ plus vite marche 1–2’ › 5’ facile", "", "Récupération"], [11, 1, 4, "cross", "Entraînement croisé · 20–30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Récupération"], [11, 1, 5, "long", "Sortie longue · 15–20’", "15–20’ de course", "Course régulière, avec 4–5 lignes droites à la fin.", "Récupération"], [12, 0, 0, "ef", "Footing · 3×3’", "Échauffement + drills › 3×3’ jogging marche 2’ entre chaque", "", "Affûtage"], [12, 0, 2, "int", "Fractionné", "Échauffement + drills › 5’ facile › 2’ marche › 5×1’ plus vite marche 1–2’ › 5’ facile", "", "Affûtage"], [12, 0, 4, "cote", "Accélérations · 10–15’", "Repos ou drills › 10–15’ jogging › 4 lignes droites", "Séance optionnelle : juste de quoi réveiller les jambes avant la course.", "Affûtage"], [12, 0, 5, "race", "Jour de course", "", "Bonne course ! Pars à une allure confortable, garde de l’énergie pour la deuxième moitié et profite de l’ambiance.", "Affûtage"]]}, "5k-niveau2": {"dist": "5 km", "niveau": "Niveau 2 · course continue", "nb": 12, "src": "sr", "s": [[1, 11, 0, "ef", "Footing · 10–15’", "Échauffement + activation + drills › 10–15’ jogging", "", ""], [1, 11, 2, "cote", "Accélérations", "Échauffement + drills › 15–20’ course facile › 4 lignes droites", "", ""], [1, 11, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", ""], [1, 11, 5, "long", "Sortie longue · 20’", "20’ de course", "Garde une allure constante.", ""], [2, 10, 0, "ef", "Footing · 15–20’", "Échauffement + drills › 15–20’ jogging", "", "Progression"], [2, 10, 2, "int", "Fractionné", "Échauffement + drills › 20’ course facile › dont 5–8×1’ plus vite 1’ facile entre", "", "Progression"], [2, 10, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [2, 10, 5, "long", "Sortie longue · 22’", "22’ de course", "Bien régulier, allure constante.", "Progression"], [3, 9, 0, "ef", "Footing · 18–20’", "Échauffement + drills › 18–20’ jogging", "", "Progression"], [3, 9, 2, "int", "Fractionné", "Échauffement + drills › 25’ course facile › dont 5–6×2’ plus vite 2’ facile entre", "", "Progression"], [3, 9, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [3, 9, 5, "long", "Sortie longue · 25’", "25’ de course", "Bien régulier, allure constante.", "Progression"], [4, 8, 0, "ef", "Footing · 20–22’", "Échauffement + drills › 20–22’ jogging", "", "Progression"], [4, 8, 2, "int", "Fractionné", "Échauffement + drills › 25–30’ course facile › dont 5–6×3’ plus vite 2’ facile entre", "", "Progression"], [4, 8, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [4, 8, 5, "long", "Sortie longue · 25’", "25’ de course", "Essaie de courir la 2e moitié plus vite que la 1re.", "Progression"], [5, 7, 0, "ef", "Footing · 15–20’", "Échauffement + drills › 15–20’ jogging", "", "Récupération"], [5, 7, 2, "int", "Fractionné", "Échauffement + drills › 25–30’ course facile › dont 5–8×1’ plus vite 1’ facile entre", "", "Récupération"], [5, 7, 4, "cross", "Entraînement croisé · 30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Récupération"], [5, 7, 5, "long", "Sortie longue · 20’", "20’ de course", "Bien régulier, allure constante.", "Récupération"], [6, 6, 0, "ef", "Footing · 20–25’", "Échauffement + drills › 20–25’ jogging", "", "Progression"], [6, 6, 2, "int", "Fractionné", "Échauffement + drills › 25–30’ course facile › dont 4×4’ plus vite 2’ facile entre", "", "Progression"], [6, 6, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [6, 6, 5, "long", "Sortie longue · 25’", "25’ de course", "Essaie de courir la 2e moitié plus vite que la 1re.", "Progression"], [7, 5, 0, "ef", "Footing · 25–30’", "Échauffement + drills › 25–30’ jogging", "", "Progression"], [7, 5, 2, "int", "Fractionné", "Échauffement + drills › 30–35’ course facile › dont 4×(3’-2’-1’) plus vite 1’ facile entre, 3’ entre les séries", "", "Progression"], [7, 5, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [7, 5, 5, "long", "Sortie longue · 28’", "28’ de course", "Bien régulier, allure constante.", "Progression"], [8, 4, 0, "ef", "Footing · 25–30’", "Échauffement + drills › 25–30’ jogging", "", "Progression"], [8, 4, 2, "int", "Fractionné", "Échauffement + drills › 30–35’ course facile › dont 6×3’ plus vite 90″ facile entre", "", "Progression"], [8, 4, 4, "cross", "Entraînement croisé · 30–40’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [8, 4, 5, "long", "Sortie longue · 30’", "30’ de course", "Régulier, ou accélère légèrement en 2e moitié.", "Progression"], [9, 3, 0, "ef", "Footing · 25–30’", "Échauffement + drills › 25–30’ jogging", "", "Progression"], [9, 3, 2, "int", "Fractionné", "Échauffement + drills › 30–35’ course facile › dont 4–5×5’ plus vite 90″ facile entre", "", "Progression"], [9, 3, 4, "cross", "Entraînement croisé · 20–30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [9, 3, 5, "long", "Sortie longue · 30’", "30’ de course", "Tous niveaux : allure régulière et confortable.", "Progression"], [10, 2, 0, "ef", "Footing · 30’", "Échauffement + drills › 30’ jogging", "", "Progression"], [10, 2, 2, "int", "Fractionné", "Échauffement + drills › 30–35’ course facile › dont 2×5’ puis 4×2’ plus vite 90″ facile entre", "", "Progression"], [10, 2, 4, "cross", "Entraînement croisé · 20–30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Progression"], [10, 2, 5, "long", "Sortie longue · 25’", "25’ de course", "Course régulière, avec 4–5 lignes droites à la fin.", "Progression"], [11, 1, 0, "ef", "Footing · 25’", "Échauffement + drills › 25’ jogging", "", "Récupération"], [11, 1, 2, "int", "Fractionné", "Échauffement + drills › 30–35’ course facile › dont 7–8×2’ plus vite 90″ facile entre", "", "Récupération"], [11, 1, 4, "cross", "Entraînement croisé · 20–30’", "Vélo, randonnée, patins à roues alignées, natation…", "", "Récupération"], [11, 1, 5, "long", "Sortie longue · 15–20’", "15–20’ de course", "Course régulière, avec 4–5 lignes droites à la fin.", "Récupération"], [12, 0, 0, "ef", "Footing · 15–20’", "Échauffement + drills › 15–20’ jogging", "", "Affûtage"], [12, 0, 2, "int", "Fractionné · 30–35’", "Échauffement + drills › 30–35’ course facile › dont 5×1’ plus vite 1’ facile entre", "", "Affûtage"], [12, 0, 4, "cote", "Accélérations · 10–15’", "Repos ou drills › 10–15’ jogging › 4 lignes droites", "Séance optionnelle : juste de quoi réveiller les jambes avant la course.", "Affûtage"], [12, 0, 5, "race", "Jour de course", "", "Bonne course ! Pars à une allure confortable, garde de l’énergie pour la deuxième moitié et profite de l’ambiance.", "Affûtage"]]}};
-var RACES = {
-  mtl21:{nom:"Montréal",sous:"Nespresso · semi-marathon",date:"2027-04-18",dist:21,info:"Dimanche 18 avril 2027 · départ 8 h · parc Jean-Drapeau",pdf:{"semi-3x":"3x","semi-4x":"4x","semi-5x":"5x"},voyage:1},
-  mtl10:{nom:"Montréal",sous:"Nespresso · 10 km",date:"2027-04-17",dist:10,info:"Samedi 17 avril 2027 · départ 11 h 30 · parc Jean-Drapeau",pdf:{"10k-niveau1":"10k1","10k-niveau2":"10k2","10k-niveau3":"10k3"},voyage:1},
-  sl10:{nom:"Sporting Life",sous:"10 km · Toronto",date:"2027-05-09",dist:10,info:"Dimanche 9 mai 2027 (date à confirmer) · rue Yonge, Toronto"},
-  twr10:{nom:"Toronto Women's Run",sous:"Printemps · 10 km",date:"2027-05-22",dist:10,info:"Samedi 22 mai 2027 · départ 8 h · parc Wilket Creek"},
-  twr5:{nom:"Toronto Women's Run",sous:"Printemps · 5 km",date:"2027-05-22",dist:5,info:"Samedi 22 mai 2027 · départ 8 h 20 · parc Wilket Creek"}
-};
-var PLANS_BY = {5:["5k-niveau1","5k-niveau2"],10:["10k-niveau1","10k-niveau2","10k-niveau3"],21:["semi-3x","semi-4x","semi-5x"]};
-var SHORT = {"semi-3x":"3 fois","semi-4x":"4 fois","semi-5x":"5 fois","5k-niveau1":"Niveau 1<small>course et marche</small>","5k-niveau2":"Niveau 2<small>course continue</small>",
-  "10k-niveau1":"Niveau 1<small>course et marche · 4 séances</small>","10k-niveau2":"Niveau 2<small>course continue · 4 séances</small>","10k-niveau3":"Niveau 3<small>5 sorties par semaine</small>"};
-var PDFNAME = {"3x":"Entrainement-ESMO-Nespresso-Montreal-3x-semaine.pdf","4x":"Entrainement-ESMO-Nespresso-Montreal-4x-semaine.pdf","5x":"Entrainement-ESMO-Nespresso-Montreal-5x-semaine.pdf",
-  "10k1":"Montreal-ESMO-10km-Niveau1.pdf","10k2":"Montreal-ESMO-10km-Niveau2.pdf","10k3":"Montreal-ESMO-10km-Niveau3.pdf"};
-var CREDIT = {ra:"Plans d'entraînement et conseils tirés de Running Addict (running-addict.fr).",sr:"Plan d'entraînement original de la coach Seanna Robinson, traduit en français."};
-var BAR = {ef:"w3-border-grey",int:"w3-border-red",cote:"w3-border-green",long:"w3-border-blue",cross:"w3-border-purple",race:"w3-border-amber",rest:"w3-border-light-grey"};
-var TYPES = {ef:"Footing",int:"Fractionné",cote:"Côtes / accélérations",long:"Sortie longue",cross:"Entraînement croisé",race:"Course"};
-var DAY = 86400000;
-var DOW = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
-var MON = ["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
-var MONL = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
-var $ = function(id){ return document.getElementById(id); };
-var paces = null, downloads = null, cur = null;
 
-function pd(s){ var a=s.split("-"); return new Date(Date.UTC(+a[0],+a[1]-1,+a[2])); }
-function iso(d){ return d.toISOString().slice(0,10); }
-function monday(dt){ return new Date(dt.getTime()-((dt.getUTCDay()+6)%7)*DAY); }
-function dm(dt,long){ var d=dt.getUTCDate(); return d+(d===1?"er":"")+" "+(long?MONL:MON)[dt.getUTCMonth()]; }
-function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
-
-/* ---- Choix ---- */
-function raceSel(){
-  var k=$("race").value;
-  if(k!=="autre") return {key:k,r:RACES[k]};
-  var d=$("cdate").value, dist=+document.querySelector("input[name=cdist]:checked").value;
-  return {key:"autre",r:{nom:"Ta course",sous:dist===21?"Semi-marathon":dist+" km",date:d||null,dist:dist,info:d?DOW[pd(d).getUTCDay()]+" "+dm(pd(d),1)+" "+pd(d).getUTCFullYear():"Choisis la date de ta course."}};
-}
-function planSel(){ var el=document.querySelector("input[name=plan]:checked"); return el?el.value:null; }
-function renderPlanChoices(){
-  var R=raceSel().r, ids=PLANS_BY[R.dist], prev=planSel();
-  $("l-plan").textContent = R.dist===21 ? "Combien de fois par semaine vas-tu courir ?" : "Ton niveau";
-  $("plans").innerHTML = ids.map(function(id,i){ return '<label class="opt"><input type="radio" name="plan" value="'+id+'"'+((prev===id||(!prev||ids.indexOf(prev)<0)&&i===(R.dist===21?1:0))?' checked':'')+'><span class="w3-button w3-border w3-round">'+SHORT[id]+'</span></label>'; }).join("");
-  Array.prototype.forEach.call(document.querySelectorAll("input[name=plan]"),function(el){ el.addEventListener("change",update); });
-}
-
-/* ---- Génération du calendrier ---- */
-function generate(planId, raceIso){
-  var P=LIB[planId], race=pd(raceIso), rmon=monday(race), weeks=[];
-  P.s.forEach(function(s){
-    var d=new Date(rmon.getTime()+(-s[1]*7+s[2])*DAY), type=s[3];
-    if(type==="race") d=race;
-    else if(s[1]===0 && d>=race) d=new Date(race.getTime()-DAY);   // course un autre jour : la séance passe à la veille
-    var w=weeks[s[0]-1]||(weeks[s[0]-1]={num:s[0],label:s[7],mon:new Date(rmon.getTime()-s[1]*7*DAY),s:[]});
-    w.s.push({date:d,type:type,title:s[4],detail:s[5],tip:s[6]});
-  });
-  weeks.forEach(function(w){ w.s.sort(function(a,b){ return a.date-b.date; }); });
-  return {plan:planId,P:P,weeks:weeks,start:weeks[0].mon,race:race};
-}
-function raceSession(s,R){ return s.type==="race" ? {date:s.date,type:"race",title:R.nom+" · "+R.sous,detail:R.info,tip:s.tip} : s; }
-
-/* ---- Allures ---- */
-function readTime(){ var m=$("min").value.trim(), s=$("sec").value.trim();
-  if(!m&&!s) return 0; s=s||"0"; if(!/^\d{1,2}$/.test(m)||!/^\d{1,2}$/.test(s)||+s>59) return null; return (+m)*60+(+s); }
-function fmt(x){ x=Math.round(x); var m=Math.floor(x/60), s=x%60; return m+":"+(s<10?"0":"")+s; }
-function fmtH(x){ x=Math.round(x); var h=Math.floor(x/3600), m=Math.floor((x%3600)/60); return (h?h+" h ":"")+(h&&m<10?"0":"")+m+" min"; }
-function calc(t){ var r=function(d){ return t*Math.pow(d/5,1.06); }; var t10=r(10), tHM=r(21.0975), tM=r(42.195);
-  return {p5:t/5,p10:t10/10,pHM:tHM/21.0975,pM:tM/42.195,eLo:t/5+75,eHi:t/5+120,t5:t,t10:t10,tHM:tHM}; }
-var EFFORT = {"EF · facile":"Tu peux tenir une conversation.","Jogging facile":"Tu peux tenir une conversation.",
-  "Allure 42 km":"Confortable mais soutenue : tu parles en phrases courtes.","Allure 21 km":"Soutenue : quelques mots à la fois. Tenable environ 2 h.",
-  "Allure 10 km":"Difficile mais contrôlé : quelques mots seulement.","Allure 5 km":"Très difficile : tu ne peux plus parler.","« Plus vite »":"Soutenu mais contrôlé."};
-function paceRows(p,planId,dist){
-  var src=LIB[planId].src;
-  if(src==="sr") return [
-    {k:"Jogging facile",v:fmt(p.eLo)+"–"+fmt(p.eHi),f:"Footings, sortie du samedi, échauffements",wide:1},
-    {k:"« Plus vite »",v:fmt(p.p10)+"–"+fmt(p.p5),f:"Les répétitions du mercredi"},
-    dist===5 ? {k:"Allure 5 km",v:fmt(p.p5),f:"Ton allure le jour de la course",main:1} : {k:"Allure 10 km",v:fmt(p.p10),f:"Ton allure le jour de la course",main:1}];
-  return [
-    {k:"EF · facile",v:fmt(p.eLo)+"–"+fmt(p.eHi),f:"Footings, échauffements, récupérations",wide:1},
-    {k:"Allure 21 km",v:fmt(p.pHM),f:dist===21?"Ton allure de course · blocs de la sortie longue":"Blocs de la sortie longue",main:dist===21},
-    {k:"Allure 42 km",v:fmt(p.pM),f:"Blocs de la sortie longue (début du plan)"},
-    {k:"Allure 10 km",v:fmt(p.p10),f:dist===10?"Ton allure de course · fractionnés":"Fractionnés « allure 10 km »",main:dist===10},
-    {k:"Allure 5 km",v:fmt(p.p5),f:"Fractionnés courts (1'30)"}];
-}
-function paceText(p,planId,dist){
-  if(!p) return "Allures à l'effort (fais ton test de 5 km pour avoir tes chiffres) : "+paceRows(calc(1800),planId,dist).map(function(r){ return r.k+" : "+EFFORT[r.k]; }).join(" · ");
-  return "Tes allures (min/km) : "+paceRows(p,planId,dist).map(function(r){ return r.k+" "+r.v; }).join(" · ");
-}
-function renderPaces(){
-  var t=readTime(), planId=planSel(), dist=raceSel().r.dist; if(!planId) return false;
-  if(t===null||(t&&(t<11*60||t>75*60))){ $("err").textContent="Écris tes minutes (11 à 75) et tes secondes (0 à 59). Exemple : 28 min 45 s."; paces=null; return false; }
-  $("err").textContent=""; paces=t?calc(t):null;
-  var rows=paceRows(paces||calc(1800),planId,dist);
-  $("paces").innerHTML=rows.map(function(r){ return '<div class="w3-col s6 m4 l4 w3-margin-bottom"><div class="w3-container w3-padding w3-round '+(r.main?'w3-teal':'w3-light-grey')+'" style="min-height:118px">'+
-    '<div class="w3-small" style="text-transform:uppercase;letter-spacing:1px">'+r.k+'</div>'+
-    (paces?'<div class="w3-xxlarge">'+r.v+' <span class="w3-small">/km</span></div>':'<div style="font-weight:bold;margin:4px 0">'+EFFORT[r.k]+'</div>')+
-    '<div class="w3-small'+(r.main?'':' w3-text-grey')+'">'+r.f+'</div></div></div>'; }).join("");
-  if(!paces) $("predict").textContent="En attendant ton test, cours à l'effort. Tes chiffres apparaîtront ici dès que tu écris ton temps.";
-  else $("predict").innerHTML = dist===21 ? "Temps estimé au semi-marathon : <strong>"+fmtH(paces.tHM)+"</strong>. Une estimation : pour un premier semi, pars plus lentement."
-    : dist===10 ? "Temps estimé au 10 km : <strong>"+fmtH(paces.t10)+"</strong>. Une estimation : garde de l'énergie pour la 2e moitié."
-    : "Ton test de 5 km : <strong>"+fmtH(paces.t5)+"</strong>. Le jour de la course, vise un peu plus vite si l'entraînement s'est bien passé !";
-  save_();
-  return true;
-}
-
-/* ---- Rendu ---- */
-function update(){
-  var S=raceSel(), R=S.r; $("custom").hidden = S.key!=="autre";
-  if(!$("plans").children.length || PLANS_BY[R.dist].indexOf(planSel())<0) renderPlanChoices();
-  var planId=planSel();
-  $("race-info").textContent=R.info;
-  if(!R.date){ cur=null; $("weeks").innerHTML=""; $("warn").hidden=true; dlState(); renderPaces(); return; }
-  cur=generate(planId,R.date); cur.R=R; cur.key=S.key;
-  var race=cur.race, start=cur.start, now=Date.now();
-  $("race-info").textContent=R.info+" · début du plan : lundi "+dm(start,1);
-  var testWk=new Date(start.getTime()-7*DAY);
-  $("test-title").textContent="Ton test de 5 km : semaine du "+dm(testWk,1);
-  $("base-title").textContent="D'ici le "+dm(start,1)+" : entraînement de base";
-  if(race.getTime()<now){ $("warn").hidden=false; $("warn").textContent="Cette date est déjà passée. Choisis une course à venir."; }
-  else if(start.getTime()<now-7*DAY){ var late=Math.floor((now-start.getTime())/(7*DAY)); $("warn").hidden=false;
-    $("warn").textContent="Ce plan de "+cur.weeks.length+" semaines aurait dû commencer le "+dm(start,1)+". Commence là où le plan est rendu (semaine "+Math.min(cur.weeks.length,late+1)+") et parles-en à ta coach."; }
-  else $("warn").hidden=true;
-  var chips=['<span class="w3-tag w3-light-grey w3-round" style="margin:0 4px 4px 0"><b>'+dm(start,1)+'</b> · début du plan</span>'];
-  if(start.getTime()<=Date.UTC(2027,2,19) && race.getTime()>=Date.UTC(2027,2,15)) chips.push('<span class="w3-tag w3-light-grey w3-round" style="margin:0 4px 4px 0"><b>15 au 19 mars</b> · relâche</span>');
-  if(R.voyage) chips.push('<span class="w3-tag w3-light-grey w3-round" style="margin:0 4px 4px 0"><b>16 au 18 avril</b> · voyage à Montréal</span>');
-  $("chips").innerHTML=chips.join("");
-  var used={}; cur.weeks.forEach(function(w){ w.s.forEach(function(s){ used[s.type]=1; }); });
-  $("legend").innerHTML=Object.keys(TYPES).filter(function(t){ return used[t]; }).map(function(t){ return '<span class="w3-tag w3-white w3-leftbar '+BAR[t]+'" style="margin:0 4px 4px 0">'+TYPES[t]+'</span>'; }).join("");
-  $("note").textContent = cur.P.src==="sr"
-    ? "Échauffement + drills avant chaque course. « Plus vite » : effort soutenu mais contrôlé. Lignes droites : accélérations progressives de 15 à 20 s. Les autres jours : repos, marche ou autre sport."
-    : "EF : endurance fondamentale, allure facile (tu peux parler). Allure 5, 10, 21 ou 42 km : ton allure de course sur cette distance. Les récupérations se font toujours en EF.";
-  $("credit").textContent=CREDIT[cur.P.src];
-  var openIdx=0; cur.weeks.forEach(function(w,i){ if(now>=w.mon.getTime()) openIdx=i; });
-  $("weeks").innerHTML=cur.weeks.map(function(w,i){
-    var we=new Date(w.mon.getTime()+6*DAY), isNow=now>=w.mon.getTime()&&now<w.mon.getTime()+7*DAY;
-    var head='<b>Semaine '+w.num+'</b> <span class="w3-text-grey">'+dm(w.mon)+' – '+dm(we)+'</span> '+(w.label?'<span class="w3-tag w3-small w3-round w3-light-grey">'+esc(w.label)+'</span> ':'')+(isNow?'<span class="w3-tag w3-small w3-round w3-teal">Cette semaine</span>':'');
-    var body=w.s.map(function(raw){ var s=raceSession(raw,R);
-      return '<div class="w3-col s12 m6 l4" style="padding:4px"><div class="w3-container w3-white w3-leftbar '+BAR[s.type]+'" style="padding:8px 12px;min-height:96px">'+
-        '<div class="w3-small w3-text-grey" style="text-transform:uppercase">'+DOW[s.date.getUTCDay()]+' '+dm(s.date)+'</div><div><b>'+esc(s.title)+'</b></div>'+(s.type==="rest"||!s.detail?'':'<div class="w3-small">'+esc(s.detail)+'</div>')+'</div></div>'; }).join("");
-    return '<details class="w3-border w3-round w3-margin-bottom w3-light-grey"'+(i===openIdx?' open':'')+'><summary class="w3-padding" style="cursor:pointer">'+head+'</summary><div class="w3-row" style="padding:0 8px 8px">'+body+'</div></details>';
-  }).join("");
-  dlState(); renderPaces();
-}
-
-/* ---- Téléchargements ---- */
-function dlState(){ var ok=!!cur; $("dl-pdf").disabled=!ok; $("dl-csv").disabled=!ok; $("dl-ics").disabled=!ok;
-  $("dl-pdf").innerHTML = '<i class="fa fa-file-pdf-o"></i> '+(cur&&cur.R.pdf&&cur.R.pdf[cur.plan] ? "Télécharger mon plan (PDF du club)" : "Télécharger mon plan (PDF)"); }
-function csvCell(s){ return '"'+String(s).replace(/"/g,'""')+'"'; }
-function mdY(dt){ var m=dt.getUTCMonth()+1, d=dt.getUTCDate(); return (m<10?"0":"")+m+"/"+(d<10?"0":"")+d+"/"+dt.getUTCFullYear(); }
-function planName(){ var t=SHORT[cur.plan].replace(/<small>/," · ").replace(/<\/small>/,""); return (cur.R.dist===21?"Semi-marathon · ":cur.R.dist+" km · ")+(cur.R.dist===21?t+" par semaine":t); }
-function buildCSV(){
-  var rows=[["Subject","Start Date","All Day Event","Description","Location"]];
-  cur.weeks.forEach(function(w){ w.s.forEach(function(raw){ var s=raceSession(raw,cur.R); if(s.type==="rest") return;
-    var desc="Semaine "+w.num+(w.label?" ("+w.label.toLowerCase()+")":"")+" · "+planName()+"\n"+s.detail+(s.tip?"\n\nConseil : "+s.tip:"")+"\n\n"+paceText(paces,cur.plan,cur.R.dist);
-    rows.push(["ESMO · "+s.title, mdY(s.date), "True", desc, ""]); }); });
-  return rows.map(function(r){ return r.map(csvCell).join(","); }).join("\r\n");
-}
-function buildPDF(){
-  var J=window.jspdf&&window.jspdf.jsPDF; if(!J) return null;
-  var doc=new J({orientation:"landscape",unit:"pt",format:"letter"}), W=doc.internal.pageSize.getWidth(), R=cur.R;
-  doc.setFillColor(58,58,58); doc.rect(0,0,W,96,"F");
-  doc.setFillColor(0,150,136); doc.circle(48,34,16,"F");
-  doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(8); doc.text("ESMO",48,37,{align:"center"});
-  doc.setTextColor(255,255,255); doc.setFontSize(9); doc.text("CLUB DE COURSE",72,31);
-  doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.text("École secondaire Michelle-O'Bonsawin",72,42);
-  doc.setFont("helvetica","bold"); doc.setFontSize(18); doc.setTextColor(255,255,255); doc.text(R.nom+" · "+R.sous,32,72);
-  doc.setFontSize(9.5); doc.setTextColor(255,255,255); doc.setFont("helvetica","normal");
-  doc.text(planName()+" · "+DOW[cur.race.getUTCDay()]+" "+dm(cur.race,1)+" "+cur.race.getUTCFullYear()+" · début du plan : lundi "+dm(cur.start,1),32,87);
-  doc.setFontSize(8.2); doc.setTextColor(15,31,61); doc.setFont("helvetica","bold");
-  doc.text(paceText(paces,cur.plan,R.dist),32,112,{maxWidth:W-64});
-  var days=[1,2,3,4,5,6,0].filter(function(d){ return cur.weeks.some(function(w){ return w.s.some(function(s){ return s.date.getUTCDay()===d; }); }); });
-  var body=cur.weeks.map(function(w){ var by={}; w.s.forEach(function(raw){ by[raw.date.getUTCDay()]=raceSession(raw,R); });
-    return ["Sem. "+w.num+(w.label?"\n"+w.label:"")+"\n"+dm(w.mon)].concat(days.map(function(d){ var s=by[d]; return s?(s.title+(s.type==="rest"||!s.detail?"":"\n"+s.detail)):""; })); });
-  doc.autoTable({startY:132,head:[["Semaine"].concat(days.map(function(d){ return DOW[d]; }))],body:body,theme:"grid",margin:{left:32,right:32,bottom:30},
-    styles:{font:"helvetica",fontSize:6.8,cellPadding:2.6,textColor:[15,31,61],lineColor:[228,225,218],lineWidth:.5,valign:"top"},
-    headStyles:{fillColor:[0,150,136],textColor:255,fontStyle:"bold",fontSize:8},columnStyles:{0:{cellWidth:58,fontStyle:"bold"}},
-    didParseCell:function(h){ if(h.section==="body"&&h.row.index===cur.weeks.length-1) h.cell.styles.fillColor=[224,242,241]; }});
-  doc.setFont("helvetica","normal"); doc.setFontSize(7); doc.setTextColor(104,109,119);
-  doc.text(CREDIT[cur.P.src]+" Club de course ESMO · www.mmebernatchez.ca",32,doc.internal.pageSize.getHeight()-14);
-  return doc.output("arraybuffer");
-}
-function status(msg,bad){ $("status").textContent=msg; $("status").style.color=bad?"var(--red)":"var(--muted)"; }
-function save(filename,data,type){
-  try{
-    var blob = data instanceof Blob ? data : new Blob([data],{type:type||"application/octet-stream"});
-    var url=URL.createObjectURL(blob), a=document.createElement("a");
-    a.href=url; a.download=filename; document.body.appendChild(a); a.click();
-    setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); },1500);
-    status("Fichier téléchargé : "+filename);
-  }catch(e){ status("Le téléchargement n'a pas fonctionné. Réessaie.",true); }
-}
-function slug(){ return ("ESMO-"+cur.R.nom+"-"+cur.plan).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Za-z0-9-]+/g,"-"); }
-$("dl-pdf").addEventListener("click",function(){ if(!cur) return; renderPaces();
-  var orig=cur.R.pdf&&cur.R.pdf[cur.plan];
-  if(orig){ status("Préparation du PDF…"); fetch("plans/"+orig+".pdf").then(function(r){ if(!r.ok) throw 0; return r.blob(); })
-    .then(function(b){ save(PDFNAME[orig],b,"application/pdf"); }).catch(function(){ status("Le PDF n'a pas pu être chargé. Recharge la page et réessaie.",true); }); return; }
-  var buf=buildPDF(); if(!buf){ status("Le PDF n'a pas pu être créé. Recharge la page et réessaie.",true); return; }
-  save(slug()+".pdf",buf,"application/pdf"); });
-$("dl-csv").addEventListener("click",function(){ if(!cur) return; renderPaces(); save(slug()+"-Google-Agenda.csv",buildCSV(),"text/csv;charset=utf-8"); });
-$("dl-ics").addEventListener("click",function(){ if(!cur) return; renderPaces(); save(slug()+".ics",buildICS(),"text/calendar;charset=utf-8"); });
-function icsEsc(s){ return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n"); }
-function icsFold(l){ var out=[],s=l; while(s.length>70){ out.push(s.slice(0,70)); s=" "+s.slice(70); } out.push(s); return out.join("\r\n"); }
-function ymd(d){ return d.toISOString().slice(0,10).replace(/-/g,""); }
-function buildICS(){
-  var L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Club de course ESMO//FR","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:ESMO · "+cur.R.nom], n=0, stamp=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
-  function ev(d,title,desc){ n++; L.push("BEGIN:VEVENT","UID:esmo-"+cur.plan+"-"+ymd(d)+"-"+n+"@mmebernatchez.ca","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+ymd(d),"DTEND;VALUE=DATE:"+ymd(new Date(d.getTime()+DAY)),
-    icsFold("SUMMARY:"+icsEsc(title)),icsFold("DESCRIPTION:"+icsEsc(desc)),"TRANSP:TRANSPARENT","END:VEVENT"); }
-  cur.weeks.forEach(function(w){ w.s.forEach(function(raw){ var s=raceSession(raw,cur.R); if(s.type==="rest") return;
-    ev(s.date,"ESMO · "+s.title,"Semaine "+w.num+(w.label?" ("+w.label.toLowerCase()+")":"")+" · "+planName()+"\n"+s.detail+(s.tip?"\n\nConseil : "+s.tip:"")+"\n\n"+paceText(paces,cur.plan,cur.R.dist)); }); });
-  L.push("END:VCALENDAR"); return L.join("\r\n")+"\r\n";
-}
-
-function save_(){ try{ localStorage.setItem("esmoGen",JSON.stringify({m:$("min").value,s:$("sec").value,r:$("race").value,p:planSel(),d:$("cdate").value,
-  cd:(document.querySelector("input[name=cdist]:checked")||{}).value})); }catch(e){} }
-$("race").addEventListener("change",function(){ renderPlanChoices(); update(); });
-$("cdate").addEventListener("change",update);
-Array.prototype.forEach.call(document.querySelectorAll("input[name=cdist]"),function(el){ el.addEventListener("change",function(){ renderPlanChoices(); update(); }); });
-["min","sec"].forEach(function(id){ $(id).addEventListener("input",function(){ $(id).value=$(id).value.replace(/\D/g,""); renderPaces(); }); });
-
-try{ var st=JSON.parse(localStorage.getItem("esmoGen")||"null");
-  if(st){ if(st.m) $("min").value=st.m; if(st.s) $("sec").value=st.s; if(st.r) $("race").value=st.r; if(st.d) $("cdate").value=st.d;
-    if(st.cd){ var c=document.querySelector('input[name=cdist][value="'+st.cd+'"]'); if(c) c.checked=true; }
-    renderPlanChoices(); if(st.p){ var p=document.querySelector('input[name=plan][value="'+st.p+'"]'); if(p) p.checked=true; } } }catch(e){}
-if(!$("plans").children.length) renderPlanChoices();
-update();
-
-})();
-</script>
 </body>
 </html>
