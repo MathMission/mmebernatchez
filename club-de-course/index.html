@@ -80,10 +80,6 @@ details summary::-webkit-details-marker{color:#009688}
         <select class="w3-select w3-border w3-margin-top" id="race" style="max-width:460px">
           <option value="mtl21">Montréal · semi-marathon · 18 avril</option>
           <option value="mtl10">Montréal · 10 km · 17 avril</option>
-          <option value="sl10">Sporting Life · 10 km · 9 mai</option>
-          <option value="twr10">Toronto Women's Run · 10 km · 22 mai</option>
-          <option value="twr5">Toronto Women's Run · 5 km · 22 mai</option>
-          <option value="autre">Autre course…</option>
         </select>
         <p class="w3-small w3-text-grey" id="race-info"></p>
         <div id="custom" hidden>
@@ -149,7 +145,8 @@ details summary::-webkit-details-marker{color:#009688}
       <li class="w3-theme"><p class="w3-xlarge"><span id="num-apercu">4</span>. Aperçu de ton plan</p></li>
       <li class="w3-padding-16">
         <div class="w3-panel w3-sand w3-leftbar w3-border-amber" style="margin-top:0">
-          <p><b id="base-title"></b><br>Cours au moins 3 fois par semaine, 30 minutes minimum chaque fois. C'est le strict minimum pour être prêt à commencer le plan.</p>
+          <p><b id="base-title"></b><br><span id="base-text"></span></p>
+          <div id="base-table" style="overflow-x:auto"></div>
         </div>
         <div id="chips" style="margin-bottom:8px"></div>
         <div id="legend" style="margin-bottom:8px"></div>
@@ -260,6 +257,44 @@ function generate(planId, raceIso){
 }
 function raceSession(s,R){ return s.type==="race" ? {date:s.date,type:"race",title:R.nom+" · "+R.sous,detail:R.info,tip:s.tip} : s; }
 
+/* ---- Entraînement de base : progression de 10 % par semaine jusqu'au plan ---- */
+function minutesOf(title){
+  var m=/·\s*(.*)$/.exec(title); if(!m) return 0; var s=m[1], h=/^(\d+)h(\d*)/.exec(s);
+  if(h) return (+h[1])*60+(+(h[2]||0));
+  var r=/^(\d+)(?:–(\d+))?’/.exec(s); return r ? ((+r[1])+(+(r[2]||r[1])))/2 : 0;
+}
+function r5(x){ return Math.round(x/5)*5; }
+function baseInfo(){
+  if(!cur) return null;
+  var P=cur.P, now=Date.now(), testWk=new Date(cur.start.getTime()-7*DAY);
+  if(P.src!=="ra") return {simple:1};
+  var w1=P.s.filter(function(s){ return s[0]===1 && ["rest","race","cross"].indexOf(s[3])<0; });
+  var tot=0, lng=0, runs=w1.length;
+  w1.forEach(function(s){ var m=minutesOf(s[4]); tot+=m; if(s[3]==="long") lng=Math.max(lng,m); });
+  var floor=runs>=5?120:90, thisMon=monday(new Date(Date.UTC(new Date().getFullYear(),new Date().getMonth(),new Date().getDate())));
+  var isLight=function(mon){ var xmas=Date.UTC(mon.getUTCFullYear(),11,25); return xmas>=mon.getTime() && xmas<mon.getTime()+7*DAY; };
+  var rows=[], T=tot/1.1, L=lng/1.1, mon=testWk, guard=0;
+  while(mon.getTime()>=thisMon.getTime() && guard++<30){
+    if(isLight(mon)) rows.unshift({mon:mon,light:1});
+    else { rows.unshift({mon:mon,t:Math.max(T,floor),l:Math.max(L,30)}); T/=1.1; L/=1.1; }
+    mon=new Date(mon.getTime()-7*DAY);
+  }
+  rows.forEach(function(r,i){ if(r.light){ var prev=rows[i-1]||rows[i+1]; r.t=prev.t*0.8; r.l=prev.l*0.8; } });
+  rows.forEach(function(r){ r.t=r5(r.t); r.l=r5(r.l);
+    r.n = runs<=3 ? "3" : r.t<=110 ? "3" : r.t<=150 ? "3–4" : (runs>=5 && r.t>=170 ? "4–5" : "4"); });
+  return {rows:rows,testWk:testWk,w1t:r5(tot),w1l:r5(lng)};
+}
+function renderBase(){
+  var b=baseInfo(); if(!b){ $("base-text").textContent=""; $("base-table").innerHTML=""; return; }
+  if(b.simple){ $("base-text").textContent="Cours 3 fois par semaine, 20 à 30 minutes chaque fois. Alterner course et marche, c'est correct. Le plan commence en douceur."; $("base-table").innerHTML=""; return; }
+  $("base-text").textContent="Augmente ton temps de course d'environ 10 % par semaine, jamais plus. Voici où tu devrais être chaque semaine pour commencer ton plan (semaine 1 : "+b.w1t+" min, sortie longue de "+b.w1l+" min) sans te blesser.";
+  if(!b.rows.length){ $("base-table").innerHTML=""; return; }
+  var now=Date.now();
+  $("base-table").innerHTML='<table class="w3-table w3-bordered w3-small w3-white" style="margin-bottom:12px"><tr class="w3-teal"><th>Semaine du</th><th>Total</th><th>Courses</th><th>Sortie longue</th></tr>'+
+    b.rows.map(function(r){ var isNow=now>=r.mon.getTime()&&now<r.mon.getTime()+7*DAY, isTest=r.mon.getTime()===b.testWk.getTime();
+      return '<tr'+(isNow?' class="w3-pale-green" style="font-weight:bold"':'')+'><td>'+dm(r.mon)+(r.light?' <span class="w3-text-grey">(plus léger)</span>':'')+(isTest?' <span class="w3-text-teal">(test 5 km)</span>':'')+(isNow?' ← cette semaine':'')+'</td><td>'+r.t+' min</td><td>'+r.n+'</td><td>'+r.l+' min</td></tr>'; }).join("")+'</table>';
+}
+
 /* ---- Allures ---- */
 function readTime(){ var m=$("min").value.trim(), s=$("sec").value.trim();
   if(!m&&!s) return 0; s=s||"0"; if(!/^\d{1,2}$/.test(m)||!/^\d{1,2}$/.test(s)||+s>59) return null; return (+m)*60+(+s); }
@@ -341,6 +376,7 @@ function update(){
         '<div class="w3-small w3-text-grey" style="text-transform:uppercase">'+DOW[s.date.getUTCDay()]+' '+dm(s.date)+'</div><div><b>'+esc(s.title)+'</b></div>'+(s.type==="rest"||!s.detail?'':'<div class="w3-small">'+esc(s.detail)+'</div>')+'</div></div>'; }).join("");
     return '<details class="w3-border w3-round w3-margin-bottom w3-light-grey"'+(i===openIdx?' open':'')+'><summary class="w3-padding" style="cursor:pointer">'+head+'</summary><div class="grid-ses">'+body+'</div></details>';
   }).join("");
+  renderBase();
   var avance = cur.P.src==="ra";
   $("box-allures").hidden = !avance; $("num-apercu").textContent = avance ? "4" : "3";
   dlState(); renderPaces();
