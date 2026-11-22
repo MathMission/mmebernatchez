@@ -15,8 +15,14 @@
 .opt input:checked+.w3-button{background-color:#009688!important;color:#fff!important;border-color:#009688!important}
 .opt input:focus-visible+.w3-button{outline:3px solid #009688;outline-offset:2px}
 .opt small{display:block;font-size:11px;opacity:.8}
-.tm input{width:80px;display:inline-block;text-align:center;font-size:22px}
 .box{max-width:1000px;margin:0 auto 32px;text-align:left}
+.grid-paces{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:8px}
+.grid-ses{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;padding:0 12px 12px}
+.grid-ses>div,.grid-paces>div{height:100%}
+.dl-btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:12px}
+.dl-btns .w3-button{width:100%;white-space:normal;margin:0!important}
+.tm{display:flex;align-items:center;gap:8px}
+.tm input{width:80px!important;text-align:center;font-size:22px}
 details summary::-webkit-details-marker{color:#009688}
 </style>
 </head>
@@ -102,9 +108,11 @@ details summary::-webkit-details-marker{color:#009688}
     <ul class="w3-ul w3-border w3-hover-shadow">
       <li class="w3-theme"><p class="w3-xlarge">2. Ton calendrier</p></li>
       <li class="w3-padding-16">
-        <button type="button" class="w3-button w3-teal w3-padding-large w3-margin-bottom" id="dl-pdf" disabled><i class="fa fa-file-pdf-o"></i> Télécharger mon plan (PDF)</button><br>
-        <button type="button" class="w3-button w3-border w3-margin-bottom" id="dl-ics" disabled><i class="fa fa-calendar"></i> Ajouter à mon calendrier (iPhone, Outlook)</button>
-        <button type="button" class="w3-button w3-border w3-margin-bottom" id="dl-csv" disabled><i class="fa fa-google"></i> Ajouter à Google Agenda</button>
+        <div class="dl-btns">
+        <button type="button" class="w3-button w3-teal w3-padding" id="dl-pdf" disabled><i class="fa fa-file-pdf-o"></i> Télécharger mon plan (PDF)</button>
+        <button type="button" class="w3-button w3-border w3-padding" id="dl-ics" disabled><i class="fa fa-calendar"></i> Ajouter à mon calendrier (iPhone, Outlook)</button>
+        <button type="button" class="w3-button w3-border w3-padding" id="dl-csv" disabled><i class="fa fa-google"></i> Ajouter à Google Agenda</button>
+        </div>
         <details class="w3-small w3-margin-bottom"><summary><b>iPhone ou Outlook : comment ça marche ?</b></summary>
           <p>Sur iPhone, touche le bouton puis « Tout ajouter » : tes séances arrivent dans l'app Calendrier. Sur ordinateur, ouvre le fichier .ics téléchargé : Outlook ou Calendrier l'importe.</p></details>
         <details class="w3-small"><summary><b>Comment importer dans Google Agenda ?</b></summary>
@@ -121,7 +129,7 @@ details summary::-webkit-details-marker{color:#009688}
       <li class="w3-theme"><p class="w3-xlarge">3. Tes allures</p></li>
       <li class="w3-padding-16">
         <div class="w3-panel w3-pale-green w3-leftbar w3-border-teal" style="margin-top:0">
-          <p><b id="test-title"></b><br>Cours 5 km le plus vite possible en gardant une allure régulière (après 10 minutes d'échauffement). Ta coach te dira où le faire. Écris ton temps ici pour voir tes allures.</p>
+          <p><b id="test-title"></b><br>Cours 5 km le plus vite possible en gardant une allure régulière (après 10 minutes d'échauffement). Écris ton temps ici pour voir tes allures.</p>
         </div>
         <p style="margin:0 0 6px"><b id="l-time">Ton temps au test de 5 km</b> <span class="w3-small w3-text-grey">(quand tu l'auras fait)</span></p>
         <div class="tm" role="group" aria-labelledby="l-time">
@@ -129,7 +137,7 @@ details summary::-webkit-details-marker{color:#009688}
           <input class="w3-input w3-border" type="text" id="sec" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="--" aria-label="Secondes" autocomplete="off"> s
         </div>
         <p class="w3-text-red" id="err" role="alert"></p>
-        <div class="w3-row-padding" id="paces" style="margin:0 -8px" aria-live="polite"></div>
+        <div class="grid-paces" id="paces" aria-live="polite"></div>
         <p class="w3-small w3-text-grey" id="predict"></p>
       </li>
     </ul>
@@ -285,7 +293,7 @@ function renderPaces(){
   if(t===null||(t&&(t<11*60||t>75*60))){ $("err").textContent="Écris tes minutes (11 à 75) et tes secondes (0 à 59). Exemple : 28 min 45 s."; paces=null; return false; }
   $("err").textContent=""; paces=t?calc(t):null;
   var rows=paceRows(paces||calc(1800),planId,dist);
-  $("paces").innerHTML=rows.map(function(r){ return '<div class="w3-col s6 m4 l4 w3-margin-bottom"><div class="w3-container w3-padding w3-round '+(r.main?'w3-teal':'w3-light-grey')+'" style="min-height:118px">'+
+  $("paces").innerHTML=rows.map(function(r){ return '<div><div class="w3-container w3-padding w3-round '+(r.main?'w3-teal':'w3-light-grey')+'" style="height:100%">'+
     '<div class="w3-small" style="text-transform:uppercase;letter-spacing:1px">'+r.k+'</div>'+
     (paces?'<div class="w3-xxlarge">'+r.v+' <span class="w3-small">/km</span></div>':'<div style="font-weight:bold;margin:4px 0">'+EFFORT[r.k]+'</div>')+
     '<div class="w3-small'+(r.main?'':' w3-text-grey')+'">'+r.f+'</div></div></div>'; }).join("");
@@ -329,9 +337,9 @@ function update(){
     var we=new Date(w.mon.getTime()+6*DAY), isNow=now>=w.mon.getTime()&&now<w.mon.getTime()+7*DAY;
     var head='<b>Semaine '+w.num+'</b> <span class="w3-text-grey">'+dm(w.mon)+' – '+dm(we)+'</span> '+(w.label?'<span class="w3-tag w3-small w3-round w3-light-grey">'+esc(w.label)+'</span> ':'')+(isNow?'<span class="w3-tag w3-small w3-round w3-teal">Cette semaine</span>':'');
     var body=w.s.map(function(raw){ var s=raceSession(raw,R);
-      return '<div class="w3-col s12 m6 l4" style="padding:4px"><div class="w3-container w3-white w3-leftbar '+BAR[s.type]+'" style="padding:8px 12px;min-height:96px">'+
+      return '<div><div class="w3-container w3-white w3-leftbar '+BAR[s.type]+'" style="padding:8px 12px;height:100%">'+
         '<div class="w3-small w3-text-grey" style="text-transform:uppercase">'+DOW[s.date.getUTCDay()]+' '+dm(s.date)+'</div><div><b>'+esc(s.title)+'</b></div>'+(s.type==="rest"||!s.detail?'':'<div class="w3-small">'+esc(s.detail)+'</div>')+'</div></div>'; }).join("");
-    return '<details class="w3-border w3-round w3-margin-bottom w3-light-grey"'+(i===openIdx?' open':'')+'><summary class="w3-padding" style="cursor:pointer">'+head+'</summary><div class="w3-row" style="padding:0 8px 8px">'+body+'</div></details>';
+    return '<details class="w3-border w3-round w3-margin-bottom w3-light-grey"'+(i===openIdx?' open':'')+'><summary class="w3-padding" style="cursor:pointer">'+head+'</summary><div class="grid-ses">'+body+'</div></details>';
   }).join("");
   var avance = cur.P.src==="ra";
   $("box-allures").hidden = !avance; $("num-apercu").textContent = avance ? "4" : "3";
