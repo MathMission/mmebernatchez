@@ -1,184 +1,77 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Club de course ESMO · Mme Bernatchez</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Club de course de l'École secondaire Michelle-O'Bonsawin : plans d'entraînement, allures et calendriers.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-/* Same identity as the ESMO PDF plans: navy band header, yellow + red accents, Poppins, cream panels.
-   Layout: header (selected race only) → 3 short steps with live paces → downloads → week-by-week preview. */
-:root{
-  --navy:#0f1f3d; --yellow:#f2b63c; --red:#d23f30; --cream:#faf9f6; --sand:#f3f1ec;
-  --ink:#0f1f3d; --muted:#686d77; --line:#e4e1da; --surface:#ffffff; --bg:#faf9f6;
-  --ef:#9a948a; --int:#d23f30; --cote:#2f8a5a; --long:#2b5fd9; --cross:#8a6fc4; --race:#f2b63c;
-  --font:"Poppins","Segoe UI",Roboto,Arial,sans-serif;
-  color-scheme:light;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --ink:#eef1f7; --muted:#a9b0bd; --line:#2b3a57; --surface:#15284b; --bg:#0b1730; --sand:#1b2f55; --cream:#122444;
-    --ef:#b9b3a8; color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --ink:#eef1f7; --muted:#a9b0bd; --line:#2b3a57; --surface:#15284b; --bg:#0b1730; --sand:#1b2f55; --cream:#122444;
-  --ef:#b9b3a8; color-scheme:dark;
-}
-*{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.55}
-a{color:inherit}
-button,input{font:inherit}
-:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
-
-/* Header band */
-.topbar{background:#0b1730;color:#c9d1e2;font-size:13px;display:flex;justify-content:space-between;gap:12px;padding:8px 16px}
-.topbar a{color:#fff;text-decoration:none;font-weight:600}
-.topbar a:hover{text-decoration:underline}
-.hero{background:var(--navy);color:#fff;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;right:-120px;top:-120px;width:240px;height:240px;border-radius:50%;border:24px solid var(--red)}
-@media (min-width:720px){.hero::before{right:-60px;top:-70px;width:260px;height:260px;border-width:28px}}
-.hero::after{content:"";position:absolute;right:-40px;bottom:-80px;width:130px;height:130px;border-radius:50%;background:var(--yellow)}
-@media (min-width:720px){.hero::after{right:60px;bottom:-70px;width:160px;height:160px}}
-.hero-in{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:22px 16px 26px;display:grid;gap:18px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:46px;height:46px;border-radius:50%;background:var(--yellow);color:var(--navy);display:grid;place-items:center;font-weight:800;font-size:12px;letter-spacing:.02em;flex:none}
-.brand b{display:block;font-weight:700;font-size:14px;letter-spacing:.04em}
-.brand span{font-size:12px;opacity:.8}
-.eyebrow{color:var(--yellow);font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin:0}
-h1{margin:4px 0 0;font-weight:800;font-size:clamp(30px,8vw,48px);line-height:1.05;text-wrap:balance}
-h1 .y{color:var(--yellow);display:block}
-#h-sub{display:block;font-size:.5em;font-weight:600;margin-top:4px}
-.meta{display:flex;flex-wrap:wrap;gap:14px 28px;margin:0}
-.meta div{display:grid}
-.meta dt{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
-.meta dd{margin:0;font-weight:600;font-size:15px}
-
-main{max-width:980px;margin:0 auto;padding:20px 16px 48px;display:grid;gap:18px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px}
-h2{margin:0;font-size:19px;font-weight:700;display:flex;align-items:center;gap:10px;text-wrap:balance}
-.num{width:28px;height:28px;border-radius:50%;background:var(--navy);color:var(--yellow);display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
-:root[data-theme="dark"] .num{background:var(--yellow);color:var(--navy)}
-.lead{margin:0;color:var(--muted);font-size:14px;max-width:62ch}
-
-/* Steps */
-.steps{display:grid;gap:16px}
-.step{display:grid;gap:8px}
-.step-l{font-weight:600;font-size:14px;display:block}
-.step-l small{color:var(--muted);font-weight:500;font-size:12px}
-.seg{display:flex;flex-wrap:wrap;gap:8px}
-.seg label{cursor:pointer}
-.seg input{position:absolute;opacity:0;width:1px;height:1px}
-.seg span{display:block;padding:9px 14px;border:1.5px solid var(--line);border-radius:999px;font-weight:500;font-size:14px;background:var(--cream)}
-.seg span small{display:block;font-size:11px;color:var(--muted);font-weight:400;line-height:1.2}
-.seg input:checked+span{background:var(--navy);border-color:var(--navy);color:#fff}
-.seg input:checked+span small{color:#c9d1e2}
-.seg input:focus-visible+span{outline:3px solid var(--yellow);outline-offset:2px}
-.tm{display:flex;align-items:center;gap:8px}
-select.sel,input.date{font:inherit;font-size:15px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--cream);color:var(--ink);width:100%;max-width:420px}
-.info{font-size:13px;color:var(--muted);margin:0}
-.signup{background:var(--navy);color:#fff;border-radius:12px;padding:14px 16px;display:grid;gap:6px}
-.signup b{font-size:16px}
-.signup span{font-size:14px;color:#c9d1e2}
-.signup .btn{margin-top:6px}
-.signup.closed{background:var(--sand);color:var(--ink)}
-.signup.closed span{color:var(--muted)}
-.warn{background:#fff6df;border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:10px 14px;font-size:14px;color:#0f1f3d}
-.tm input{width:74px;padding:8px 6px;text-align:center;font-size:24px;font-weight:700;border:1.5px solid var(--line);border-radius:10px;background:var(--cream);color:var(--ink);font-variant-numeric:tabular-nums}
-.tm span{color:var(--muted);font-weight:500}
-.err{color:var(--red);font-weight:600;margin:0;font-size:14px}
-
-/* Paces */
-.paces{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (min-width:720px){.paces{grid-template-columns:repeat(var(--n,5),minmax(0,1fr))}}
-.pace{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:2px;align-content:start}
-.pace .k{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.pace .v{font-size:26px;font-weight:800;line-height:1.15;font-variant-numeric:tabular-nums}
-.pace .v small{font-size:12px;font-weight:500;color:var(--muted)}
-.pace .f{font-size:12px;color:var(--muted);line-height:1.35}
-.pace.main{background:var(--navy);border-color:var(--navy);color:#fff}
-.pace.main .k,.pace.main .f,.pace.main .v small{color:#c9d1e2}
-.pace.main .v{color:var(--yellow)}
-.pace.wide{grid-column:1/-1}
-@media (min-width:720px){.pace.wide{grid-column:auto}}
-.predict{margin:0;font-size:14px;color:var(--muted)}
-.predict strong{color:var(--ink)}
-
-/* Downloads */
-.dl{display:grid;gap:10px}
-.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 18px;border-radius:12px;font-weight:700;font-size:16px;cursor:pointer;border:2px solid var(--navy);text-decoration:none}
-.btn.primary{background:var(--yellow);border-color:var(--yellow);color:var(--navy)}
-.btn.secondary{background:transparent;color:var(--ink);border-color:var(--ink)}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.btn small{font-weight:500;font-size:12px;opacity:.8}
-details.how{font-size:13px;color:var(--muted)}
-details.how summary{cursor:pointer;font-weight:600;color:var(--ink);font-size:14px}
-details.how ol{margin:8px 0 4px;padding-left:20px;display:grid;gap:3px}
-.status{margin:0;font-size:13px;font-weight:600;min-height:1.2em}
-
-/* Preview */
-.base{background:var(--cream);border-left:4px solid var(--yellow);border-radius:0 10px 10px 0;padding:10px 14px;font-size:14px}
-.base b{display:block}
-.base span{color:var(--muted)}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none;font-size:13px}
-.chips li{background:var(--sand);border-radius:999px;padding:3px 11px}
-.chips b{font-weight:600}
-.weeks{display:grid;gap:8px}
-details.wk{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
-details.wk[open]{border-color:var(--navy)}
-details.wk summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 14px;flex-wrap:wrap}
-details.wk summary::-webkit-details-marker{display:none}
-details.wk summary::after{content:"+";margin-left:auto;font-weight:700;color:var(--muted)}
-details.wk[open] summary::after{content:"−"}
-.wn{font-weight:700}
-.wd{color:var(--muted);font-size:13px}
-.tag{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--yellow);color:var(--navy)}
-.tag.now{background:var(--red);color:#fff}
-.tag.ev{background:var(--sand);color:var(--ink)}
-.sessions{display:grid;gap:8px;padding:0 14px 14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
-.ses{border:1px solid var(--line);border-top:4px solid var(--ef);border-radius:10px;padding:9px 11px;display:grid;gap:2px;background:var(--cream)}
-.ses .d{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.ses .t{font-weight:700;font-size:14px}
-.ses .x{font-size:13px}
-.ses.int{border-top-color:var(--int)}.ses.cote{border-top-color:var(--cote)}.ses.long{border-top-color:var(--long)}
-.ses.cross{border-top-color:var(--cross)}.ses.race{border-top-color:var(--race);background:#fff6df;color:#0f1f3d}.ses.rest{opacity:.6}
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin:0;padding:0;list-style:none}
-.legend li::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c)}
-.note{font-size:13px;color:var(--muted);margin:0}
-footer{max-width:980px;margin:0 auto;padding:0 16px 32px;font-size:12px;color:var(--muted);display:grid;gap:10px}
-footer p{margin:0}
-details.math{border-top:1px solid var(--line);padding-top:12px;font-size:13px}
-details.math summary{cursor:pointer;font-weight:600;color:var(--ink)}
-details.math p,details.math ul{margin:8px 0 0;max-width:65ch}
-details.math ul{padding-left:18px}
-.formula{font-size:17px;font-weight:600;color:var(--ink)}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.opt{display:inline-block;margin:0 6px 6px 0;cursor:pointer}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt input:checked+.w3-button{background-color:#009688!important;color:#fff!important;border-color:#009688!important}
+.opt input:focus-visible+.w3-button{outline:3px solid #009688;outline-offset:2px}
+.opt small{display:block;font-size:11px;opacity:.8}
+.tm input{width:80px;display:inline-block;text-align:center;font-size:22px}
+.box{max-width:1000px;margin:0 auto 32px;text-align:left}
+details summary::-webkit-details-marker{color:#009688}
 </style>
 </head>
-<body>
-<nav class="topbar"><a href="../index.html">← Mme Bernatchez</a><span>Club de course</span></nav>
-<header class="hero">
-  <div class="hero-in">
-    <div class="brand"><div class="logo" aria-hidden="true">ESMO</div></div>
-    <div>
-      <p class="eyebrow">École secondaire Michelle-O'Bonsawin</p>
-      <h1>Club de course <span class="y">ESMO</span><span id="h-sub">Ton plan d'entraînement</span></h1>
-    </div>
-  </div>
-</header>
+<body id="myPage">
 
-<main>
-  <section class="card" aria-labelledby="s1">
-    <h2 id="s1"><span class="num">1</span>Ton plan</h2>
-    <div class="steps">
-      <div class="step">
-        <label class="step-l" for="race">Ta course</label>
-        <select class="sel" id="race">
+<!-- Sidebar on click -->
+<nav class="w3-sidebar w3-bar-block w3-white w3-card w3-animate-left w3-xxlarge" style="display:none;z-index:2" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-display-topright w3-text-teal">Close
+    <i class="fa fa-remove"></i>
+  </a>
+  <a href="../mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
+  <a href="../mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
+  <a href="./" class="w3-bar-item w3-button">Club de course</a>
+  <a href="#contact" class="w3-bar-item w3-button">Contact</a>
+</nav>
+
+<!-- Navbar -->
+<div class="w3-top">
+ <div class="w3-bar w3-theme-d2 w3-left-align">
+  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+  <a href="../index.html" class="w3-bar-item w3-button w3-teal"><i class="fa fa-home w3-margin-right"></i>Mme Bernatchez</a>
+  <a href="../mhf4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MHF4U</a>
+  <a href="../mdm4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MDM4U</a>
+  <a href="./" class="w3-bar-item w3-button w3-hide-small w3-white">Club de course</a>
+  <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Pour me joindre</a>
+ </div>
+
+ <!-- Navbar on small screens -->
+ <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium">
+    <a href="../mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
+    <a href="../mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
+    <a href="./" class="w3-bar-item w3-button">Club de course</a>
+    <a href="#contact" class="w3-bar-item w3-button">Pour me joindre</a>
+  </div>
+</div>
+
+<!-- Container -->
+<div class="w3-container" style="position:relative">
+  <a onclick="w3_open()" class="w3-button w3-xlarge w3-circle w3-teal"
+  style="position:absolute;top:-28px;right:24px">+</a>
+</div>
+
+<div class="w3-row-padding w3-padding-64">
+  <div class="w3-center">
+    <h2>Club de course ESMO</h2>
+    <p>Ton plan d'entraînement, tes allures et ton calendrier</p><br>
+  </div>
+
+  <!-- 1. Plan -->
+  <div class="box">
+    <ul class="w3-ul w3-border w3-hover-shadow">
+      <li class="w3-theme"><p class="w3-xlarge">1. Ton plan</p></li>
+      <li class="w3-padding-16">
+        <label for="race"><b>Ta course</b></label>
+        <select class="w3-select w3-border w3-margin-top" id="race" style="max-width:460px">
           <option value="mtl21">Montréal · semi-marathon · 18 avril</option>
           <option value="mtl10">Montréal · 10 km · 17 avril</option>
           <option value="sl10">Sporting Life · 10 km · 9 mai</option>
@@ -186,99 +79,115 @@ details.math ul{padding-left:18px}
           <option value="twr5">Toronto Women's Run · 5 km · 22 mai</option>
           <option value="autre">Autre course…</option>
         </select>
-        <p class="info" id="race-info"></p>
-      </div>
-      <div class="step" id="custom" hidden>
-        <label class="step-l" for="cdate">Date de ta course</label>
-        <input class="date" type="date" id="cdate">
-        <span class="step-l" id="l-dist">Distance</span>
-        <div class="seg" role="radiogroup" aria-labelledby="l-dist">
-          <label><input type="radio" name="cdist" value="5"><span>5 km</span></label>
-          <label><input type="radio" name="cdist" value="10" checked><span>10 km</span></label>
-          <label><input type="radio" name="cdist" value="21"><span>Semi-marathon</span></label>
+        <p class="w3-small w3-text-grey" id="race-info"></p>
+        <div id="custom" hidden>
+          <label for="cdate"><b>Date de ta course</b></label>
+          <input class="w3-input w3-border w3-margin-bottom" type="date" id="cdate" style="max-width:260px">
+          <p style="margin:0 0 6px"><b id="l-dist">Distance</b></p>
+          <div role="radiogroup" aria-labelledby="l-dist">
+            <label class="opt"><input type="radio" name="cdist" value="5"><span class="w3-button w3-border w3-round">5 km</span></label>
+            <label class="opt"><input type="radio" name="cdist" value="10" checked><span class="w3-button w3-border w3-round">10 km</span></label>
+            <label class="opt"><input type="radio" name="cdist" value="21"><span class="w3-button w3-border w3-round">Semi-marathon</span></label>
+          </div>
         </div>
-      </div>
-      <div class="step">
-        <span class="step-l" id="l-plan"></span>
-        <div class="seg" role="radiogroup" aria-labelledby="l-plan" id="plans"></div>
-      </div>
-      <p class="warn" id="warn" hidden></p>
-    </div>
-  </section>
-
-  <section class="card" aria-labelledby="s2">
-    <h2 id="s2"><span class="num">2</span>Ton calendrier</h2>
-    <div class="signup" id="signup">
-      <b>Inscris-toi au Club de course</b>
-      <span id="signup-text">Ton plan est déjà choisi dans le formulaire : ajoute ton nom et ton courriel de l'école.</span>
-      <a class="btn primary" id="signup-btn" href="#" target="_blank" rel="noopener">Je m'inscris au club</a>
-    </div>
-    <div class="signup bilan">
-      <b>Chaque dimanche : ton bilan de la semaine</b>
-      <span>Une minute pour dire à ta coach combien de fois tu as couru, comment tu te sens et si tu as une douleur. Le rappel est déjà dans ton calendrier Google Agenda (ci-dessous).</span>
-      <a class="btn secondary" href="https://docs.google.com/forms/d/e/1FAIpQLSedNcEOOhzAlemy1SoMQqvjLDFJN-3hfUmtyrfB9shCy0noHw/viewform" target="_blank" rel="noopener" style="background:#fff;color:#0f1f3d;border-color:#fff">Faire mon bilan</a>
-    </div>
-    <div class="dl">
-      <button type="button" class="btn primary" id="dl-pdf" disabled>Télécharger mon plan (PDF)</button>
-      <button type="button" class="btn secondary" id="dl-ics" disabled>Ajouter à mon calendrier (iPhone, Outlook)</button>
-      <button type="button" class="btn secondary" id="dl-csv" disabled>Ajouter à Google Agenda</button>
-      <details class="how">
-        <summary>iPhone ou Outlook : comment ça marche ?</summary>
-        Sur iPhone, touche le bouton puis « Tout ajouter » : tes séances arrivent dans l'app Calendrier. Sur ordinateur, ouvre le fichier .ics téléchargé : Outlook ou Calendrier l'importe.
-      </details>
-      <details class="how">
-        <summary>Comment importer dans Google Agenda ?</summary>
-        <ol>
-          <li>Sur un ordinateur, ouvre calendar.google.com.</li>
-          <li>Crée un agenda « Entraînement » (Paramètres › Ajouter un agenda).</li>
-          <li>Paramètres › Importer et exporter › choisis le fichier et cet agenda › Importer.</li>
-        </ol>
-        Tes séances, le conseil du jour et le rappel du bilan du dimanche apparaissent ensuite dans l'application Google Agenda sur ton téléphone. Changement de plan ? Supprime cet agenda et recommence.
-      </details>
-      <p class="status" id="status" role="status"></p>
-    </div>
-  </section>
-
-  <section class="card" aria-labelledby="s3a">
-    <h2 id="s3a"><span class="num">3</span>Tes allures</h2>
-    <div class="base"><b id="test-title"></b><span>Cours 5 km le plus vite possible en gardant une allure régulière (après 10 minutes d'échauffement). Ta coach te dira où le faire. Écris ton temps ici, et aussi dans ton bilan de la semaine si tu reçois les courriels du club.</span></div>
-    <div class="step">
-      <span class="step-l" id="l-time">Ton temps au test de 5 km <small>(quand tu l'auras fait)</small></span>
-      <div class="tm" role="group" aria-labelledby="l-time">
-        <input type="text" id="min" inputmode="numeric" pattern="[0-9]*" maxlength="2" value="" placeholder="--" aria-label="Minutes" autocomplete="off"><span>min</span>
-        <input type="text" id="sec" inputmode="numeric" pattern="[0-9]*" maxlength="2" value="" placeholder="--" aria-label="Secondes" autocomplete="off"><span>s</span>
-      </div>
-      <p class="err" id="err" role="alert"></p>
-    </div>
-    <div class="paces" id="paces" aria-live="polite"></div>
-    <p class="predict" id="predict"></p>
-  </section>
-
-  <section class="card" aria-labelledby="s4">
-    <h2 id="s4"><span class="num">4</span>Aperçu de ton plan</h2>
-    <div class="base"><b id="base-title"></b><span>Cours au moins 3 fois par semaine, 30 minutes minimum chaque fois. C'est le strict minimum pour être prêt à commencer le plan.</span></div>
-    <ul class="chips" id="chips"></ul>
-    <ul class="legend" id="legend"></ul>
-    <p class="note" id="note"></p>
-    <div class="weeks" id="weeks"></div>
-  </section>
-</main>
-<footer>
-  <details class="math">
-    <summary>Comment on calcule tes allures ?</summary>
-    <p>On utilise la <b>formule de Riegel</b> (1977), une fonction puissance qui prédit ton temps sur une distance à partir de ton test de 5 km :</p>
-    <p class="formula">T<sub>2</sub> = T<sub>1</sub> × (D<sub>2</sub> ÷ D<sub>1</sub>)<sup>1,06</sup></p>
-    <ul>
-      <li>T<sub>1</sub> : ton temps au test de 5 km</li>
-      <li>D<sub>1</sub> : 5 km</li>
-      <li>D<sub>2</sub> : la distance visée (10 km, 21,1 km ou 42,2 km)</li>
-      <li>T<sub>2</sub> : ton temps prédit sur cette distance</li>
+        <p style="margin:12px 0 6px"><b id="l-plan"></b></p>
+        <div role="radiogroup" aria-labelledby="l-plan" id="plans"></div>
+        <div class="w3-panel w3-pale-red w3-leftbar w3-border-red" id="warn" hidden></div>
+      </li>
     </ul>
-    <p>L'exposant 1,06, un peu plus grand que 1, traduit la fatigue : plus la course est longue, plus l'allure ralentit légèrement. L'allure visée est T<sub>2</sub> ÷ D<sub>2</sub>. L'allure EF correspond à ton allure 5 km plus 75 à 120 secondes par kilomètre.</p>
-  </details>
-  <p id="credit"></p>
+  </div>
+
+  <!-- 2. Calendrier -->
+  <div class="box">
+    <ul class="w3-ul w3-border w3-hover-shadow">
+      <li class="w3-theme"><p class="w3-xlarge">2. Ton calendrier</p></li>
+      <li class="w3-padding-16">
+        <button type="button" class="w3-button w3-teal w3-padding-large w3-margin-bottom" id="dl-pdf" disabled><i class="fa fa-file-pdf-o"></i> Télécharger mon plan (PDF)</button><br>
+        <button type="button" class="w3-button w3-border w3-margin-bottom" id="dl-ics" disabled><i class="fa fa-calendar"></i> Ajouter à mon calendrier (iPhone, Outlook)</button>
+        <button type="button" class="w3-button w3-border w3-margin-bottom" id="dl-csv" disabled><i class="fa fa-google"></i> Ajouter à Google Agenda</button>
+        <details class="w3-small w3-margin-bottom"><summary><b>iPhone ou Outlook : comment ça marche ?</b></summary>
+          <p>Sur iPhone, touche le bouton puis « Tout ajouter » : tes séances arrivent dans l'app Calendrier. Sur ordinateur, ouvre le fichier .ics téléchargé : Outlook ou Calendrier l'importe.</p></details>
+        <details class="w3-small"><summary><b>Comment importer dans Google Agenda ?</b></summary>
+          <ol><li>Sur un ordinateur, ouvre calendar.google.com.</li><li>Crée un agenda « Entraînement » (Paramètres › Ajouter un agenda).</li><li>Paramètres › Importer et exporter › choisis le fichier et cet agenda › Importer.</li></ol>
+          <p>Tes séances et le conseil du jour apparaissent ensuite dans l'application Google Agenda sur ton téléphone.</p></details>
+        <p class="w3-small w3-text-teal" id="status" role="status"></p>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 3. Allures -->
+  <div class="box">
+    <ul class="w3-ul w3-border w3-hover-shadow">
+      <li class="w3-theme"><p class="w3-xlarge">3. Tes allures</p></li>
+      <li class="w3-padding-16">
+        <div class="w3-panel w3-pale-green w3-leftbar w3-border-teal" style="margin-top:0">
+          <p><b id="test-title"></b><br>Cours 5 km le plus vite possible en gardant une allure régulière (après 10 minutes d'échauffement). Ta coach te dira où le faire. Écris ton temps ici pour voir tes allures.</p>
+        </div>
+        <p style="margin:0 0 6px"><b id="l-time">Ton temps au test de 5 km</b> <span class="w3-small w3-text-grey">(quand tu l'auras fait)</span></p>
+        <div class="tm" role="group" aria-labelledby="l-time">
+          <input class="w3-input w3-border" type="text" id="min" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="--" aria-label="Minutes" autocomplete="off"> min
+          <input class="w3-input w3-border" type="text" id="sec" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="--" aria-label="Secondes" autocomplete="off"> s
+        </div>
+        <p class="w3-text-red" id="err" role="alert"></p>
+        <div class="w3-row-padding" id="paces" style="margin:0 -8px" aria-live="polite"></div>
+        <p class="w3-small w3-text-grey" id="predict"></p>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 4. Aperçu -->
+  <div class="box">
+    <ul class="w3-ul w3-border w3-hover-shadow">
+      <li class="w3-theme"><p class="w3-xlarge">4. Aperçu de ton plan</p></li>
+      <li class="w3-padding-16">
+        <div class="w3-panel w3-sand w3-leftbar w3-border-amber" style="margin-top:0">
+          <p><b id="base-title"></b><br>Cours au moins 3 fois par semaine, 30 minutes minimum chaque fois. C'est le strict minimum pour être prêt à commencer le plan.</p>
+        </div>
+        <div id="chips" style="margin-bottom:8px"></div>
+        <div id="legend" style="margin-bottom:8px"></div>
+        <p class="w3-small w3-text-grey" id="note"></p>
+        <div id="weeks"></div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="box w3-small w3-text-grey">
+    <details><summary><b>Comment on calcule tes allures ?</b></summary>
+      <p>On utilise la <b>formule de Riegel</b> (1977), une fonction puissance qui prédit ton temps sur une distance à partir de ton test de 5 km :</p>
+      <p class="w3-large w3-text-black">T<sub>2</sub> = T<sub>1</sub> × (D<sub>2</sub> ÷ D<sub>1</sub>)<sup>1,06</sup></p>
+      <ul><li>T<sub>1</sub> : ton temps au test de 5 km</li><li>D<sub>1</sub> : 5 km</li><li>D<sub>2</sub> : la distance visée (10 km, 21,1 km ou 42,2 km)</li><li>T<sub>2</sub> : ton temps prédit sur cette distance</li></ul>
+      <p>L'exposant 1,06, un peu plus grand que 1, traduit la fatigue : plus la course est longue, plus l'allure ralentit légèrement. L'allure visée est T<sub>2</sub> ÷ D<sub>2</sub>. L'allure EF correspond à ton allure 5 km plus 75 à 120 secondes par kilomètre.</p>
+    </details>
+    <p id="credit"></p>
+  </div>
+</div>
+
+<!-- Contact Container -->
+<div class="w3-container w3-padding-64 w3-theme-l5" id="contact">
+  <div class="w3-row">
+    <div class="w3-col m5">
+    <div class="w3-padding-16"><span class="w3-xlarge w3-border-teal w3-bottombar">Pour me joindre</span></div>
+      <p><i class="fa fa-map-marker w3-text-teal w3-xlarge"></i>  École secondaire Michelle-O'Bonsawin, Toronto</p>
+      <p><i class="fa fa-envelope-o w3-text-teal w3-xlarge"></i>  bernatcheza@csviamonde.ca</p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-32 w3-theme-d1 w3-center">
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+  <div style="position:relative;bottom:100px;z-index:1;" class="w3-tooltip w3-right">
+    <span class="w3-text w3-padding w3-teal w3-hide-small">Retour</span>
+    <a class="w3-button w3-theme" href="#myPage"><span class="w3-xlarge">
+    <i class="fa fa-chevron-circle-up"></i></span></a>
+  </div>
 </footer>
 
+<script>
+function w3_open() { var x = document.getElementById("mySidebar"); x.style.width = "300px"; x.style.paddingTop = "10%"; x.style.display = "block"; }
+function w3_close() { document.getElementById("mySidebar").style.display = "none"; }
+function openNav() { var x = document.getElementById("navDemo"); if (x.className.indexOf("w3-show") == -1) { x.className += " w3-show"; } else { x.className = x.className.replace(" w3-show", ""); } }
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
@@ -298,6 +207,7 @@ var SHORT = {"semi-3x":"3 fois","semi-4x":"4 fois","semi-5x":"5 fois","5k-niveau
 var PDFNAME = {"3x":"Entrainement-ESMO-Nespresso-Montreal-3x-semaine.pdf","4x":"Entrainement-ESMO-Nespresso-Montreal-4x-semaine.pdf","5x":"Entrainement-ESMO-Nespresso-Montreal-5x-semaine.pdf",
   "10k1":"Montreal-ESMO-10km-Niveau1.pdf","10k2":"Montreal-ESMO-10km-Niveau2.pdf","10k3":"Montreal-ESMO-10km-Niveau3.pdf"};
 var CREDIT = {ra:"Plans d'entraînement et conseils tirés de Running Addict (running-addict.fr).",sr:"Plan d'entraînement original de la coach Seanna Robinson, traduit en français."};
+var BAR = {ef:"w3-border-grey",int:"w3-border-red",cote:"w3-border-green",long:"w3-border-blue",cross:"w3-border-purple",race:"w3-border-amber",rest:"w3-border-light-grey"};
 var TYPES = {ef:"Footing",int:"Fractionné",cote:"Côtes / accélérations",long:"Sortie longue",cross:"Entraînement croisé",race:"Course"};
 var DAY = 86400000;
 var DOW = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
@@ -323,7 +233,7 @@ function planSel(){ var el=document.querySelector("input[name=plan]:checked"); r
 function renderPlanChoices(){
   var R=raceSel().r, ids=PLANS_BY[R.dist], prev=planSel();
   $("l-plan").textContent = R.dist===21 ? "Combien de fois par semaine vas-tu courir ?" : "Ton niveau";
-  $("plans").innerHTML = ids.map(function(id,i){ return '<label><input type="radio" name="plan" value="'+id+'"'+((prev===id||(!prev||ids.indexOf(prev)<0)&&i===(R.dist===21?1:0))?' checked':'')+'><span>'+SHORT[id]+'</span></label>'; }).join("");
+  $("plans").innerHTML = ids.map(function(id,i){ return '<label class="opt"><input type="radio" name="plan" value="'+id+'"'+((prev===id||(!prev||ids.indexOf(prev)<0)&&i===(R.dist===21?1:0))?' checked':'')+'><span class="w3-button w3-border w3-round">'+SHORT[id]+'</span></label>'; }).join("");
   Array.prototype.forEach.call(document.querySelectorAll("input[name=plan]"),function(el){ el.addEventListener("change",update); });
 }
 
@@ -374,9 +284,10 @@ function renderPaces(){
   if(t===null||(t&&(t<11*60||t>75*60))){ $("err").textContent="Écris tes minutes (11 à 75) et tes secondes (0 à 59). Exemple : 28 min 45 s."; paces=null; return false; }
   $("err").textContent=""; paces=t?calc(t):null;
   var rows=paceRows(paces||calc(1800),planId,dist);
-  $("paces").style.setProperty("--n",rows.length);
-  $("paces").innerHTML=rows.map(function(r){ return '<div class="pace'+(r.main?' main':'')+(r.wide?' wide':'')+'"><span class="k">'+r.k+'</span>'+
-    (paces?'<span class="v">'+r.v+' <small>/km</small></span>':'<span class="v" style="font-size:14px;font-weight:600;line-height:1.35">'+EFFORT[r.k]+'</span>')+'<span class="f">'+r.f+'</span></div>'; }).join("");
+  $("paces").innerHTML=rows.map(function(r){ return '<div class="w3-col s6 m4 l4 w3-margin-bottom"><div class="w3-container w3-padding w3-round '+(r.main?'w3-teal':'w3-light-grey')+'" style="min-height:118px">'+
+    '<div class="w3-small" style="text-transform:uppercase;letter-spacing:1px">'+r.k+'</div>'+
+    (paces?'<div class="w3-xxlarge">'+r.v+' <span class="w3-small">/km</span></div>':'<div style="font-weight:bold;margin:4px 0">'+EFFORT[r.k]+'</div>')+
+    '<div class="w3-small'+(r.main?'':' w3-text-grey')+'">'+r.f+'</div></div></div>'; }).join("");
   if(!paces) $("predict").textContent="En attendant ton test, cours à l'effort. Tes chiffres apparaîtront ici dès que tu écris ton temps.";
   else $("predict").innerHTML = dist===21 ? "Temps estimé au semi-marathon : <strong>"+fmtH(paces.tHM)+"</strong>. Une estimation : pour un premier semi, pars plus lentement."
     : dist===10 ? "Temps estimé au 10 km : <strong>"+fmtH(paces.t10)+"</strong>. Une estimation : garde de l'énergie pour la 2e moitié."
@@ -402,12 +313,12 @@ function update(){
   else if(start.getTime()<now-7*DAY){ var late=Math.floor((now-start.getTime())/(7*DAY)); $("warn").hidden=false;
     $("warn").textContent="Ce plan de "+cur.weeks.length+" semaines aurait dû commencer le "+dm(start,1)+". Commence là où le plan est rendu (semaine "+Math.min(cur.weeks.length,late+1)+") et parles-en à ta coach."; }
   else $("warn").hidden=true;
-  var chips=['<li><b>'+dm(start,1)+'</b> · début du plan</li>'];
-  if(start.getTime()<=Date.UTC(2027,2,19) && race.getTime()>=Date.UTC(2027,2,15)) chips.push('<li><b>15 au 19 mars</b> · relâche : on s\'entraîne en solo</li>');
-  if(R.voyage) chips.push('<li><b>16 au 18 avril</b> · voyage à Montréal</li>');
+  var chips=['<span class="w3-tag w3-light-grey w3-round" style="margin:0 4px 4px 0"><b>'+dm(start,1)+'</b> · début du plan</span>'];
+  if(start.getTime()<=Date.UTC(2027,2,19) && race.getTime()>=Date.UTC(2027,2,15)) chips.push('<span class="w3-tag w3-light-grey w3-round" style="margin:0 4px 4px 0"><b>15 au 19 mars</b> · relâche</span>');
+  if(R.voyage) chips.push('<span class="w3-tag w3-light-grey w3-round" style="margin:0 4px 4px 0"><b>16 au 18 avril</b> · voyage à Montréal</span>');
   $("chips").innerHTML=chips.join("");
   var used={}; cur.weeks.forEach(function(w){ w.s.forEach(function(s){ used[s.type]=1; }); });
-  $("legend").innerHTML=Object.keys(TYPES).filter(function(t){ return used[t]; }).map(function(t){ return '<li style="--c:var(--'+t+')">'+TYPES[t]+'</li>'; }).join("");
+  $("legend").innerHTML=Object.keys(TYPES).filter(function(t){ return used[t]; }).map(function(t){ return '<span class="w3-tag w3-white w3-leftbar '+BAR[t]+'" style="margin:0 4px 4px 0">'+TYPES[t]+'</span>'; }).join("");
   $("note").textContent = cur.P.src==="sr"
     ? "Échauffement + drills avant chaque course. « Plus vite » : effort soutenu mais contrôlé. Lignes droites : accélérations progressives de 15 à 20 s. Les autres jours : repos, marche ou autre sport."
     : "EF : endurance fondamentale, allure facile (tu peux parler). Allure 5, 10, 21 ou 42 km : ton allure de course sur cette distance. Les récupérations se font toujours en EF.";
@@ -415,32 +326,18 @@ function update(){
   var openIdx=0; cur.weeks.forEach(function(w,i){ if(now>=w.mon.getTime()) openIdx=i; });
   $("weeks").innerHTML=cur.weeks.map(function(w,i){
     var we=new Date(w.mon.getTime()+6*DAY), isNow=now>=w.mon.getTime()&&now<w.mon.getTime()+7*DAY;
-    var head='<span class="wn">Semaine '+w.num+'</span><span class="wd">'+dm(w.mon)+' – '+dm(we)+'</span>'+(w.label?'<span class="tag">'+esc(w.label)+'</span>':'')+(isNow?'<span class="tag now">Cette semaine</span>':'');
+    var head='<b>Semaine '+w.num+'</b> <span class="w3-text-grey">'+dm(w.mon)+' – '+dm(we)+'</span> '+(w.label?'<span class="w3-tag w3-small w3-round w3-light-grey">'+esc(w.label)+'</span> ':'')+(isNow?'<span class="w3-tag w3-small w3-round w3-teal">Cette semaine</span>':'');
     var body=w.s.map(function(raw){ var s=raceSession(raw,R);
-      return '<div class="ses '+s.type+'"><span class="d">'+DOW[s.date.getUTCDay()]+' '+dm(s.date)+'</span><span class="t">'+esc(s.title)+'</span>'+(s.type==="rest"||!s.detail?'':'<span class="x">'+esc(s.detail)+'</span>')+'</div>'; }).join("");
-    return '<details class="wk"'+(i===openIdx?' open':'')+'><summary>'+head+'</summary><div class="sessions">'+body+'</div></details>';
+      return '<div class="w3-col s12 m6 l4" style="padding:4px"><div class="w3-container w3-white w3-leftbar '+BAR[s.type]+'" style="padding:8px 12px;min-height:96px">'+
+        '<div class="w3-small w3-text-grey" style="text-transform:uppercase">'+DOW[s.date.getUTCDay()]+' '+dm(s.date)+'</div><div><b>'+esc(s.title)+'</b></div>'+(s.type==="rest"||!s.detail?'':'<div class="w3-small">'+esc(s.detail)+'</div>')+'</div></div>'; }).join("");
+    return '<details class="w3-border w3-round w3-margin-bottom w3-light-grey"'+(i===openIdx?' open':'')+'><summary class="w3-padding" style="cursor:pointer">'+head+'</summary><div class="w3-row" style="padding:0 8px 8px">'+body+'</div></details>';
   }).join("");
-  dlState(); renderPaces(); updateSignup();
-}
-
-/* ---- Inscription au club (formulaire Google prérempli) ---- */
-var BILAN_URL = "https://docs.google.com/forms/d/e/1FAIpQLSedNcEOOhzAlemy1SoMQqvjLDFJN-3hfUmtyrfB9shCy0noHw/viewform";
-var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSevA8vuvahklVdT3agTLVB_O27JCoLJdhEo0wL3hV7d-w4pVg/viewform?usp=pp_url";
-var FORM_PLAN = {"semi-3x":"Semi-marathon · 3 fois par semaine","semi-4x":"Semi-marathon · 4 fois par semaine","semi-5x":"Semi-marathon · 5 fois par semaine",
-  "10k-niveau1":"10 km · Niveau 1 (course et marche, 4 séances)","10k-niveau2":"10 km · Niveau 2 (course continue, 4 séances)","10k-niveau3":"10 km · Niveau 3 (5 sorties par semaine)"};
-function updateSignup(){
-  var S=raceSel(), plan=planSel(), open=(S.key==="mtl21"||S.key==="mtl10")&&FORM_PLAN[plan];
-  $("signup").classList.toggle("closed",!open); $("signup-btn").hidden=!open;
-  if(!open){ $("signup-text").textContent="Les inscriptions au club sont ouvertes pour le voyage à Montréal. Pour les courses du printemps, elles ouvriront plus tard dans l'année : tu peux déjà télécharger ton plan ci-dessous."; return; }
-  $("signup-text").textContent="Ton plan est déjà choisi dans le formulaire : ajoute ton nom et ton courriel de l'école.";
-  var u=FORM_URL+"&entry.993205044="+encodeURIComponent(FORM_PLAN[plan]);
-  var t=readTime(); if(t){ u+="&entry.416026868="+Math.floor(t/60)+"&entry.1392043059="+(t%60); }
-  $("signup-btn").href=u;
+  dlState(); renderPaces();
 }
 
 /* ---- Téléchargements ---- */
 function dlState(){ var ok=!!cur; $("dl-pdf").disabled=!ok; $("dl-csv").disabled=!ok; $("dl-ics").disabled=!ok;
-  $("dl-pdf").textContent = cur&&cur.R.pdf&&cur.R.pdf[cur.plan] ? "Télécharger mon plan (PDF du club)" : "Télécharger mon plan (PDF)"; }
+  $("dl-pdf").innerHTML = '<i class="fa fa-file-pdf-o"></i> '+(cur&&cur.R.pdf&&cur.R.pdf[cur.plan] ? "Télécharger mon plan (PDF du club)" : "Télécharger mon plan (PDF)"); }
 function csvCell(s){ return '"'+String(s).replace(/"/g,'""')+'"'; }
 function mdY(dt){ var m=dt.getUTCMonth()+1, d=dt.getUTCDate(); return (m<10?"0":"")+m+"/"+(d<10?"0":"")+d+"/"+dt.getUTCFullYear(); }
 function planName(){ var t=SHORT[cur.plan].replace(/<small>/," · ").replace(/<\/small>/,""); return (cur.R.dist===21?"Semi-marathon · ":cur.R.dist+" km · ")+(cur.R.dist===21?t+" par semaine":t); }
@@ -449,22 +346,17 @@ function buildCSV(){
   cur.weeks.forEach(function(w){ w.s.forEach(function(raw){ var s=raceSession(raw,cur.R); if(s.type==="rest") return;
     var desc="Semaine "+w.num+(w.label?" ("+w.label.toLowerCase()+")":"")+" · "+planName()+"\n"+s.detail+(s.tip?"\n\nConseil : "+s.tip:"")+"\n\n"+paceText(paces,cur.plan,cur.R.dist);
     rows.push(["ESMO · "+s.title, mdY(s.date), "True", desc, ""]); }); });
-  var t0=new Date(Date.UTC(new Date().getFullYear(),new Date().getMonth(),new Date().getDate())), dim=new Date(t0.getTime()+((7-t0.getUTCDay())%7)*DAY), fin=cur.race.getTime(), today=0;
-  for(;dim.getTime()<=fin;dim=new Date(dim.getTime()+7*DAY)){
-    if(dim.getTime()<today) continue;
-    rows.push(["ESMO · Bilan de la semaine (18 h)", mdY(dim), "True", "Une minute pour dire à ta coach comment s'est passée ta semaine : "+BILAN_URL, ""]);
-  }
   return rows.map(function(r){ return r.map(csvCell).join(","); }).join("\r\n");
 }
 function buildPDF(){
   var J=window.jspdf&&window.jspdf.jsPDF; if(!J) return null;
   var doc=new J({orientation:"landscape",unit:"pt",format:"letter"}), W=doc.internal.pageSize.getWidth(), R=cur.R;
-  doc.setFillColor(15,31,61); doc.rect(0,0,W,96,"F");
-  doc.setFillColor(242,182,60); doc.circle(48,34,16,"F");
-  doc.setTextColor(15,31,61); doc.setFont("helvetica","bold"); doc.setFontSize(8); doc.text("ESMO",48,37,{align:"center"});
+  doc.setFillColor(58,58,58); doc.rect(0,0,W,96,"F");
+  doc.setFillColor(0,150,136); doc.circle(48,34,16,"F");
+  doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(8); doc.text("ESMO",48,37,{align:"center"});
   doc.setTextColor(255,255,255); doc.setFontSize(9); doc.text("CLUB DE COURSE",72,31);
   doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.text("École secondaire Michelle-O'Bonsawin",72,42);
-  doc.setFont("helvetica","bold"); doc.setFontSize(18); doc.setTextColor(242,182,60); doc.text(R.nom+" · "+R.sous,32,72);
+  doc.setFont("helvetica","bold"); doc.setFontSize(18); doc.setTextColor(255,255,255); doc.text(R.nom+" · "+R.sous,32,72);
   doc.setFontSize(9.5); doc.setTextColor(255,255,255); doc.setFont("helvetica","normal");
   doc.text(planName()+" · "+DOW[cur.race.getUTCDay()]+" "+dm(cur.race,1)+" "+cur.race.getUTCFullYear()+" · début du plan : lundi "+dm(cur.start,1),32,87);
   doc.setFontSize(8.2); doc.setTextColor(15,31,61); doc.setFont("helvetica","bold");
@@ -474,10 +366,10 @@ function buildPDF(){
     return ["Sem. "+w.num+(w.label?"\n"+w.label:"")+"\n"+dm(w.mon)].concat(days.map(function(d){ var s=by[d]; return s?(s.title+(s.type==="rest"||!s.detail?"":"\n"+s.detail)):""; })); });
   doc.autoTable({startY:132,head:[["Semaine"].concat(days.map(function(d){ return DOW[d]; }))],body:body,theme:"grid",margin:{left:32,right:32,bottom:30},
     styles:{font:"helvetica",fontSize:6.8,cellPadding:2.6,textColor:[15,31,61],lineColor:[228,225,218],lineWidth:.5,valign:"top"},
-    headStyles:{fillColor:[15,31,61],textColor:255,fontStyle:"bold",fontSize:8},columnStyles:{0:{cellWidth:58,fontStyle:"bold"}},
-    didParseCell:function(h){ if(h.section==="body"&&h.row.index===cur.weeks.length-1) h.cell.styles.fillColor=[255,246,223]; }});
+    headStyles:{fillColor:[0,150,136],textColor:255,fontStyle:"bold",fontSize:8},columnStyles:{0:{cellWidth:58,fontStyle:"bold"}},
+    didParseCell:function(h){ if(h.section==="body"&&h.row.index===cur.weeks.length-1) h.cell.styles.fillColor=[224,242,241]; }});
   doc.setFont("helvetica","normal"); doc.setFontSize(7); doc.setTextColor(104,109,119);
-  doc.text(CREDIT[cur.P.src]+" Généré par le Club de course ESMO.",32,doc.internal.pageSize.getHeight()-14);
+  doc.text(CREDIT[cur.P.src]+" Club de course ESMO · www.mmebernatchez.ca",32,doc.internal.pageSize.getHeight()-14);
   return doc.output("arraybuffer");
 }
 function status(msg,bad){ $("status").textContent=msg; $("status").style.color=bad?"var(--red)":"var(--muted)"; }
@@ -508,8 +400,6 @@ function buildICS(){
     icsFold("SUMMARY:"+icsEsc(title)),icsFold("DESCRIPTION:"+icsEsc(desc)),"TRANSP:TRANSPARENT","END:VEVENT"); }
   cur.weeks.forEach(function(w){ w.s.forEach(function(raw){ var s=raceSession(raw,cur.R); if(s.type==="rest") return;
     ev(s.date,"ESMO · "+s.title,"Semaine "+w.num+(w.label?" ("+w.label.toLowerCase()+")":"")+" · "+planName()+"\n"+s.detail+(s.tip?"\n\nConseil : "+s.tip:"")+"\n\n"+paceText(paces,cur.plan,cur.R.dist)); }); });
-  var t0=new Date(Date.UTC(new Date().getFullYear(),new Date().getMonth(),new Date().getDate())), dim=new Date(t0.getTime()+((7-t0.getUTCDay())%7)*DAY);
-  for(;dim.getTime()<=cur.race.getTime();dim=new Date(dim.getTime()+7*DAY)) ev(dim,"ESMO · Bilan de la semaine (18 h)","Une minute pour dire à ta coach comment s'est passée ta semaine : "+BILAN_URL);
   L.push("END:VCALENDAR"); return L.join("\r\n")+"\r\n";
 }
 
@@ -518,7 +408,7 @@ function save_(){ try{ localStorage.setItem("esmoGen",JSON.stringify({m:$("min")
 $("race").addEventListener("change",function(){ renderPlanChoices(); update(); });
 $("cdate").addEventListener("change",update);
 Array.prototype.forEach.call(document.querySelectorAll("input[name=cdist]"),function(el){ el.addEventListener("change",function(){ renderPlanChoices(); update(); }); });
-["min","sec"].forEach(function(id){ $(id).addEventListener("input",function(){ $(id).value=$(id).value.replace(/\D/g,""); renderPaces(); updateSignup(); }); });
+["min","sec"].forEach(function(id){ $(id).addEventListener("input",function(){ $(id).value=$(id).value.replace(/\D/g,""); renderPaces(); }); });
 
 try{ var st=JSON.parse(localStorage.getItem("esmoGen")||"null");
   if(st){ if(st.m) $("min").value=st.m; if(st.s) $("sec").value=st.s; if(st.r) $("race").value=st.r; if(st.d) $("cdate").value=st.d;
