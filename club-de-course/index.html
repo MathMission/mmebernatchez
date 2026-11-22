@@ -150,7 +150,7 @@ details summary::-webkit-details-marker{color:#009688}
 
           <a class="course a-venir" data-debut="2027-02-15" data-course="2027-05-09" href="https://sportinglife10k.ca" target="_blank" rel="noopener">
             <span class="etat">À venir</span>
-            <span class="quand">Printemps · 9 mai 2027 (à confirmer)</span>
+            <span class="quand">Printemps · 9 mai 2027 · fête des Mères</span>
             <b>Sporting Life</b>
             <span class="dist">10 km</span>
             <span class="plan">Entraînement : 15 février (N3) · 1er mars (N1–2)<br>Plans en ligne le 1er février</span>
@@ -201,27 +201,24 @@ details summary::-webkit-details-marker{color:#009688}
       <li class="w3-padding-16">
         <label for="race"><b>Ta course</b></label>
         <select class="w3-select w3-border w3-margin-top" id="race" style="max-width:460px">
-          <option value="mtl21">Montréal · semi-marathon · 18 avril</option>
-          <option value="mtl10">Montréal · 10 km · 17 avril</option>
           <!-- =====================================================================
-               COURSES DU PRINTEMPS : déjà prêtes, mais cachées.
-               POUR AFFICHER UNE COURSE : sur sa ligne ci-dessous, efface la marque
-               de début « <!- - » et la marque de fin « - - > » (ici écrites avec des
-               espaces ; dans la ligne, elles sont collées). Rien d'autre à faire : les plans,
-               les allures et les calendriers sont déjà dans la page.
+               LES COURSES APPARAISSENT ET DISPARAISSENT TOUTES SEULES.
+               Chaque ligne a 2 dates (format AAAA-MM-JJ) :
+                 data-debut="…" : premier jour où la course est dans le menu
+                                  (le jour où les plans sont « en ligne »)
+                 data-fin="…"   : dernier jour où elle est dans le menu (le jour de la course)
+               Tu n'as rien à faire. Si une date change, corrige data-debut ou data-fin,
+               et le texte de la ligne.
 
-               • Sporting Life 10 km  → à activer le 1er février 2027
-                 Avant : vérifie la date officielle (sportinglife10k.ca). Si elle
-                 n'est pas le 9 mai, corrige-la ici ET dans le script (ligne « sl10: »).
-               • Toronto Women's Run 10 km et 5 km → à activer le 15 février 2027
-
-               APRÈS MONTRÉAL (après le 18 avril) : remets les deux lignes Montréal
-               en commentaire : remets « <!- - » au début et « - - > » à la fin (collés).
-               La première ligne visible devient le choix par défaut.
+               Sporting Life a toujours lieu le jour de la fête des Mères (2e dimanche de mai).
+               Si la date change, corrige-la ici ET dans le script (ligne « sl10: »)
+               ET sur la carte Sporting Life de « Notre saison ».
                ===================================================================== -->
-          <!-- <option value="sl10">Sporting Life · 10 km · 9 mai</option> -->
-          <!-- <option value="twr10">Toronto Women's Run · 10 km · 22 mai</option> -->
-          <!-- <option value="twr5">Toronto Women's Run · 5 km · 22 mai</option> -->
+          <option value="mtl21" data-debut="2026-11-01" data-fin="2027-04-18">Montréal · semi-marathon · 18 avril</option>
+          <option value="mtl10" data-debut="2026-11-01" data-fin="2027-04-17">Montréal · 10 km · 17 avril</option>
+          <option value="sl10"  data-debut="2027-02-01" data-fin="2027-05-09">Sporting Life · 10 km · 9 mai</option>
+          <option value="twr10" data-debut="2027-02-15" data-fin="2027-05-22">Toronto Women's Run · 10 km · 22 mai</option>
+          <option value="twr5"  data-debut="2027-02-15" data-fin="2027-05-22">Toronto Women's Run · 5 km · 22 mai</option>
         </select>
         <p class="w3-small w3-text-grey" id="race-info"></p>
         <div id="custom" hidden>
@@ -358,7 +355,7 @@ var LIB = {"semi-3x": {"dist": "21,1 km", "niveau": "3 fois par semaine", "nb": 
 var RACES = {
   mtl21:{nom:"Montréal",sous:"Nespresso · semi-marathon",date:"2027-04-18",dist:21,info:"Dimanche 18 avril 2027 · départ 8 h · parc Jean-Drapeau",pdf:{"semi-3x":"3x","semi-4x":"4x","semi-5x":"5x"},voyage:1},
   mtl10:{nom:"Montréal",sous:"Nespresso · 10 km",date:"2027-04-17",dist:10,info:"Samedi 17 avril 2027 · départ 11 h 30 · parc Jean-Drapeau",pdf:{"10k-niveau1":"10k1","10k-niveau2":"10k2","10k-niveau3":"10k3"},voyage:1},
-  sl10:{nom:"Sporting Life",sous:"10 km · Toronto",date:"2027-05-09",dist:10,info:"Dimanche 9 mai 2027 (date à confirmer) · rue Yonge, Toronto"},
+  sl10:{nom:"Sporting Life",sous:"10 km · Toronto",date:"2027-05-09",dist:10,info:"Dimanche 9 mai 2027 · rue Yonge, Toronto"},
   twr10:{nom:"Toronto Women's Run",sous:"Printemps · 10 km",date:"2027-05-22",dist:10,info:"Samedi 22 mai 2027 · départ 8 h · parc Wilket Creek"},
   twr5:{nom:"Toronto Women's Run",sous:"Printemps · 5 km",date:"2027-05-22",dist:5,info:"Samedi 22 mai 2027 · départ 8 h 20 · parc Wilket Creek"}
 };
@@ -617,6 +614,14 @@ function buildICS(){
 
 function save_(){ try{ localStorage.setItem("esmoGen",JSON.stringify({m:$("min").value,s:$("sec").value,r:$("race").value,p:planSel(),d:$("cdate").value,
   cd:(document.querySelector("input[name=cdist]:checked")||{}).value})); }catch(e){} }
+/* Garde dans le menu seulement les courses dont la date du jour est entre data-debut et data-fin. */
+(function(){
+  var t=new Date(), iso=t.getFullYear()+"-"+("0"+(t.getMonth()+1)).slice(-2)+"-"+("0"+t.getDate()).slice(-2);
+  var sel=$("race"), opts=[].slice.call(sel.options), gardees=0;
+  opts.forEach(function(o){ var d=o.getAttribute("data-debut"), f=o.getAttribute("data-fin");
+    if((d && iso<d) || (f && iso>f)) sel.removeChild(o); else gardees++; });
+  if(!gardees){ opts.forEach(function(o){ sel.appendChild(o); }); var m=document.createElement("p"); m.className="w3-panel w3-pale-green w3-padding"; m.textContent="La saison 2026-2027 est terminée. Merci et bravo à tout le club ! Les plans restent ici pour consultation."; sel.parentNode.insertBefore(m,sel.previousElementSibling); sel.selectedIndex=0; }
+})();
 $("race").addEventListener("change",function(){ renderPlanChoices(); update(); });
 $("cdate").addEventListener("change",update);
 Array.prototype.forEach.call(document.querySelectorAll("input[name=cdist]"),function(el){ el.addEventListener("change",function(){ renderPlanChoices(); update(); }); });
@@ -626,6 +631,7 @@ try{ var st=JSON.parse(localStorage.getItem("esmoGen")||"null");
   if(st){ if(st.m) $("min").value=st.m; if(st.s) $("sec").value=st.s; if(st.r) $("race").value=st.r; if(st.d) $("cdate").value=st.d;
     if(st.cd){ var c=document.querySelector('input[name=cdist][value="'+st.cd+'"]'); if(c) c.checked=true; }
     renderPlanChoices(); if(st.p){ var p=document.querySelector('input[name=plan][value="'+st.p+'"]'); if(p) p.checked=true; } } }catch(e){}
+if(!$("race").value) $("race").selectedIndex=0;
 if(!$("plans").children.length) renderPlanChoices();
 update();
 
