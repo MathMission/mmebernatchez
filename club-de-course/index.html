@@ -115,8 +115,8 @@ details summary::-webkit-details-marker{color:#009688}
     </ul>
   </div>
 
-  <!-- 3. Allures -->
-  <div class="box">
+  <!-- 3. Allures (plans avancés seulement) -->
+  <div class="box" id="box-allures">
     <ul class="w3-ul w3-border w3-hover-shadow">
       <li class="w3-theme"><p class="w3-xlarge">3. Tes allures</p></li>
       <li class="w3-padding-16">
@@ -138,7 +138,7 @@ details summary::-webkit-details-marker{color:#009688}
   <!-- 4. Aperçu -->
   <div class="box">
     <ul class="w3-ul w3-border w3-hover-shadow">
-      <li class="w3-theme"><p class="w3-xlarge">4. Aperçu de ton plan</p></li>
+      <li class="w3-theme"><p class="w3-xlarge"><span id="num-apercu">4</span>. Aperçu de ton plan</p></li>
       <li class="w3-padding-16">
         <div class="w3-panel w3-sand w3-leftbar w3-border-amber" style="margin-top:0">
           <p><b id="base-title"></b><br>Cours au moins 3 fois par semaine, 30 minutes minimum chaque fois. C'est le strict minimum pour être prêt à commencer le plan.</p>
@@ -276,6 +276,7 @@ function paceRows(p,planId,dist){
     {k:"Allure 5 km",v:fmt(p.p5),f:"Fractionnés courts (1'30)"}];
 }
 function paceText(p,planId,dist){
+  if(LIB[planId].src!=="ra") return "";
   if(!p) return "Allures à l'effort (fais ton test de 5 km pour avoir tes chiffres) : "+paceRows(calc(1800),planId,dist).map(function(r){ return r.k+" : "+EFFORT[r.k]; }).join(" · ");
   return "Tes allures (min/km) : "+paceRows(p,planId,dist).map(function(r){ return r.k+" "+r.v; }).join(" · ");
 }
@@ -332,6 +333,8 @@ function update(){
         '<div class="w3-small w3-text-grey" style="text-transform:uppercase">'+DOW[s.date.getUTCDay()]+' '+dm(s.date)+'</div><div><b>'+esc(s.title)+'</b></div>'+(s.type==="rest"||!s.detail?'':'<div class="w3-small">'+esc(s.detail)+'</div>')+'</div></div>'; }).join("");
     return '<details class="w3-border w3-round w3-margin-bottom w3-light-grey"'+(i===openIdx?' open':'')+'><summary class="w3-padding" style="cursor:pointer">'+head+'</summary><div class="w3-row" style="padding:0 8px 8px">'+body+'</div></details>';
   }).join("");
+  var avance = cur.P.src==="ra";
+  $("box-allures").hidden = !avance; $("num-apercu").textContent = avance ? "4" : "3";
   dlState(); renderPaces();
 }
 
