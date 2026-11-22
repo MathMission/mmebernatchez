@@ -20,8 +20,9 @@
 .course{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:10px;text-decoration:none;color:inherit;border:2px solid transparent;position:relative;transition:transform .15s}
 .course:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
 .course b{font-size:17px;line-height:1.2}
-.course .etat{align-self:flex-start;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;margin-bottom:4px}
+.course .etat{align-self:flex-start;font-size:12px;font-weight:700;padding:2px 10px;border-radius:8px;line-height:1.35;margin-bottom:4px}
 .course .quand{font-size:13px}
+.course .sem{font-size:13px;font-weight:700;margin:-2px 0 2px}
 .course .dist{font-size:14px}
 .course .plan{font-size:12px;margin-top:4px;padding-top:6px;border-top:1px dashed currentColor;opacity:.9}
 .course .plan b{font-size:inherit}
@@ -33,6 +34,14 @@
 .course.a-venir{background:linear-gradient(135deg,#009688,#00796b);color:#fff}
 .course.a-venir .etat{background:#fff;color:#00796b}
 .course.a-venir .lien{color:#fff}
+.course.entrainement{background:linear-gradient(135deg,#ffc94a,#f39c12);color:#1d2433;border-color:#f39c12;animation:lueur 2.4s ease-in-out infinite alternate}
+.course.entrainement .etat{background:#1d2433;color:#ffc94a}
+.course.entrainement .lien{color:#1d2433}
+.course.base{background:linear-gradient(135deg,#fff3c4,#ffd76a);color:#1d2433;border-color:#f2b63c}
+.course.base .etat{background:#1d2433;color:#ffd76a}
+.course.base .lien{color:#1d2433}
+@keyframes lueur{from{box-shadow:0 0 0 rgba(243,156,18,0)}to{box-shadow:0 0 18px 3px rgba(243,156,18,.55)}}
+@media (prefers-reduced-motion:reduce){.course.entrainement{animation:none}}
 
 .grid-paces{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:8px}
 .grid-ses{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;padding:0 12px 12px}
@@ -95,11 +104,17 @@ details summary::-webkit-details-marker{color:#009688}
 
   <!-- =====================================================================
        NOTRE SAISON 2026-2027
-       Chaque course est une carte <a class="course …">.
-       • Course terminée  : écris  class="course fait"     (carte grise + « Fait ! » + médaille)
-       • Course à venir   : écris  class="course a-venir"  (carte en couleur + « À venir »)
-       Pour changer une course de « à venir » à « fait », change seulement ce mot,
-       puis remplace la ligne <span class="etat">…</span> par celle d'une carte « fait ».
+       LES COULEURS CHANGENT TOUTES SEULES selon la date du jour :
+       • gris + « ✓ Fait ! »        : le lendemain de la course
+       • or + « En entraînement »   : à partir de data-debut (début du plan)
+       • or pâle + « En entraînement de base » : à partir de data-base (seulement Montréal, pour le semi)
+       • « C'est aujourd'hui ! »    : le jour de la course (data-course)
+       • sarcelle + « À venir »     : avant data-debut
+       Chaque carte a donc 2 dates (format AAAA-MM-JJ) :
+         data-debut="…"  : premier jour du plan d'entraînement
+         data-course="…" : jour de la course (le dernier jour, s'il y en a deux)
+       Tu n'as rien à changer pendant l'année. Si une date change, corrige
+       data-debut ou data-course, et le texte de la carte.
        Si une date change, corrige-la ici aussi (et dans le menu « Ta course »).
        ===================================================================== -->
   <div class="box">
@@ -108,7 +123,7 @@ details summary::-webkit-details-marker{color:#009688}
       <li class="w3-padding-16">
         <div class="saison">
 
-          <a class="course fait" href="https://towomensruns.com" target="_blank" rel="noopener">
+          <a class="course fait" data-debut="2026-09-08" data-course="2026-10-03" href="https://towomensruns.com" target="_blank" rel="noopener">
             <span class="etat">✓ Fait !</span>
             <span class="quand">Automne · 3 octobre 2026</span>
             <b>Toronto Women's Run</b>
@@ -116,7 +131,7 @@ details summary::-webkit-details-marker{color:#009688}
             <span class="lien">Site officiel ↗</span>
           </a>
 
-          <a class="course fait" href="https://www.thesantaclausparade.com/holly-jolly-fun-run" target="_blank" rel="noopener">
+          <a class="course fait" data-debut="2026-10-05" data-course="2026-11-22" href="https://www.thesantaclausparade.com/holly-jolly-fun-run" target="_blank" rel="noopener">
             <span class="etat">✓ Fait !</span>
             <span class="quand">Fin d'automne · 22 novembre 2026</span>
             <b>Holly Jolly Fun Run</b>
@@ -124,16 +139,16 @@ details summary::-webkit-details-marker{color:#009688}
             <span class="lien">Site officiel ↗</span>
           </a>
 
-          <a class="course a-venir" href="https://couronsmtl.com/21k/accueil/" target="_blank" rel="noopener">
+          <a class="course a-venir" data-base="2026-11-23" data-debut="2027-01-25" data-course="2027-04-18" href="https://couronsmtl.com/21k/accueil/" target="_blank" rel="noopener">
             <span class="etat">À venir</span>
             <span class="quand">Hiver · 17 et 18 avril 2027</span>
             <b>Montréal · 21K Nespresso</b>
             <span class="dist">Semi-marathon · 10 km<br>voyage du 16 au 18 avril</span>
-            <span class="plan">Entraînement : 25 janvier (semi, 10 km N3) · 8 février (10 km N1–2)<br><b>Plans en ligne maintenant</b></span>
+            <span class="plan">Entraînement de base (semi) : dès le 23 novembre<br>Entraînement : 25 janvier (semi, 10 km N3) · 8 février (10 km N1–2)<br><b>Plans en ligne maintenant</b></span>
             <span class="lien">Site officiel ↗</span>
           </a>
 
-          <a class="course a-venir" href="https://sportinglife10k.ca" target="_blank" rel="noopener">
+          <a class="course a-venir" data-debut="2027-02-15" data-course="2027-05-09" href="https://sportinglife10k.ca" target="_blank" rel="noopener">
             <span class="etat">À venir</span>
             <span class="quand">Printemps · 9 mai 2027 (à confirmer)</span>
             <b>Sporting Life</b>
@@ -142,7 +157,7 @@ details summary::-webkit-details-marker{color:#009688}
             <span class="lien">Site officiel ↗</span>
           </a>
 
-          <a class="course a-venir" href="https://towomensruns.com" target="_blank" rel="noopener">
+          <a class="course a-venir" data-debut="2027-03-01" data-course="2027-05-22" href="https://towomensruns.com" target="_blank" rel="noopener">
             <span class="etat">À venir</span>
             <span class="quand">Printemps · 22 mai 2027</span>
             <b>Toronto Women's Run</b>
@@ -152,6 +167,27 @@ details summary::-webkit-details-marker{color:#009688}
           </a>
 
         </div>
+
+        <script>
+        /* Met chaque carte de la saison à jour selon la date du jour (voir le commentaire plus haut). */
+        (function(){
+          var t=new Date(); t=new Date(t.getFullYear(),t.getMonth(),t.getDate());
+          function d(x){ var p=x.split('-'); return new Date(+p[0],p[1]-1,+p[2]); }
+          var cards=document.querySelectorAll('.saison .course');
+          for(var i=0;i<cards.length;i++){
+            var c=cards[i], deb=d(c.getAttribute('data-debut')), crs=d(c.getAttribute('data-course')),
+                base=c.getAttribute('data-base') ? d(c.getAttribute('data-base')) : null,
+                etat='a-venir', txt='À venir', sem='';
+            function semaine(depuis){ return 'Semaine '+(Math.floor(Math.round((t-depuis)/864e5)/7)+1); }
+            if(t>crs){ etat='fait'; txt='✓ Fait !'; }
+            else if(+t===+crs){ etat='entrainement'; txt="🏁 C'est aujourd'hui !"; }
+            else if(t>=deb){ etat='entrainement'; txt='🔥 En entraînement'; sem=semaine(deb); }
+            else if(base && t>=base){ etat='base'; txt='🌱 En entraînement de base'; sem=semaine(base); }
+            c.className='course '+etat; c.querySelector('.etat').textContent=txt;
+            if(sem){ var e=c.querySelector('.etat'), sp=document.createElement('span'); sp.className='sem'; sp.textContent=sem; e.parentNode.insertBefore(sp,e.nextSibling); }
+          }
+        })();
+        </script>
         <p class="w3-small" style="margin-bottom:0"><b>Jamais couru ?</b> Pas de problème : le 5 km et le 10 km Niveau 1 commencent en alternant course et marche.<br>
         <b>Tu fais Montréal ?</b> Tu peux aussi faire Sporting Life ou le Toronto Women's Run, sans nouveau plan : garde tes sorties faciles et ta sortie longue jusqu'à la course.</p>
       </li>
