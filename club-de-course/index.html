@@ -36,6 +36,7 @@ details summary::-webkit-details-marker{color:#009688}
   <a href="../mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
   <a href="../mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
   <a href="./" class="w3-bar-item w3-button">Club de course</a>
+  <a href="../jeux/" class="w3-bar-item w3-button">Jeux</a>
   <a href="#contact" class="w3-bar-item w3-button">Contact</a>
 </nav>
 
@@ -47,6 +48,7 @@ details summary::-webkit-details-marker{color:#009688}
   <a href="../mhf4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MHF4U</a>
   <a href="../mdm4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MDM4U</a>
   <a href="./" class="w3-bar-item w3-button w3-hide-small w3-white">Club de course</a>
+  <a href="../jeux/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Jeux</a>
   <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Pour me joindre</a>
  </div>
 
@@ -55,6 +57,7 @@ details summary::-webkit-details-marker{color:#009688}
     <a href="../mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
     <a href="../mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
     <a href="./" class="w3-bar-item w3-button">Club de course</a>
+    <a href="../jeux/" class="w3-bar-item w3-button">Jeux</a>
     <a href="#contact" class="w3-bar-item w3-button">Pour me joindre</a>
   </div>
 </div>
@@ -71,6 +74,39 @@ details summary::-webkit-details-marker{color:#009688}
     <p>Ton plan d'entraînement, tes allures et ton calendrier</p><br>
   </div>
 
+  <!-- =====================================================================
+       INFO : LES COURSES 2027
+       Ce tableau est toujours visible. Quand une course est passée, tu peux
+       effacer sa ligne <tr> … </tr>, ou laisser tout tel quel.
+       Si une date change, corrige-la ici aussi (et dans le menu « Ta course »).
+       ===================================================================== -->
+  <div class="box">
+    <ul class="w3-ul w3-border w3-hover-shadow">
+      <li class="w3-theme"><p class="w3-xlarge"><i class="fa fa-flag-checkered w3-margin-right"></i>Les courses 2027</p></li>
+      <li class="w3-padding-16">
+        <div class="w3-responsive">
+        <table class="w3-table w3-bordered w3-striped">
+          <tr class="w3-light-grey"><th>Course</th><th>Distances</th><th>Début de l'entraînement</th><th>Plans en ligne</th></tr>
+          <tr><td><b>Montréal</b><br><span class="w3-small">voyage du 16 au 18 avril</span></td>
+              <td>Semi-marathon · 18 avril<br>10 km · 17 avril</td>
+              <td>25 janvier : semi et 10 km Niveau 3<br>8 février : 10 km Niveaux 1 et 2</td>
+              <td><span class="w3-tag w3-teal w3-round">Maintenant</span></td></tr>
+          <tr><td><b>Sporting Life</b><br><span class="w3-small">Toronto · 9 mai (à confirmer)</span></td>
+              <td>10 km</td>
+              <td>15 février : Niveau 3<br>1er mars : Niveaux 1 et 2</td>
+              <td>1er février</td></tr>
+          <tr><td><b>Toronto Women's Run</b><br><span class="w3-small">parc Wilket Creek · 22 mai</span></td>
+              <td>5 km<br>10 km</td>
+              <td>1er mars : 5 km et 10 km Niveau 3<br>15 mars : 10 km Niveaux 1 et 2</td>
+              <td>15 février</td></tr>
+        </table>
+        </div>
+        <p class="w3-small" style="margin-bottom:0"><b>Jamais couru ?</b> Pas de problème : le 5 km et le 10 km Niveau 1 commencent en alternant course et marche.<br>
+        <b>Tu fais Montréal ?</b> Tu peux aussi faire Sporting Life ou le Toronto Women's Run, sans nouveau plan : garde tes sorties faciles et ta sortie longue jusqu'à la course.</p>
+      </li>
+    </ul>
+  </div>
+
   <!-- 1. Plan -->
   <div class="box">
     <ul class="w3-ul w3-border w3-hover-shadow">
@@ -80,6 +116,25 @@ details summary::-webkit-details-marker{color:#009688}
         <select class="w3-select w3-border w3-margin-top" id="race" style="max-width:460px">
           <option value="mtl21">Montréal · semi-marathon · 18 avril</option>
           <option value="mtl10">Montréal · 10 km · 17 avril</option>
+          <!-- =====================================================================
+               COURSES DU PRINTEMPS : déjà prêtes, mais cachées.
+               POUR AFFICHER UNE COURSE : sur sa ligne ci-dessous, efface la marque
+               de début « <!- - » et la marque de fin « - - > » (ici écrites avec des
+               espaces ; dans la ligne, elles sont collées). Rien d'autre à faire : les plans,
+               les allures et les calendriers sont déjà dans la page.
+
+               • Sporting Life 10 km  → à activer le 1er février 2027
+                 Avant : vérifie la date officielle (sportinglife10k.ca). Si elle
+                 n'est pas le 9 mai, corrige-la ici ET dans le script (ligne « sl10: »).
+               • Toronto Women's Run 10 km et 5 km → à activer le 15 février 2027
+
+               APRÈS MONTRÉAL (après le 18 avril) : remets les deux lignes Montréal
+               en commentaire : remets « <!- - » au début et « - - > » à la fin (collés).
+               La première ligne visible devient le choix par défaut.
+               ===================================================================== -->
+          <!-- <option value="sl10">Sporting Life · 10 km · 9 mai</option> -->
+          <!-- <option value="twr10">Toronto Women's Run · 10 km · 22 mai</option> -->
+          <!-- <option value="twr5">Toronto Women's Run · 5 km · 22 mai</option> -->
         </select>
         <p class="w3-small w3-text-grey" id="race-info"></p>
         <div id="custom" hidden>
