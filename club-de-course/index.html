@@ -280,19 +280,24 @@ function baseInfo(){
     mon=new Date(mon.getTime()-7*DAY);
   }
   rows.forEach(function(r,i){ if(r.light){ var prev=rows[i-1]||rows[i+1]; r.t=prev.t*0.8; r.l=prev.l*0.8; } });
-  rows.forEach(function(r){ r.t=r5(r.t); r.l=r5(r.l);
+  var part=Math.max(0.4,lng/tot);  // la sortie longue ne dépasse pas sa part dans la semaine 1 du plan (min. 40 %)
+  rows.forEach(function(r){ r.t=r5(Math.max(r.t,r.l/part)); r.l=r5(r.l);
     r.n = runs<=3 ? "3" : r.t<=110 ? "3" : r.t<=150 ? "3–4" : (runs>=5 && r.t>=170 ? "4–5" : "4"); });
   return {rows:rows,testWk:testWk,w1t:r5(tot),w1l:r5(lng)};
+}
+function autres(r){
+  var rest=r.t-r.l;
+  return String(r.n).split("–").map(Number).map(function(n){ return (n-1)+" × "+r5(rest/(n-1))+" min"; }).join(" ou ");
 }
 function renderBase(){
   var b=baseInfo(); if(!b){ $("base-text").textContent=""; $("base-table").innerHTML=""; return; }
   if(b.simple){ $("base-text").textContent="Cours 3 fois par semaine, 20 à 30 minutes chaque fois. Alterner course et marche, c'est correct. Le plan commence en douceur."; $("base-table").innerHTML=""; return; }
-  $("base-text").textContent="Augmente ton temps de course d'environ 10 % par semaine, jamais plus. Voici où tu devrais être chaque semaine pour commencer ton plan (semaine 1 : "+b.w1t+" min, sortie longue de "+b.w1l+" min) sans te blesser.";
+  $("base-text").textContent="Augmente ton temps de course d'environ 10 % par semaine, jamais plus. Le total inclut la sortie longue. Voici où tu devrais être chaque semaine pour commencer ton plan (semaine 1 : "+b.w1t+" min, sortie longue de "+b.w1l+" min) sans te blesser.";
   if(!b.rows.length){ $("base-table").innerHTML=""; return; }
   var now=Date.now();
-  $("base-table").innerHTML='<table class="w3-table w3-bordered w3-small w3-white" style="margin-bottom:12px"><tr class="w3-teal"><th>Semaine du</th><th>Total</th><th>Courses</th><th>Sortie longue</th></tr>'+
+  $("base-table").innerHTML='<table class="w3-table w3-bordered w3-small w3-white" style="margin-bottom:12px"><tr class="w3-teal"><th>Semaine du</th><th>Total</th><th>Sorties</th><th>Sortie longue</th><th>Autres sorties</th></tr>'+
     b.rows.map(function(r){ var isNow=now>=r.mon.getTime()&&now<r.mon.getTime()+7*DAY, isTest=r.mon.getTime()===b.testWk.getTime();
-      return '<tr'+(isNow?' class="w3-pale-green" style="font-weight:bold"':'')+'><td>'+dm(r.mon)+(r.light?' <span class="w3-text-grey">(plus léger)</span>':'')+(isTest?' <span class="w3-text-teal">(test 5 km)</span>':'')+(isNow?' ← cette semaine':'')+'</td><td>'+r.t+' min</td><td>'+r.n+'</td><td>'+r.l+' min</td></tr>'; }).join("")+'</table>';
+      return '<tr'+(isNow?' class="w3-pale-green" style="font-weight:bold"':'')+'><td>'+dm(r.mon)+(r.light?' <span class="w3-text-grey">(plus léger)</span>':'')+(isTest?' <span class="w3-text-teal">(test 5 km)</span>':'')+(isNow?' ← cette semaine':'')+'</td><td>'+r.t+' min</td><td>'+r.n+'</td><td>'+r.l+' min</td><td>'+autres(r)+'</td></tr>'; }).join("")+'</table>';
 }
 
 /* ---- Allures ---- */
