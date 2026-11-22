@@ -94,6 +94,18 @@ details summary::-webkit-details-marker{color:#009688}
         </div>
         <p style="margin:12px 0 6px"><b id="l-plan"></b></p>
         <div role="radiogroup" aria-labelledby="l-plan" id="plans"></div>
+        <div class="w3-panel w3-pale-yellow w3-leftbar w3-border-amber" id="indecis-note" hidden>
+          <p><b>Pas de problème !</b> Pour l'instant, suis l'entraînement de base ci-dessous (calculé pour 4 fois par semaine, le choix du milieu). <b>Choisis ton plan d'ici le 18 janvier</b>, la semaine du test de 5 km.</p>
+        </div>
+        <details id="guide" class="w3-small" style="margin-top:8px"><summary><b>Comment choisir : 3, 4 ou 5 fois par semaine ?</b></summary>
+          <table class="w3-table w3-bordered w3-white" style="margin:8px 0">
+            <tr class="w3-teal"><th>Si tu…</th><th>Choisis</th></tr>
+            <tr><td>n'as pas couru régulièrement depuis un moment (des mois), ou tu as déjà un autre sport, un emploi ou un horaire chargé</td><td><b>3 fois</b></td></tr>
+            <tr><td>cours régulièrement (environ 3 fois par semaine) et tu peux ajouter une séance</td><td><b>4 fois</b></td></tr>
+            <tr><td>cours déjà 4 fois ou plus par semaine, tu as déjà fait un 10 km ou un semi, et tu n'as pas d'autre sport</td><td><b>5 fois</b></td></tr>
+          </table>
+          <p><b>Dans le doute, choisis moins.</b> C'est facile d'en ajouter, mais une blessure en février met fin à la saison.<br><b>Tu peux changer.</b> Descendre d'un niveau pendant le plan, c'est toujours permis. Monter, c'est possible pendant les 2 premières semaines.</p>
+        </details>
         <div class="w3-panel w3-pale-red w3-leftbar w3-border-red" id="warn" hidden></div>
       </li>
     </ul>
@@ -104,6 +116,7 @@ details summary::-webkit-details-marker{color:#009688}
     <ul class="w3-ul w3-border w3-hover-shadow">
       <li class="w3-theme"><p class="w3-xlarge">2. Ton calendrier</p></li>
       <li class="w3-padding-16">
+        <div class="w3-panel w3-light-grey" id="dl-wait" hidden><p>Choisis ton plan (3, 4 ou 5 fois par semaine) pour télécharger ton calendrier. D'ici là, suis l'entraînement de base de l'aperçu ci-dessous.</p></div>
         <div class="dl-btns">
         <button type="button" class="w3-button w3-teal w3-padding" id="dl-pdf" disabled><i class="fa fa-file-pdf-o"></i> Télécharger mon plan (PDF)</button>
         <button type="button" class="w3-button w3-border w3-padding" id="dl-ics" disabled><i class="fa fa-calendar"></i> Ajouter à mon calendrier (iPhone, Outlook)</button>
@@ -147,6 +160,7 @@ details summary::-webkit-details-marker{color:#009688}
         <div class="w3-panel w3-sand w3-leftbar w3-border-amber" style="margin-top:0">
           <p><b id="base-title"></b><br><span id="base-text"></span></p>
           <div id="base-table" style="overflow-x:auto"></div>
+          <p id="base-retour" class="w3-small"><b>Ça fait longtemps que tu n'as pas couru ?</b> Ne saute pas directement à la ligne « cette semaine ». Commence à 3 × 20 minutes (course et marche si besoin) et ajoute environ 10 % par semaine jusqu'à rejoindre le tableau. Tu as le temps !</p>
         </div>
         <div id="chips" style="margin-bottom:8px"></div>
         <div id="legend" style="margin-bottom:8px"></div>
@@ -206,8 +220,9 @@ var RACES = {
   twr10:{nom:"Toronto Women's Run",sous:"Printemps · 10 km",date:"2027-05-22",dist:10,info:"Samedi 22 mai 2027 · départ 8 h · parc Wilket Creek"},
   twr5:{nom:"Toronto Women's Run",sous:"Printemps · 5 km",date:"2027-05-22",dist:5,info:"Samedi 22 mai 2027 · départ 8 h 20 · parc Wilket Creek"}
 };
-var PLANS_BY = {5:["5k-niveau1","5k-niveau2"],10:["10k-niveau1","10k-niveau2","10k-niveau3"],21:["semi-3x","semi-4x","semi-5x"]};
-var SHORT = {"semi-3x":"3 fois","semi-4x":"4 fois","semi-5x":"5 fois","5k-niveau1":"Niveau 1<small>course et marche</small>","5k-niveau2":"Niveau 2<small>course continue</small>",
+var PLANS_BY = {5:["5k-niveau1","5k-niveau2"],10:["10k-niveau1","10k-niveau2","10k-niveau3"],21:["semi-3x","semi-4x","semi-5x","semi-indecis"]};
+function eff(id){ return id==="semi-indecis" ? "semi-4x" : id; }
+var SHORT = {"semi-indecis":"Je ne sais pas encore","semi-3x":"3 fois","semi-4x":"4 fois","semi-5x":"5 fois","5k-niveau1":"Niveau 1<small>course et marche</small>","5k-niveau2":"Niveau 2<small>course continue</small>",
   "10k-niveau1":"Niveau 1<small>course et marche · 4 séances</small>","10k-niveau2":"Niveau 2<small>course continue · 4 séances</small>","10k-niveau3":"Niveau 3<small>5 sorties par semaine</small>"};
 var PDFNAME = {"3x":"Entrainement-ESMO-Nespresso-Montreal-3x-semaine.pdf","4x":"Entrainement-ESMO-Nespresso-Montreal-4x-semaine.pdf","5x":"Entrainement-ESMO-Nespresso-Montreal-5x-semaine.pdf",
   "10k1":"Montreal-ESMO-10km-Niveau1.pdf","10k2":"Montreal-ESMO-10km-Niveau2.pdf","10k3":"Montreal-ESMO-10km-Niveau3.pdf"};
@@ -291,6 +306,7 @@ function autres(r){
 }
 function renderBase(){
   var b=baseInfo(); if(!b){ $("base-text").textContent=""; $("base-table").innerHTML=""; return; }
+  $("base-retour").hidden = !!b.simple;
   if(b.simple){ $("base-text").textContent="Cours 3 fois par semaine, 20 à 30 minutes chaque fois. Alterner course et marche, c'est correct. Le plan commence en douceur."; $("base-table").innerHTML=""; return; }
   $("base-text").textContent="Augmente ton temps de course d'environ 10 % par semaine, jamais plus. Le total inclut la sortie longue. Voici où tu devrais être chaque semaine pour commencer ton plan (semaine 1 : "+b.w1t+" min, sortie longue de "+b.w1l+" min) sans te blesser.";
   if(!b.rows.length){ $("base-table").innerHTML=""; return; }
@@ -329,7 +345,7 @@ function paceText(p,planId,dist){
   return "Tes allures (min/km) : "+paceRows(p,planId,dist).map(function(r){ return r.k+" "+r.v; }).join(" · ");
 }
 function renderPaces(){
-  var t=readTime(), planId=planSel(), dist=raceSel().r.dist; if(!planId) return false;
+  var t=readTime(), planId=eff(planSel()), dist=raceSel().r.dist; if(!planId) return false;
   if(t===null||(t&&(t<11*60||t>75*60))){ $("err").textContent="Écris tes minutes (11 à 75) et tes secondes (0 à 59). Exemple : 28 min 45 s."; paces=null; return false; }
   $("err").textContent=""; paces=t?calc(t):null;
   var rows=paceRows(paces||calc(1800),planId,dist);
@@ -349,10 +365,12 @@ function renderPaces(){
 function update(){
   var S=raceSel(), R=S.r; $("custom").hidden = S.key!=="autre";
   if(!$("plans").children.length || PLANS_BY[R.dist].indexOf(planSel())<0) renderPlanChoices();
-  var planId=planSel();
+  var choice=planSel(), planId=eff(choice);
+  $("guide").hidden = R.dist!==21;
+  $("indecis-note").hidden = choice!=="semi-indecis";
   $("race-info").textContent=R.info;
   if(!R.date){ cur=null; $("weeks").innerHTML=""; $("warn").hidden=true; dlState(); renderPaces(); return; }
-  cur=generate(planId,R.date); cur.R=R; cur.key=S.key;
+  cur=generate(planId,R.date); cur.R=R; cur.key=S.key; cur.indecis = choice==="semi-indecis";
   var race=cur.race, start=cur.start, now=Date.now();
   $("race-info").textContent=R.info+" · début du plan : lundi "+dm(start,1);
   var testWk=new Date(start.getTime()-7*DAY);
@@ -388,7 +406,7 @@ function update(){
 }
 
 /* ---- Téléchargements ---- */
-function dlState(){ var ok=!!cur; $("dl-pdf").disabled=!ok; $("dl-csv").disabled=!ok; $("dl-ics").disabled=!ok;
+function dlState(){ var ok=!!cur&&!cur.indecis; $("dl-wait").hidden=!(cur&&cur.indecis); $("dl-pdf").disabled=!ok; $("dl-csv").disabled=!ok; $("dl-ics").disabled=!ok;
   $("dl-pdf").innerHTML = '<i class="fa fa-file-pdf-o"></i> '+(cur&&cur.R.pdf&&cur.R.pdf[cur.plan] ? "Télécharger mon plan (PDF du club)" : "Télécharger mon plan (PDF)"); }
 function csvCell(s){ return '"'+String(s).replace(/"/g,'""')+'"'; }
 function mdY(dt){ var m=dt.getUTCMonth()+1, d=dt.getUTCDate(); return (m<10?"0":"")+m+"/"+(d<10?"0":"")+d+"/"+dt.getUTCFullYear(); }
