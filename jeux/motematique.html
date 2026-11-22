@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Motématique — le mot mathématique du jour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>
+/* ==========================================================
+   LISTE DES MOTS  —  à modifier par l'enseignante
+   ----------------------------------------------------------
+   • Ouvrez la page avec #prof à la fin de l'adresse
+     (ex. .../motematique.html#prof) pour générer une ligne.
+   • Collez la ligne ci-dessous. Le jeu prend le mot dont la
+     date est aujourd'hui (ou le plus récent avant aujourd'hui).
+   • Le mot est encodé pour que les élèves ne le voient pas
+     en regardant le code source.
+   • Mots de 4 à 9 lettres ; les accents sont ignorés.
+   ========================================================== */
+const MOTS = [
+  { date: "2026-11-20", code: "U1VOSVM=",     indice: "Côté opposé sur hypoténuse." },
+  { date: "2026-11-23", code: "TkFJREFS",     indice: "Unité d'angle : un tour complet en vaut 2π." },
+  { date: "2026-11-24", code: "RURPSVJFUA==", indice: "Le temps pour compléter un cycle." },
+  { date: "2026-11-25", code: "U1VOSVNPQw==", indice: "Abscisse d'un point sur le cercle trigonométrique." },
+  { date: "2026-11-26", code: "RVRJVE5FREk=", indice: "Égalité vraie pour toutes les valeurs permises." },
+  { date: "2026-11-27", code: "RVRORUdOQVQ=", indice: "Sinus sur cosinus." },
+  { date: "2026-11-30", code: "RURVVElMUE1B", indice: "La moitié de la distance entre le max et le min." },
+  { date: "2026-12-01", code: "RVRPVFBNWVNB", indice: "Droite dont la courbe s'approche sans jamais la toucher." },
+  { date: "2026-12-02", code: "RVROQUNFUw==", indice: "La fonction inverse du cosinus : 1/cos x." },
+  { date: "2026-12-03", code: "Tk9JVEFVUUU=", indice: "On la résout pour trouver x." },
+];
+</script>
+<style>
+  :root{
+    --ink:#1d2433; --paper:#fbfaf6; --grid:#e4e8ef; --grid2:#d3d9e3;
+    --correct:#2f8f6b; --present:#e0a526; --absent:#7a8394;
+    --tile-border:#c3cad6; --key:#dfe4ec; --accent:#3a5bd9;
+    --gap:6px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:"Atkinson Hyperlegible",system-ui,sans-serif;color:var(--ink);
+    background-color:var(--paper);
+    background-image:
+      linear-gradient(var(--grid2) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid2) 1px,transparent 1px),
+      linear-gradient(var(--grid) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:100px 100px,100px 100px,20px 20px,20px 20px;
+    display:flex;flex-direction:column;align-items:center;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .app{width:100%;max-width:500px;min-height:100%;display:flex;flex-direction:column;padding:0 12px}
+  .back{font-size:13px;padding:8px 2px 0;color:var(--ink);text-decoration:none;font-weight:700}
+  header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px;border-bottom:2px solid var(--ink)}
+  .brand{text-align:center;flex:1}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:28px;margin:0;letter-spacing:-.5px}
+  h1 .pi{color:var(--accent)}
+  .sub{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;opacity:.7}
+  .icon-btn{background:none;border:2px solid var(--ink);border-radius:50%;width:36px;height:36px;font-size:17px;font-weight:700;cursor:pointer;color:var(--ink);display:grid;place-items:center;font-family:inherit}
+  .icon-btn:active{transform:scale(.94)}
+  .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 2px;gap:8px}
+  .hint-btn{border:1.5px dashed var(--ink);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
+  .hint-btn[disabled]{opacity:.5;cursor:default}
+  .hint{background:#fff;border-left:4px solid var(--present);padding:8px 10px;font-size:14px;margin:0 2px 6px;border-radius:4px;display:none}
+  .hint.show{display:block}
+  .test-banner{background:var(--accent);color:#fff;text-align:center;font-size:13px;padding:6px;border-radius:6px;margin-top:8px;display:none}
+  .test-banner.show{display:block}
+
+  .board-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:8px 0}
+  .board{
+    --tile:min(60px, calc((min(100vw, 500px) - 40px - (var(--n) - 1) * var(--gap)) / var(--n)));
+    display:grid;gap:var(--gap);
+  }
+  .row{display:grid;grid-template-columns:repeat(var(--n),var(--tile));gap:var(--gap)}
+  .row.shake{animation:shake .45s}
+  @keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}
+  .tile{
+    width:var(--tile);height:var(--tile);border:2px solid var(--tile-border);background:#fff;
+    display:grid;place-items:center;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    font-size:calc(var(--tile) * .52);text-transform:uppercase;border-radius:6px;user-select:none;
+  }
+  .tile.filled{border-color:var(--ink);animation:pop .1s}
+  @keyframes pop{50%{transform:scale(1.08)}}
+  .tile.flip{animation:flip .5s ease forwards}
+  @keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+  .tile.correct{background:var(--correct);border-color:var(--correct);color:#fff}
+  .tile.present{background:var(--present);border-color:var(--present);color:#fff}
+  .tile.absent{background:var(--absent);border-color:var(--absent);color:#fff}
+  .tile.win{animation:bounce .5s ease}
+  @keyframes bounce{40%{transform:translateY(-14px)}70%{transform:translateY(3px)}}
+
+  .keyboard{padding:6px 0 calc(12px + env(safe-area-inset-bottom));user-select:none}
+  .krow{display:flex;justify-content:center;gap:5px;margin-bottom:7px}
+  .key{
+    flex:1;max-width:44px;height:54px;border:none;border-radius:6px;background:var(--key);color:var(--ink);
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:17px;cursor:pointer;padding:0;
+    box-shadow:0 2px 0 rgba(0,0,0,.15);
+  }
+  .key.wide{max-width:72px;flex:1.6;font-size:12px;letter-spacing:.5px}
+  .key:active{transform:translateY(2px);box-shadow:none}
+  .key.correct{background:var(--correct);color:#fff}
+  .key.present{background:var(--present);color:#fff}
+  .key.absent{background:var(--absent);color:#fff}
+  .spacer{flex:.5;max-width:20px}
+
+  .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;text-align:center;max-width:90vw}
+  .toast.show{opacity:1}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(29,36,51,.55);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--paper);border:2px solid var(--ink);border-radius:12px;max-width:440px;width:100%;max-height:88vh;overflow:auto;padding:18px 18px 20px;position:relative;box-shadow:6px 6px 0 var(--ink)}
+  .modal h2{font-family:"Bricolage Grotesque",sans-serif;margin:0 0 10px;font-size:22px}
+  .modal p,.modal li{font-size:15px;line-height:1.45}
+  .close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--ink)}
+  .ex{display:flex;gap:4px;margin:6px 0 2px}
+  .ex .tile{--tile:34px;font-size:18px}
+  .stats{display:flex;justify-content:space-around;text-align:center;margin:8px 0 14px}
+  .stats b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:30px}
+  .stats span{font-size:12px}
+  .dist{display:grid;gap:4px;margin-bottom:14px}
+  .dist div{display:flex;align-items:center;gap:6px;font-size:14px}
+  .dist i{display:block;background:var(--absent);color:#fff;font-style:normal;font-weight:700;padding:2px 6px;text-align:right;min-width:22px;border-radius:3px}
+  .dist i.me{background:var(--correct)}
+  .answer{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:26px;letter-spacing:3px;text-align:center;margin:6px 0}
+  .btn{display:inline-block;background:var(--ink);color:#fff;border:none;border-radius:8px;padding:11px 18px;font:inherit;font-weight:700;cursor:pointer;font-size:15px}
+  .btn.alt{background:var(--accent)}
+  .btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+  .center{text-align:center}
+  textarea,input{font:inherit;font-size:15px;width:100%;padding:9px;border:2px solid var(--ink);border-radius:8px;background:#fff;color:var(--ink)}
+  textarea{font-family:ui-monospace,Menlo,monospace;font-size:13px;resize:vertical}
+  label{font-size:13px;font-weight:700;display:block;margin:10px 0 4px}
+  .row2{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .muted{font-size:13px;opacity:.75}
+  .dates{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+  .dates span{font-size:12px;background:#fff;border:1px solid var(--tile-border);border-radius:4px;padding:2px 6px}
+  .dates span.today{border-color:var(--correct);background:#e3f3ec;font-weight:700}
+  .empty{text-align:center;padding:40px 20px;font-size:17px}
+</style>
+</head>
+<body>
+<div class="app">
+  <a class="back" href="./">← Jeux mathématiques</a>
+  <header>
+    <button class="icon-btn" id="helpBtn" aria-label="Comment jouer">?</button>
+    <div class="brand">
+      <h1>Mot<span class="pi">é</span>matique</h1>
+      <div class="sub">le mot mathématique du jour</div>
+    </div>
+    <button class="icon-btn" id="statsBtn" aria-label="Statistiques">▥</button>
+  </header>
+  <div class="test-banner" id="testBanner">Mode test — rien n'est enregistré · <a href="#" id="quitTest" style="color:#fff">quitter</a></div>
+  <div class="meta">
+    <span id="dateLabel"></span>
+    <button class="hint-btn" id="hintBtn">💡 Indice</button>
+  </div>
+  <div class="hint" id="hint"></div>
+  <div class="board-wrap"><div class="board" id="board"></div></div>
+  <div class="keyboard" id="keyboard"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Aide -->
+<div class="modal-bg" id="helpModal"><div class="modal">
+  <button class="close" data-close>×</button>
+  <h2>Comment jouer</h2>
+  <p>Devine le <b>mot mathématique du jour</b> en 6 essais. Le nombre de cases indique le nombre de lettres.</p>
+  <p>Après chaque essai, les couleurs t'aident :</p>
+  <div class="ex"><div class="tile correct">S</div><div class="tile">I</div><div class="tile">N</div></div>
+  <p class="muted">Vert : bonne lettre, bonne place.</p>
+  <div class="ex"><div class="tile">R</div><div class="tile present">A</div><div class="tile">D</div></div>
+  <p class="muted">Jaune : la lettre est dans le mot, mais ailleurs.</p>
+  <div class="ex"><div class="tile">P</div><div class="tile">I</div><div class="tile absent">X</div></div>
+  <p class="muted">Gris : la lettre n'est pas dans le mot.</p>
+  <p>Les accents sont ignorés (PÉRIODE s'écrit PERIODE). Un nouveau mot chaque jour de classe !</p>
+</div></div>
+
+<!-- Stats / fin -->
+<div class="modal-bg" id="statsModal"><div class="modal">
+  <button class="close" data-close>×</button>
+  <div id="endBlock"></div>
+  <h2>Statistiques</h2>
+  <div class="stats">
+    <div><b id="sPlayed">0</b><span>Parties</span></div>
+    <div><b id="sPct">0</b><span>% réussies</span></div>
+    <div><b id="sStreak">0</b><span>Série</span></div>
+    <div><b id="sMax">0</b><span>Meilleure série</span></div>
+  </div>
+  <div class="dist" id="dist"></div>
+  <div class="center" id="shareWrap"></div>
+</div></div>
+
+<!-- Enseignante -->
+<div class="modal-bg" id="profModal"><div class="modal">
+  <button class="close" data-close>×</button>
+  <h2>Espace enseignante</h2>
+  <p class="muted">Écris le mot et l'indice, puis copie la ligne dans la liste <b>MOTS</b> au haut du fichier HTML (sur GitHub : crayon ✏️ → coller → <i>Commit changes</i>).</p>
+  <label for="pDate">Date</label><input type="date" id="pDate">
+  <label for="pWord">Mot (4 à 9 lettres)</label><input id="pWord" autocomplete="off" placeholder="ex. DÉPHASAGE">
+  <label for="pHint">Indice</label><input id="pHint" autocomplete="off" placeholder="ex. Translation horizontale d'une sinusoïde.">
+  <label for="pOut">Ligne à coller</label><textarea id="pOut" rows="3" readonly></textarea>
+  <div class="row2">
+    <button class="btn" id="pCopy">Copier la ligne</button>
+    <button class="btn alt" id="pTest">Tester ce mot</button>
+  </div>
+  <label>Dates déjà programmées</label>
+  <div class="dates" id="pDates"></div>
+</div></div>
+
+<script>
+(function(){
+  const MAX = 6;
+  const $ = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2,'0');
+  const now = new Date();
+  const TODAY = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/Œ/g,'OE').replace(/Æ/g,'AE').replace(/[^A-Z]/g,'');
+  const enc = w => btoa(norm(w).split('').reverse().join(''));
+  const dec = c => { try { return norm(atob(c).split('').reverse().join('')); } catch(e){ return ''; } };
+
+  const store = {
+    get(k,d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+    set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  };
+
+  function frDate(ymd){
+    const [y,m,d] = ymd.split('-').map(Number);
+    return new Date(y,m-1,d).toLocaleDateString('fr-CA',{weekday:'long',day:'numeric',month:'long'});
+  }
+
+  // ---------- choose today's word ----------
+  function pickToday(){
+    const past = MOTS.filter(m => m.date <= TODAY).sort((a,b)=> a.date < b.date ? 1 : -1);
+    return past[0] || null;
+  }
+
+  let game; // {answer, date, hint, key, test, guesses[], current, over, won, usedHint}
+  let busy = false;
+
+  function start(entry, test){
+    const answer = test ? norm(entry.word) : dec(entry.code);
+    const key = 'motematique:'+entry.date+':'+(test?'test':entry.code);
+    const saved = test ? null : store.get(key, null);
+    game = {
+      answer, date: entry.date, hint: entry.indice || '', key, test: !!test,
+      guesses: saved ? saved.guesses : [], current:'', over: saved ? saved.over : false,
+      won: saved ? saved.won : false, usedHint: saved ? !!saved.usedHint : false
+    };
+    $('testBanner').classList.toggle('show', !!test);
+    $('dateLabel').textContent = test ? 'Mot test' : frDate(entry.date).replace(/^./, c=>c.toUpperCase());
+    $('hint').textContent = '💡 ' + (game.hint || 'Pas d\'indice aujourd\'hui.');
+    $('hint').classList.toggle('show', game.usedHint);
+    $('hintBtn').disabled = game.usedHint || !game.hint;
+    buildBoard(); buildKeyboard();
+    // replay saved guesses
+    game.guesses.forEach((g,r)=>{
+      const res = evaluate(g, game.answer);
+      const row = $('board').children[r];
+      [...g].forEach((ch,i)=>{ const t=row.children[i]; t.textContent=ch; t.classList.add(res[i]); });
+      colorKeys(g,res);
+    });
+    if(game.over) setTimeout(()=>openStats(true), 400);
+  }
+
+  function buildBoard(){
+    const b = $('board'); b.innerHTML=''; b.style.setProperty('--n', game.answer.length);
+    for(let r=0;r<MAX;r++){
+      const row=document.createElement('div'); row.className='row';
+      for(let c=0;c<game.answer.length;c++){ const t=document.createElement('div'); t.className='tile'; row.appendChild(t); }
+      b.appendChild(row);
+    }
+  }
+
+  const LAYOUT = ['QWERTYUIOP','ASDFGHJKL','>ZXCVBNM<'];
+  function buildKeyboard(){
+    const k=$('keyboard'); k.innerHTML='';
+    LAYOUT.forEach((line,i)=>{
+      const row=document.createElement('div'); row.className='krow';
+      if(i===1){ const s=document.createElement('div'); s.className='spacer'; row.appendChild(s); }
+      [...line].forEach(ch=>{
+        const b=document.createElement('button'); b.className='key'; b.type='button';
+        if(ch==='>'){ b.textContent='ENTRER'; b.classList.add('wide'); b.dataset.k='Enter'; }
+        else if(ch==='<'){ b.textContent='⌫'; b.classList.add('wide'); b.style.fontSize='20px'; b.dataset.k='Backspace'; }
+        else { b.textContent=ch; b.dataset.k=ch; b.id='key-'+ch; }
+        row.appendChild(b);
+      });
+      if(i===1){ const s=document.createElement('div'); s.className='spacer'; row.appendChild(s); }
+      k.appendChild(row);
+    });
+  }
+  $('keyboard').addEventListener('click', e=>{ const b=e.target.closest('.key'); if(b) press(b.dataset.k); });
+  document.addEventListener('keydown', e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey) return;
+    if(document.querySelector('.modal-bg.show')) { if(e.key==='Escape') closeAll(); return; }
+    if(e.key==='Enter'||e.key==='Backspace'){ e.preventDefault(); press(e.key); }
+    else { const n=norm(e.key); if(n.length===1) press(n); }
+  });
+
+  function press(k){
+    if(!game || game.over || busy) return;
+    const n = game.answer.length;
+    if(k==='Backspace'){ game.current=game.current.slice(0,-1); paintCurrent(); return; }
+    if(k==='Enter'){ submit(); return; }
+    if(/^[A-Z]$/.test(k) && game.current.length<n){ game.current+=k; paintCurrent(); }
+  }
+
+  function paintCurrent(){
+    const row=$('board').children[game.guesses.length]; if(!row) return;
+    [...row.children].forEach((t,i)=>{
+      const ch=game.current[i]||''; t.textContent=ch; t.classList.toggle('filled', !!ch);
+    });
+  }
+
+  function evaluate(guess, answer){
+    const res=Array(answer.length).fill('absent'), left={};
+    for(let i=0;i<answer.length;i++){ if(guess[i]===answer[i]) res[i]='correct'; else left[answer[i]]=(left[answer[i]]||0)+1; }
+    for(let i=0;i<answer.length;i++){ if(res[i]!=='correct' && left[guess[i]]>0){ res[i]='present'; left[guess[i]]--; } }
+    return res;
+  }
+
+  const RANK={absent:1,present:2,correct:3};
+  function colorKeys(g,res){
+    [...g].forEach((ch,i)=>{
+      const key=$('key-'+ch); if(!key) return;
+      const cur=['correct','present','absent'].find(c=>key.classList.contains(c));
+      if(!cur || RANK[res[i]]>RANK[cur]){ key.classList.remove('correct','present','absent'); key.classList.add(res[i]); }
+    });
+  }
+
+  function submit(){
+    const n=game.answer.length, r=game.guesses.length, row=$('board').children[r];
+    if(game.current.length<n){
+      row.classList.remove('shake'); void row.offsetWidth; row.classList.add('shake');
+      toast('Il faut '+n+' lettres'); return;
+    }
+    const g=game.current, res=evaluate(g,game.answer);
+    busy=true;
+    [...row.children].forEach((t,i)=>{
+      setTimeout(()=>{ t.classList.add('flip'); setTimeout(()=>{ t.classList.remove('filled'); t.classList.add(res[i]); },250); }, i*220);
+    });
+    setTimeout(()=>{
+      [...row.children].forEach(t=>t.classList.remove('flip'));
+      colorKeys(g,res);
+      game.guesses.push(g); game.current='';
+      const won = g===game.answer;
+      if(won || game.guesses.length===MAX){
+        game.over=true; game.won=won;
+        if(won){
+          [...row.children].forEach((t,i)=>setTimeout(()=>t.classList.add('win'), i*90));
+          toast(['Génial !','Magnifique !','Superbe !','Bravo !','Bien joué !','Ouf, de justesse !'][game.guesses.length-1]);
+        } else toast(game.answer, 2600);
+        if(!game.test) recordStats(won, game.guesses.length);
+        setTimeout(()=>openStats(true), won?1700:2400);
+      }
+      save(); busy=false;
+    }, n*220+300);
+  }
+
+  function save(){ if(!game.test) store.set(game.key,{guesses:game.guesses,over:game.over,won:game.won,usedHint:game.usedHint}); }
+
+  function recordStats(won, tries){
+    const s=store.get('motematique:stats',{played:0,wins:0,streak:0,max:0,dist:[0,0,0,0,0,0]});
+    s.played++;
+    if(won){ s.wins++; s.streak++; s.max=Math.max(s.max,s.streak); s.dist[tries-1]++; } else s.streak=0;
+    store.set('motematique:stats',s);
+  }
+
+  // ---------- hint ----------
+  $('hintBtn').onclick=()=>{
+    if(!game || !game.hint) return;
+    game.usedHint=true; $('hint').classList.add('show'); $('hintBtn').disabled=true; save();
+  };
+
+  // ---------- stats / end ----------
+  function openStats(end){
+    const s=store.get('motematique:stats',{played:0,wins:0,streak:0,max:0,dist:[0,0,0,0,0,0]});
+    $('sPlayed').textContent=s.played; $('sPct').textContent=s.played?Math.round(100*s.wins/s.played):0;
+    $('sStreak').textContent=s.streak; $('sMax').textContent=s.max;
+    const top=Math.max(1,...s.dist);
+    $('dist').innerHTML=s.dist.map((v,i)=>{
+      const me = game && game.over && game.won && !game.test && game.guesses.length===i+1;
+      return '<div>'+(i+1)+'<i class="'+(me?'me':'')+'" style="width:'+Math.max(8,100*v/top)+'%">'+v+'</i></div>';
+    }).join('');
+    const eb=$('endBlock'), sw=$('shareWrap');
+    if(game && game.over){
+      eb.innerHTML='<h2>'+(game.won?'Trouvé en '+game.guesses.length+' !':'Pas cette fois…')+'</h2>'+
+        '<p class="center muted" style="margin:0">Le mot du jour était</p><div class="answer">'+game.answer+'</div>'+
+        (game.hint?'<p class="center muted">💡 '+escapeHtml(game.hint)+'</p>':'');
+      sw.innerHTML='<button class="btn" id="shareBtn">Copier mon résultat</button>';
+      $('shareBtn').onclick=share;
+    } else { eb.innerHTML=''; sw.innerHTML=''; }
+    show('statsModal');
+  }
+  function share(){
+    const em={correct:'🟩',present:'🟨',absent:'⬜'};
+    const grid=game.guesses.map(g=>evaluate(g,game.answer).map(r=>em[r]).join('')).join('\n');
+    const txt='Motématique '+(game.test?'(test)':game.date)+' — '+(game.won?game.guesses.length:'X')+'/6'+(game.usedHint?' 💡':'')+'\n'+grid;
+    copy(txt,'Résultat copié !');
+  }
+  function copy(txt,msg){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(()=>toast(msg)).catch(()=>fallbackCopy(txt,msg));
+    } else fallbackCopy(txt,msg);
+  }
+  function fallbackCopy(txt,msg){
+    const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+    ta.remove(); toast(ok?msg:'Copie impossible — sélectionne le texte manuellement');
+  }
+  function escapeHtml(s){ return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  // ---------- modals & toast ----------
+  function show(id){ $(id).classList.add('show'); }
+  function closeAll(){ document.querySelectorAll('.modal-bg').forEach(m=>m.classList.remove('show')); if(location.hash==='#prof') history.replaceState(null,'',location.pathname+location.search); }
+  document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m || e.target.hasAttribute('data-close')) closeAll(); }));
+  $('helpBtn').onclick=()=>show('helpModal');
+  $('statsBtn').onclick=()=>openStats(false);
+  let tt; function toast(msg,ms){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'), ms||1400); }
+
+  // ---------- teacher panel (#prof) ----------
+  function nextFreeDate(){
+    const taken=new Set(MOTS.map(m=>m.date)); const d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    for(let i=0;i<400;i++){
+      const ymd=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+      const wd=d.getDay();
+      if(wd!==0 && wd!==6 && !taken.has(ymd)) return ymd;
+      d.setDate(d.getDate()+1);
+    }
+    return TODAY;
+  }
+  function updateLine(){
+    const w=norm($('pWord').value), d=$('pDate').value, h=$('pHint').value.trim();
+    if(w.length<4||w.length>9){ $('pOut').value= w.length ? '⚠️ Le mot doit avoir entre 4 et 9 lettres ('+w.length+' pour l\'instant).' : ''; return null; }
+    $('pOut').value='  { date: "'+d+'", code: "'+enc(w)+'", indice: '+JSON.stringify(h)+' },';
+    return {w,d,h};
+  }
+  function openProf(){
+    $('pDate').value=nextFreeDate();
+    $('pDates').innerHTML=MOTS.map(m=>m.date).sort().map(d=>'<span class="'+(d===TODAY?'today':'')+'">'+d+'</span>').join('') || '<span>aucune</span>';
+    updateLine(); show('profModal');
+  }
+  ['pWord','pDate','pHint'].forEach(id=>$(id).addEventListener('input',updateLine));
+  $('pCopy').onclick=()=>{ if(updateLine()) copy($('pOut').value,'Ligne copiée !'); else toast('Vérifie le mot'); };
+  $('pTest').onclick=()=>{ const v=updateLine(); if(!v){ toast('Vérifie le mot'); return; } closeAll(); start({date:'test',word:v.w,indice:v.h},true); };
+  $('quitTest').onclick=e=>{ e.preventDefault(); init(); };
+  window.addEventListener('hashchange',()=>{ if(location.hash==='#prof') openProf(); });
+
+  // ---------- init ----------
+  function init(){
+    const entry=pickToday();
+    if(!entry){
+      $('board').innerHTML='<div class="empty">Pas encore de mot programmé.<br>Reviens bientôt !</div>';
+      $('keyboard').innerHTML=''; $('dateLabel').textContent=''; $('hintBtn').style.display='none';
+      $('testBanner').classList.remove('show'); return;
+    }
+    $('hintBtn').style.display='';
+    start(entry,false);
+  }
+  init();
+  if(location.hash==='#prof') openProf();
+  else if(!store.get('motematique:seenHelp',false)){ store.set('motematique:seenHelp',true); setTimeout(()=>show('helpModal'),300); }
+})();
+</script>
+</body>
+</html>

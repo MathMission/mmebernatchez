@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<title>Jeux mathématiques · Mme Bernatchez</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Jeux mathématiques de Mme Bernatchez : jeux d'équipe et mot mathématique du jour.">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+[hidden]{display:none!important}
+.opt{display:inline-block;margin:0 6px 6px 0;cursor:pointer}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt input:checked+.w3-button{background-color:#009688!important;color:#fff!important;border-color:#009688!important}
+.opt input:focus-visible+.w3-button{outline:3px solid #009688;outline-offset:2px}
+.opt small{display:block;font-size:11px;opacity:.8}
+.box{max-width:1000px;margin:0 auto 32px;text-align:left}
+.grid-paces{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:8px}
+.grid-ses{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;padding:0 12px 12px}
+.grid-ses>div,.grid-paces>div{height:100%}
+.dl-btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:12px}
+.dl-btns .w3-button{width:100%;white-space:normal;margin:0!important}
+.tm{display:flex;align-items:center;gap:8px}
+.tm input{width:80px!important;text-align:center;font-size:22px}
+.jeux{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;max-width:1100px;margin:0 auto}
+.jeux .w3-ul{height:100%;display:flex;flex-direction:column}
+.jeux .w3-ul li.grow{flex:1}
+.tag{display:inline-block;font-size:13px;padding:2px 10px;border-radius:999px;background:#e0f2f1;color:#00695c;margin:2px}
+</style>
+</head>
+<body id="myPage">
+
+<!-- Sidebar on click -->
+<nav class="w3-sidebar w3-bar-block w3-white w3-card w3-animate-left w3-xxlarge" style="display:none;z-index:2" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-display-topright w3-text-teal">Close
+    <i class="fa fa-remove"></i>
+  </a>
+  <a href="../mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
+  <a href="../mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
+  <a href="../club-de-course/" class="w3-bar-item w3-button">Club de course</a>
+  <a href="./" class="w3-bar-item w3-button">Jeux</a>
+  <a href="#contact" class="w3-bar-item w3-button">Contact</a>
+</nav>
+
+<!-- Navbar -->
+<div class="w3-top">
+ <div class="w3-bar w3-theme-d2 w3-left-align">
+  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+  <a href="../index.html" class="w3-bar-item w3-button w3-teal"><i class="fa fa-home w3-margin-right"></i>Mme Bernatchez</a>
+  <a href="../mhf4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MHF4U</a>
+  <a href="../mdm4u.html" class="w3-bar-item w3-button w3-hide-small w3-hover-white">MDM4U</a>
+  <a href="../club-de-course/" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Club de course</a>
+  <a href="./" class="w3-bar-item w3-button w3-hide-small w3-white">Jeux</a>
+  <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Pour me joindre</a>
+ </div>
+
+ <!-- Navbar on small screens -->
+ <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium">
+    <a href="../mhf4u.html" class="w3-bar-item w3-button">MHF4U</a>
+    <a href="../mdm4u.html" class="w3-bar-item w3-button">MDM4U</a>
+    <a href="../club-de-course/" class="w3-bar-item w3-button">Club de course</a>
+    <a href="./" class="w3-bar-item w3-button">Jeux</a>
+    <a href="#contact" class="w3-bar-item w3-button">Pour me joindre</a>
+  </div>
+</div>
+
+<!-- Container -->
+
+<div class="w3-row-padding w3-padding-64">
+  <div class="w3-center">
+    <h2>Jeux mathématiques</h2>
+    <p>Pour réviser en équipe ou pour le plaisir</p><br>
+  </div>
+  <div class="jeux">
+    <ul class="w3-ul w3-border w3-hover-shadow w3-center">
+      <li class="w3-theme">
+        <p class="w3-xlarge"><i class="fa fa-th w3-margin-right"></i>Jeopardy</p>
+        <p>Probabilité</p>
+      </li>
+      <li class="w3-padding-16">Jeu d'équipes au tableau</li>
+      <li class="w3-padding-16">Grille de 5 catégories</li>
+      <li class="w3-padding-16">Pour réviser avant un test</li>
+      <li class="w3-padding-16 grow"><span class="tag">MDM4U</span></li>
+      <li class="w3-theme-l5 w3-padding-24">
+        <a href="probjeopardy.html" class="w3-button w3-teal w3-padding-large"><i class="fa fa-play"></i> Jouer</a>
+      </li>
+    </ul>
+    <ul class="w3-ul w3-border w3-hover-shadow w3-center">
+      <li class="w3-theme">
+        <p class="w3-xlarge"><i class="fa fa-pie-chart w3-margin-right"></i>Combien de curry puffs ?</p>
+        <p>Les radians</p>
+      </li>
+      <li class="w3-padding-16">Jeu d'équipes, 4 niveaux</li>
+      <li class="w3-padding-16">Des fractions aux angles en π</li>
+      <li class="w3-padding-16">Négatifs et plus d'un tour</li>
+      <li class="w3-padding-16 grow"><span class="tag">MHF4U</span></li>
+      <li class="w3-theme-l5 w3-padding-24">
+        <a href="curry-puffs.html" class="w3-button w3-teal w3-padding-large"><i class="fa fa-play"></i> Jouer</a>
+      </li>
+    </ul>
+    <ul class="w3-ul w3-border w3-hover-shadow w3-center">
+      <li class="w3-theme">
+        <p class="w3-xlarge"><i class="fa fa-font w3-margin-right"></i>Motématique</p>
+        <p>Le mot mathématique du jour</p>
+      </li>
+      <li class="w3-padding-16">Devine le mot en 6 essais</li>
+      <li class="w3-padding-16">Un nouveau mot chaque jour de classe</li>
+      <li class="w3-padding-16">Indice disponible</li>
+      <li class="w3-padding-16 grow"><span class="tag">Tous les cours</span></li>
+      <li class="w3-theme-l5 w3-padding-24">
+        <a href="motematique.html" class="w3-button w3-teal w3-padding-large"><i class="fa fa-play"></i> Jouer</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-64 w3-theme-l5" id="contact">
+  <div class="w3-row">
+    <div class="w3-col m5">
+    <div class="w3-padding-16"><span class="w3-xlarge w3-border-teal w3-bottombar">Pour me joindre</span></div>
+      <p><i class="fa fa-map-marker w3-text-teal w3-xlarge"></i>  École secondaire Michelle-O'Bonsawin, Toronto</p>
+      <p><i class="fa fa-envelope-o w3-text-teal w3-xlarge"></i>  bernatcheza@csviamonde.ca</p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-32 w3-theme-d1 w3-center">
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+  <div style="position:relative;bottom:100px;z-index:1;" class="w3-tooltip w3-right">
+    <span class="w3-text w3-padding w3-teal w3-hide-small">Retour</span>
+    <a class="w3-button w3-theme" href="#myPage"><span class="w3-xlarge">
+    <i class="fa fa-chevron-circle-up"></i></span></a>
+  </div>
+</footer>
+
+<script>
+function w3_open() { var x = document.getElementById("mySidebar"); x.style.width = "300px"; x.style.paddingTop = "10%"; x.style.display = "block"; }
+function w3_close() { document.getElementById("mySidebar").style.display = "none"; }
+function openNav() { var x = document.getElementById("navDemo"); if (x.className.indexOf("w3-show") == -1) { x.className += " w3-show"; } else { x.className = x.className.replace(" w3-show", ""); } }
+</script>
+</body>
+</html>
