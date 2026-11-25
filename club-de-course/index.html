@@ -194,6 +194,100 @@ details summary::-webkit-details-marker{color:#009688}
     </ul>
   </div>
 
+  <!-- =====================================================================
+         NOTRE PROGRÈS : CONSTRUIRE SA BASE POUR LE DEMI-MARATHON
+         9 semaines de base (23 nov. 2026 au 24 janv. 2027).
+         TOUT AVANCE TOUT SEUL : chaque lundi, la semaine qui vient de finir
+         s'ajoute (jauge, mot, date, citation, 9 souliers allumés).
+         Pour tester une semaine précise : SEMAINE_FORCEE = 4 (remettre null après).
+         ===================================================================== -->
+  <div class="box" id="notre-progres">
+      <ul class="w3-ul w3-border w3-hover-shadow">
+        <li class="w3-theme"><p class="w3-xlarge"><i class="fa fa-line-chart w3-margin-right"></i>Notre progrès</p></li>
+        <li class="w3-padding-16">
+    <p class="w3-large" style="margin-top:0"><b>Construire sa base pour le demi-marathon</b></p>
+
+    <div class="w3-row-padding">
+      <div class="w3-col m5 w3-center">
+        <svg id="ep-jauge" viewBox="0 0 300 260" style="width:100%;max-width:320px" role="img" aria-label="Jauge de progression"></svg>
+        <p id="ep-mot" class="w3-xlarge" style="margin:4px 0 0;font-weight:bold"></p>
+        <p id="ep-date" class="w3-text-grey" style="margin:0"></p>
+      </div>
+      <div class="w3-col m7">
+        <div id="ep-citation" class="w3-panel w3-leftbar w3-light-grey w3-padding-16 w3-large" style="font-style:italic"></div>
+        <div id="ep-sentier"></div>
+        <p class="w3-small w3-text-grey">Chaque soulier = une semaine de course pour un·e coureur·euse du club. Pareil pour tout le monde : on mise sur la constance, pas la comparaison.</p>
+      </div>
+    </div>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="esmo-soulier" viewBox="-4 -6 310 132"><clipPath id="shoe-up"><path d="M10 60 C8 80 12 100 22 110 C30 114 40 106 50 98 C58 94 66 96 72 104 C76 110 82 112 90 110 L180 84 C226 76 272 66 290 52 C296 46 294 42 288 42 C240 40 160 44 60 52 C34 54 16 58 10 60 Z"/></clipPath><g transform="translate(0,122) scale(1,-1)" stroke-linejoin="round" stroke-linecap="round"><path d="M10 60 C8 80 12 100 22 110 C30 114 40 106 50 98 C58 94 66 96 72 104 C76 110 82 112 90 110 L180 84 C226 76 272 66 290 52 C296 46 294 42 288 42 C240 40 160 44 60 52 C34 54 16 58 10 60 Z" fill="var(--v)"/><path d="M10 60 C8 80 12 100 22 110 C26 112 30 112 34 110 C30 92 32 72 40 55 Z" fill="var(--p)"/><path d="M34 110 C30 92 32 72 40 55" fill="none" stroke="var(--l)" stroke-width="1.1"/><g clip-path="url(#shoe-up)" fill="none" stroke="var(--s)"><path d="M56 58 C100 64 132 80 152 96" stroke-width="8"/><path d="M92 55 C132 60 160 70 178 82" stroke-width="5"/><path d="M128 52 C160 55 186 63 204 74" stroke-width="3"/></g><path d="M10 60 C8 80 12 100 22 110 C30 114 40 106 50 98 C58 94 66 96 72 104 C76 110 82 112 90 110 L180 84 C226 76 272 66 290 52 C296 46 294 42 288 42 C240 40 160 44 60 52 C34 54 16 58 10 60 Z" fill="none" stroke="var(--l)" stroke-width="2.2"/><path d="M90 110 L180 84 C182 78 178 76 172 78 L94 100 C86 102 84 108 90 110 Z" fill="var(--e)" stroke="var(--l)" stroke-width="1.3"/><line x1="104" y1="100" x2="111" y2="106.933" stroke="var(--l)" stroke-width="2.6"/><circle cx="104" cy="100" r="2.6" fill="#fff" stroke="var(--l)" stroke-width="1.3"/><line x1="120" y1="95.4" x2="127" y2="102.311" stroke="var(--l)" stroke-width="2.6"/><circle cx="120" cy="95.4" r="2.6" fill="#fff" stroke="var(--l)" stroke-width="1.3"/><line x1="136" y1="90.8" x2="143" y2="97.6889" stroke="var(--l)" stroke-width="2.6"/><circle cx="136" cy="90.8" r="2.6" fill="#fff" stroke="var(--l)" stroke-width="1.3"/><line x1="152" y1="86.2" x2="159" y2="93.0667" stroke="var(--l)" stroke-width="2.6"/><circle cx="152" cy="86.2" r="2.6" fill="#fff" stroke="var(--l)" stroke-width="1.3"/><line x1="168" y1="81.6" x2="175" y2="88.4444" stroke="var(--l)" stroke-width="2.6"/><circle cx="168" cy="81.6" r="2.6" fill="#fff" stroke="var(--l)" stroke-width="1.3"/><path d="M14 24 C100 20 200 18 250 24 C270 27 285 31 290 36 C296 38 294 42 288 42 C240 40 160 44 60 52 C34 54 16 58 10 60 C2 50 4 32 14 24 Z" fill="var(--m)" stroke="var(--l)" stroke-width="2.2"/><path d="M20 40 C80 36 180 32 270 34" fill="none" stroke="var(--l)" stroke-width="1"/><path d="M14 24 C6 18 8 4 24 2 L60 0 L220 0 C250 0 282 12 296 30 C298 34 295 36 290 36 C285 31 270 27 250 24 C200 18 100 20 14 24 Z" fill="#fff" stroke="var(--l)" stroke-width="2.2"/><path d="M30 6 L220 6 C246 6 270 14 290 28" fill="none" stroke="var(--s)" stroke-width="2"/></g><text x="150" y="98" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-style="italic" font-size="11" fill="var(--t)">ESMO</text></symbol></svg>
+        </li>
+      </ul>
+    </div>
+
+  <script>
+  (function () {
+    var DEBUT = new Date(2026, 10, 23);        // lundi 23 novembre 2026 (semaine 1)
+    var SEMAINE_FORCEE = null;                 // ex. 3 pour tester, sinon null
+    var N = 9;
+    var SEG  = ["#F26B5B","#F39A3D","#E8B730","#7FB069","#3FB59A","#2A8C9C","#4C9BE0","#5B63C8","#9C7BD6"];
+    var MOTS = ["Démarrage","En route","Ça roule","Le rythme","À mi-chemin","Solide","Constant·e","Fort·e","Prêt·e!"];
+    var CITATIONS = ["Un pas à la fois.","Petit à petit, l'oiseau fait son nid.","Lentement, mais sûrement.",
+      "La constance bat la vitesse.","Le plus dur, c'est de sortir la porte.","Pas besoin d'aller vite, juste de continuer.","Chaque minute compte.",
+      "Plus fort·e qu'hier.","La base est prête. Place à la course!"];
+    var VARS = ["--l:#853b32;--s:#F26B5B;--p:#fde4e1;--v:#fef5f4;--e:#f8b5ad;--m:#f59084;--t:#fff","--l:#865522;--s:#F39A3D;--p:#fdeddc;--v:#fef8f1;--e:#f9cc9e;--m:#f6b36e;--t:#7a4d1e","--l:#80651a;--s:#E8B730;--p:#fbf2da;--v:#fdfaf1;--e:#f3db98;--m:#eec964;--t:#745c18","--l:#46613a;--s:#7FB069;--p:#e8f1e4;--v:#f6f9f4;--e:#bfd8b4;--m:#9fc48e;--t:#fff","--l:#236455;--s:#3FB59A;--p:#dcf2ed;--v:#f2faf8;--e:#9fdacc;--m:#6fc8b3;--t:#fff","--l:#174d56;--s:#2A8C9C;--p:#d9eaed;--v:#f0f7f8;--e:#94c6ce;--m:#5fa9b5;--t:#fff","--l:#2a557b;--s:#4C9BE0;--p:#dfedf9;--v:#f2f8fd;--e:#a6cdf0;--m:#79b4e8;--t:#fff","--l:#32366e;--s:#5B63C8;--p:#e1e3f5;--v:#f4f4fb;--e:#adb1e3;--m:#848ad6;--t:#fff","--l:#564476;--s:#9C7BD6;--p:#ede7f8;--v:#f8f6fc;--e:#cebdeb;--m:#b59ce0;--t:#fff"];
+    var MOIS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+
+    var jours = Math.floor((new Date() - DEBUT) / 86400000);
+    var sem = SEMAINE_FORCEE !== null ? SEMAINE_FORCEE : Math.min(N, Math.max(0, Math.floor(jours / 7)));   // semaines terminées
+
+    // --- jauge ---
+    var cx = 150, cy = 140, R = 105, LW = 22, gap = 4, seg = (270 - (N - 1) * gap) / N, s = "";
+    function pt(a){ a = a * Math.PI / 180; return [cx + R * Math.cos(a), cy - R * Math.sin(a)]; }
+    for (var i = 0; i < N; i++) {
+      var a0 = 225 - i * (seg + gap), a1 = a0 - seg, p0 = pt(a0), p1 = pt(a1);
+      var cap = (i === 0 || i === N - 1) ? "round" : "butt";
+      s += '<path d="M' + p0[0] + ' ' + p0[1] + ' A' + R + ' ' + R + ' 0 0 1 ' + p1[0] + ' ' + p1[1] +
+           '" fill="none" stroke-linecap="' + cap + '" stroke-width="' + LW + '" stroke="' + (i < sem ? SEG[i] : "#E6E6E6") + '"/>';
+    }
+    if (sem > 0) {
+      var m = pt(225 - (sem - 1) * (seg + gap) - seg);
+      s += '<circle cx="' + m[0] + '" cy="' + m[1] + '" r="' + (LW / 2 + 5) + '" fill="#fff"/>' +
+           '<circle cx="' + m[0] + '" cy="' + m[1] + '" r="' + (LW / 2 + 1) + '" fill="' + SEG[sem - 1] + '"/>';
+    }
+    s += '<text x="150" y="160" text-anchor="middle" font-size="76" font-weight="bold" fill="#222" font-family="inherit">' + sem + '</text>' +
+         '<text x="150" y="190" text-anchor="middle" font-size="15" fill="#888" font-family="inherit">semaine sur ' + N + '</text>';
+    document.getElementById("ep-jauge").innerHTML = s;
+
+    var mot = document.getElementById("ep-mot"), date = document.getElementById("ep-date"), cit = document.getElementById("ep-citation");
+    if (sem === 0) {
+      mot.textContent = "Bientôt!"; mot.style.color = "#888";
+      date.textContent = "Premier progrès affiché le lundi 30 novembre";
+      cit.textContent = "« Un pas à la fois. »";
+    } else {
+      mot.textContent = MOTS[sem - 1]; mot.style.color = SEG[sem - 1];
+      var d = new Date(DEBUT.getTime() + (sem - 1) * 7 * 86400000);
+      date.textContent = "Semaine du " + (d.getDate() === 1 ? "1er" : d.getDate()) + " " + MOIS[d.getMonth()];
+      cit.textContent = "« " + CITATIONS[sem - 1] + " »";
+    }
+
+    // --- sentier de souliers ---
+    var h = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px">';
+    for (var w = 1; w <= N; w++) {
+      var done = w <= sem;
+      h += '<div style="text-align:center"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px">';
+      for (var k = 0; k < 9; k++) {
+        var allume = done;
+        h += '<svg viewBox="-4 -6 310 132" style="width:100%;height:auto;' + VARS[k] +
+             (allume ? '' : ';opacity:' + (done ? '.22' : '.12') + ';filter:grayscale(1)') + '"><use href="#esmo-soulier"/></svg>';
+      }
+      h += '</div><div class="w3-small" style="color:' + (done ? '#555' : '#bbb') + ';font-weight:bold">Sem. ' + w + '</div></div>';
+    }
+    document.getElementById("ep-sentier").innerHTML = h + '</div>';
+  })();
+  </script>
+  <!-- ===== fin Notre progrès ===== -->
+
   <!-- 1. Plan -->
   <div class="box">
     <ul class="w3-ul w3-border w3-hover-shadow">
