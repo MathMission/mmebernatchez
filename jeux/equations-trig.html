@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>cos θ = ½ : combien de solutions?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Atkinson+Hyperlegible+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a teacher walking a class through one question, projected — calm, big, clear
+   IDEA: a sheet of graph paper next to a calculator: the calculator gives one answer, the paper shows them all
+   PICTURE: each step's live figure (triangle, unit circle, graph, reflection) is the large centre
+   COLOUR and TYPE: white graph paper; blue = cos, orange = target value, green = calculator, purple = "on réfléchit"; Atkinson Hyperlegible
+   LAYOUT: one step per screen, text column beside the figure, stacked on phones; nav pinned at the bottom */
+:root{color-scheme:light dark;
+--bg:light-dark(#fdfdfb,#11151c);--ink:light-dark(#17202e,#e8ecf2);--mut:light-dark(#5b6575,#9aa4b4);
+--grid:light-dark(#e6ebf2,#1d2430);--axis:light-dark(#4a5361,#8a94a4);
+--blue:light-dark(#1f5fd1,#6aa1ff);--orange:light-dark(#e2620f,#ff9a4d);--green:light-dark(#108a43,#3fd17f);
+--purple:light-dark(#8a2bd6,#c487ff);--grey:light-dark(#b9c0cb,#4b5464);--card:light-dark(#ffffff,#171c25);--line:light-dark(#dde2ea,#2a3140)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 "Atkinson Hyperlegible",system-ui,sans-serif;overflow-x:clip;
+background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+header{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding:16px max(4vw,16px);border-bottom:1px solid var(--line);background:var(--bg)}
+header h1{font-size:20px;margin:0;font-weight:700}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:none;color:var(--ink);font:inherit;font-size:16px;padding:8px 16px;min-height:44px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+main{max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,40px) max(4vw,16px) 120px}
+.step{display:none}.step.on{display:block;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+@media (prefers-reduced-motion:reduce){.step.on{animation:none}}
+.num{color:var(--mut);font-size:16px;margin:0 0 4px}
+h2{font-size:clamp(30px,4vw,46px);line-height:1.08;margin:0 0 18px;text-wrap:balance}
+.cols{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(20px,3vw,44px);align-items:start}
+.cols.wide{grid-template-columns:minmax(0,1fr)}
+@media(max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
+.txt p{margin:0 0 14px;max-width:62ch}
+.fig{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.fig svg{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+.ask{border-left:4px solid var(--orange);padding:10px 14px;background:color-mix(in srgb,var(--orange) 9%,transparent);border-radius:0 10px 10px 0;font-weight:700}
+.box{border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin:14px 0;background:var(--card)}
+.big{font-size:clamp(22px,2.6vw,30px);font-weight:700;line-height:1.3}
+.c-blue{color:var(--blue)}.c-or{color:var(--orange)}.c-gr{color:var(--green)}.c-pu{color:var(--purple)}.c-mu{color:var(--mut)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.btn{font:inherit;font-size:16px;min-height:44px;padding:8px 16px;border-radius:10px;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
+.btn.pri{background:var(--ink);color:var(--bg)}
+.btn:focus-visible,.seg button:focus-visible,input:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.btn:disabled{opacity:.4;cursor:default}
+label.rng{display:block;font-size:16px;color:var(--mut);margin:10px 0 2px}
+input[type=range]{width:100%;height:44px;accent-color:var(--blue)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{font-family:"Atkinson Hyperlegible Mono",ui-monospace,monospace;font-size:17px;padding:4px 12px;border-radius:999px;border:1.5px solid currentColor;white-space:nowrap}
+.calc{background:#2b2f36;border-radius:18px;padding:16px;max-width:300px;margin:6px 0 14px;box-shadow:0 6px 0 #1a1d22}
+.lcd{background:#c9d8b6;color:#1d2a14;border-radius:8px;padding:10px 14px;font-family:"Atkinson Hyperlegible Mono",ui-monospace,monospace}
+.lcd .in{font-size:17px}.lcd .out{font-size:34px;text-align:right;font-weight:500}
+.eq{font-family:"Atkinson Hyperlegible Mono",ui-monospace,monospace;font-size:clamp(18px,2vw,22px);white-space:nowrap;overflow-x:auto}
+.note{font-size:16px;color:var(--mut)}
+ol.meth{padding-left:1.3em;margin:0}ol.meth li{margin:0 0 14px}
+.hide{display:none}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;gap:12px;align-items:center;justify-content:center;padding:10px 16px;background:color-mix(in srgb,var(--bg) 92%,transparent);border-top:1px solid var(--line);backdrop-filter:blur(6px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dot{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);font:inherit;font-size:16px;cursor:pointer}
+.dot[aria-current=true]{background:var(--ink);color:var(--bg)}
+svg text{font-family:"Atkinson Hyperlegible",system-ui,sans-serif}
+@media(max-width:600px){body{font-size:17px}.dot{width:38px;height:38px}nav .btn{padding:8px 10px}}
+</style>
+</head>
+<body>
+<header>
+  <a href="./" class="btn" style="text-decoration:none;display:inline-flex;align-items:center">← Jeux</a>
+  <h1 style="flex:1">Résoudre cos θ = ½ : une ou une infinité de solutions?</h1>
+  <div class="seg" role="group" aria-label="Unité d'angle">
+    <button id="uRad" aria-pressed="true">Radians</button><button id="uDeg" aria-pressed="false">Degrés</button>
+  </div>
+</header>
+
+<main>
+<!-- 1 -->
+<section class="step on" id="s0">
+  <p class="num">Étape 1 sur 6</p>
+  <h2>Ce que vous faisiez avant : le triangle rectangle</h2>
+  <div class="cols">
+    <div class="txt">
+      <p>Dans un triangle rectangle, <b>cos θ = adjacent ÷ hypoténuse</b>.</p>
+      <p>Si cos θ = ½, on sort la calculatrice et on appuie sur <b>cos⁻¹</b> :</p>
+      <div class="calc"><div class="lcd"><div class="in">cos⁻¹(0,5)</div><div class="out" id="calcOut">60</div></div></div>
+      <p class="big c-gr" id="calcEq" style="margin:-4px 0 14px"></p>
+      <p>Une seule réponse. Et c'est logique : dans un triangle rectangle, θ est toujours <b>entre <span class="u0">0°</span> et <span class="u90">90°</span></b>.</p>
+      <p class="ask">Mais un angle doit-il vraiment être entre <span class="u0">0°</span> et <span class="u90">90°</span>?</p>
+    </div>
+    <div class="fig" id="f0"></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="step" id="s1">
+  <p class="num">Étape 2 sur 6</p>
+  <h2>Un angle, c'est une rotation</h2>
+  <div class="cols">
+    <div class="txt">
+      <p>Sur le cercle unitaire, l'angle θ fait tourner le point P. La <b class="c-blue">coordonnée x de P, c'est cos θ</b>.</p>
+      <p>Glissez le point P (ou utilisez le curseur). On peut faire plusieurs tours, et tourner dans le sens négatif.</p>
+      <p class="ask">Défi : trouvez tous les angles entre <span id="rngTxt">−360° et 720°</span> où cos θ = ½ (P touche la droite orange).</p>
+      <div class="box">
+        <div class="big" id="readA">θ = 30°</div>
+        <div id="readC" class="c-blue">cos θ = 0,866</div>
+      </div>
+      <p style="margin:0"><b>Trouvés : <span id="cnt">0</span> / 6</b></p>
+      <div class="chips" id="found"></div>
+      <p id="foundMsg" class="hide c-gr"><b>Les 6! Et si on continuait à tourner? On en trouverait encore… sans jamais s'arrêter.</b></p>
+    </div>
+    <div>
+      <div class="fig" id="f1"></div>
+      <label class="rng" for="thR">Angle θ</label>
+      <input type="range" id="thR" min="-360" max="720" step="1" value="30">
+      <div class="btns"><button class="btn" id="m360">− un tour</button><button class="btn" id="p360">+ un tour</button><button class="btn" id="rst1">Recommencer</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="step" id="s2">
+  <p class="num">Étape 3 sur 6</p>
+  <h2>Le graphique de y = cos θ : une infinité de solutions</h2>
+  <div class="cols wide">
+    <div class="fig" id="f2"></div>
+    <div class="txt">
+      <div class="btns"><button class="btn pri" id="reveal">Montrer les solutions</button><button class="btn" id="calcBtn" disabled>Laquelle donne la calculatrice?</button></div>
+      <p>Chaque point où la courbe <b class="c-blue">y = cos θ</b> touche la droite <b class="c-or">y = ½</b> est une solution. La courbe se répète à chaque <span class="per">360°</span>… donc la droite la coupe <b>à l'infini</b>, dans les deux sens.</p>
+      <div id="gen3" class="box hide">
+        <div class="eq" id="gen3eq"></div>
+        <p class="note" style="margin:6px 0 0">k : nombre de tours complets (k ∈ ℤ)</p>
+      </div>
+      <p id="calc3" class="hide c-gr"><b>La calculatrice ne donne qu'une seule de ces réponses : <span id="calc3v"></span>. Pour comprendre pourquoi, regardons la réciproque →</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="step" id="s3">
+  <p class="num">Étape 4 sur 6</p>
+  <h2>La réciproque : on échange x et y</h2>
+  <div class="cols">
+    <div class="txt">
+      <p>La relation <b class="c-blue">y = cos x</b> : on donne <b>l'angle</b> x, elle retourne <b>le rapport</b> y.</p>
+      <p>Pour trouver sa réciproque, on <b>échange x et y</b> : <b class="c-blue">x = cos y</b>. Maintenant, on donne <b>le rapport</b> et elle retourne <b>l'angle</b>.</p>
+      <p>Sur le graphique, échanger x et y, c'est faire une <b class="c-pu">réflexion par rapport à y = x</b>.</p>
+      <div class="btns"><button class="btn pri" id="flip">Réfléchir par rapport à y = x</button><button class="btn" id="unflip">Revenir</button></div>
+      <div id="after4" class="hide">
+        <label class="rng" for="x4R">On donne le rapport x = <b id="x4Val">0,5</b></label>
+        <input type="range" id="x4R" min="-1" max="1" step="0.01" value="0.5">
+        <div class="box">
+          <div>La relation réciproque retourne <b class="c-or">tous ces angles</b> :</div>
+          <div class="chips" id="x4Sols"></div>
+          <div class="note">… et une infinité d'autres en haut et en bas. C'est exactement la liste de solutions de l'étape 3!</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="fig" id="f3"></div>
+      <label class="rng" for="tR">Réflexion</label>
+      <input type="range" id="tR" min="0" max="1" step="0.01" value="0">
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="step" id="s4">
+  <p class="num">Étape 5 sur 6</p>
+  <h2>Le problème : une calculatrice est une machine à fonction</h2>
+  <div class="cols">
+    <div class="txt">
+      <p>Une touche de calculatrice doit donner <b>une seule</b> réponse pour chaque entrée : c'est une <b>fonction</b>.</p>
+      <p><b>Test de la droite verticale</b> : bougez la droite. Elle coupe la relation réciproque plusieurs fois, donc <b>ce n'est pas une fonction</b>. La calculatrice ne saurait pas quel angle choisir.</p>
+      <p>Solution : on garde <b>un seul morceau</b> de la relation.</p>
+      <label class="rng" for="xR">x = <b id="xVal">0,5</b></label>
+      <input type="range" id="xR" min="-1" max="1" step="0.01" value="0.5">
+      <div class="btns"><button class="btn pri" id="restr">Restreindre</button></div>
+      <div class="box"><div class="big" id="out5"></div><div class="note" id="msg5"></div></div>
+      <div id="why5" class="hide">
+        <p><b>Pourquoi le morceau de <span class="u0">0°</span> à <span class="u180">180°</span>?</b></p>
+        <ul style="margin:0 0 12px">
+          <li>Il donne un angle pour <b>tous</b> les rapports de −1 à 1…</li>
+          <li>… et <b>un seul</b> angle pour chacun;</li>
+          <li>il contient les angles de <span class="u0">0°</span> à <span class="u90">90°</span> des triangles rectangles.</li>
+        </ul>
+        <p><b>y = cos⁻¹ x</b> &nbsp; <b>Domaine</b> : [−1, 1] &nbsp; <b>Image</b> : [<span class="u0">0°</span>, <span class="u180">180°</span>]</p>
+        <p class="note">Attention : cos⁻¹ x ne veut pas dire 1 ÷ cos x (ça, c'est sec x).</p>
+      </div>
+    </div>
+    <div class="fig" id="f4"></div>
+  </div>
+</section>
+<!-- 6 -->
+<section class="step" id="s5">
+  <p class="num">Étape 6 sur 6</p>
+  <h2>La méthode : la calculatrice d'abord, puis on réfléchit</h2>
+  <div class="cols">
+    <div class="txt">
+      <div class="btns"><div class="seg" role="group" aria-label="Fonction"><button id="fCos" aria-pressed="true">cos θ</button><button id="fSin" aria-pressed="false">sin θ</button></div></div>
+      <p class="big" style="margin:4px 0 8px"><span id="fnName">cos</span> θ = <span class="c-or" id="cShow">½</span></p>
+      <div class="chips" id="presets"></div>
+      <label class="rng" for="c6">Ou choisissez une valeur</label>
+      <input type="range" id="c6" min="-1" max="1" step="0.01" value="0.5">
+      <ol class="meth">
+        <li><b class="c-gr">La calculatrice</b> donne UNE réponse : <span class="eq c-gr" id="m1"></span><br><span class="note" id="m1n"></span></li>
+        <li><b class="c-pu">On réfléchit</b> avec le cercle : <span id="m2"></span></li>
+        <li><b>On ajoute les tours complets</b> :<div class="eq" id="m3"></div><span class="note">k : nombre de tours complets (k ∈ ℤ)</span></li>
+      </ol>
+      <p style="margin:10px 0 0"><b>Solutions dans <span id="intv">[0°, 360°[</span> :</b></p>
+      <div class="chips" id="m4"></div>
+    </div>
+    <div class="fig" id="f5"></div>
+  </div>
+</section>
+</main>
+
+<nav>
+  <button class="btn" id="prev">← Précédent</button>
+  <div class="dots" id="dots"></div>
+  <button class="btn pri" id="next">Suivant →</button>
+</nav>
+
+<script>
+{
+const DEG = Math.PI / 180, N = 6;
+const S = { unit: 'rad', step: 0 };
+const $ = id => document.getElementById(id);
+const gcd = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a; };
+
+function num(x, d) {
+  if (Math.abs(x) < 1e-9) x = 0;
+  let s = x.toFixed(d);
+  if (s.includes('.')) s = s.replace(/0+$/, '').replace(/\.$/, '');
+  if (s === '-0') s = '0';
+  return s.replace('-', '−').replace('.', ',');
+}
+// angle given in degrees, displayed in current unit
+function fA(d) {
+  if (Math.abs(d) < 1e-9) d = 0;
+  if (S.unit === 'deg') return num(Math.round(d * 10) / 10, 1) + '°';
+  const ri = Math.round(d);
+  if (Math.abs(d - ri) < 1e-6 && ri % 15 === 0) {
+    let n = ri / 15, den = 12; const g = gcd(n, den) || 1; n /= g; den /= g;
+    if (n === 0) return '0';
+    const an = Math.abs(n);
+    return (n < 0 ? '−' : '') + (an === 1 ? '' : an) + 'π' + (den === 1 ? '' : '/' + den);
+  }
+  return num(d * DEG, 2);
+}
+const per = () => S.unit === 'deg' ? '360°' : '2π';
+const SPECIAL = [[0.5, '½'], [-0.5, '−½'], [Math.SQRT2 / 2, '√2/2'], [-Math.SQRT2 / 2, '−√2/2'], [Math.sqrt(3) / 2, '√3/2'], [-Math.sqrt(3) / 2, '−√3/2']];
+function fC(c) { for (const [v, s] of SPECIAL) if (Math.abs(c - v) < 1e-9) return s; return num(c, 2); }
+const uniq = arr => { const out = []; for (const a of arr) if (!out.some(b => Math.abs(a - b) < 1e-6)) out.push(a); return out.sort((a, b) => a - b); };
+
+/* ---------- Step 1 : triangle ---------- */
+function r0() {
+  const A = [70, 320], B = [230, 320], C = [230, 43];
+  $('f0').innerHTML = `<svg viewBox="0 0 400 370" role="img" aria-label="Triangle rectangle avec adjacent 1 et hypoténuse 2">
+    <polygon points="${A} ${B} ${C}" fill="color-mix(in srgb,var(--blue) 10%,transparent)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+    <polyline points="210,320 210,300 230,300" fill="none" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M ${A[0] + 46} ${A[1]} A 46 46 0 0 0 ${A[0] + 46 * Math.cos(60 * DEG)} ${A[1] - 46 * Math.sin(60 * DEG)}" fill="none" stroke="var(--orange)" stroke-width="3"/>
+    <text x="${A[0] + 54}" y="${A[1] - 14}" font-size="24" fill="var(--orange)" font-weight="700">θ = ${fA(60)}</text>
+    <line x1="${A[0]}" y1="${A[1]}" x2="${B[0]}" y2="${B[1]}" stroke="var(--blue)" stroke-width="6" stroke-linecap="round"/>
+    <text x="150" y="352" font-size="22" text-anchor="middle" fill="var(--blue)" font-weight="700">adjacent = 1</text>
+    <text x="118" y="170" font-size="22" text-anchor="end" fill="var(--ink)" font-weight="700" transform="rotate(-60 118 170)">hypoténuse = 2</text>
+    <text x="244" y="185" font-size="22" fill="var(--mut)">√3 ≈ 1,732</text>
+    <text x="250" y="230" font-size="18" fill="var(--mut)">cos θ = 1/2</text></svg>`;
+  $('calcOut').textContent = S.unit === 'deg' ? '60' : num(Math.PI / 3, 6);
+  $('calcEq').innerHTML = S.unit === 'deg' ? 'θ = 60°' : 'θ = π/3 ≈ ' + num(Math.PI / 3, 6) + ' ✓';
+}
+
+/* ---------- Step 2 : unit circle ---------- */
+let th = 30; const found = [];
+const TARGETS = [-300, -60, 60, 300, 420, 660];
+const C1 = { cx: 220, cy: 210, R: 160 };
+function r1() {
+  const { cx, cy, R } = C1, t = th * DEG, c = Math.cos(t), s = Math.sin(t);
+  const px = cx + R * c, py = cy - R * s, hit = Math.abs(c - 0.5) < 1e-9;
+  const n = Math.max(2, Math.ceil(Math.abs(th) / 3)); let sp = '';
+  for (let i = 0; i <= n; i++) { const a = th * i / n, r = 26 + 9 * Math.abs(a) / 360; sp += (i ? 'L' : 'M') + (cx + r * Math.cos(a * DEG)).toFixed(1) + ' ' + (cy - r * Math.sin(a * DEG)).toFixed(1); }
+  const xh = cx + R * 0.5;
+  $('f1').innerHTML = `<svg viewBox="0 0 440 420" id="svg1" role="img" aria-label="Cercle unitaire">
+    <line x1="20" y1="${cy}" x2="420" y2="${cy}" stroke="var(--axis)" stroke-width="1.5"/>
+    <line x1="${cx}" y1="15" x2="${cx}" y2="405" stroke="var(--axis)" stroke-width="1.5"/>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+    <line x1="${xh}" y1="15" x2="${xh}" y2="405" stroke="var(--orange)" stroke-width="3" stroke-dasharray="8 6"/>
+    <text x="${xh + 6}" y="32" font-size="18" fill="var(--orange)" font-weight="700">x = ½</text>
+    <text x="${cx + R + 4}" y="${cy + 22}" font-size="15" fill="var(--mut)">1</text><text x="${cx - R - 22}" y="${cy + 22}" font-size="15" fill="var(--mut)">−1</text>
+    <path d="${sp}" fill="none" stroke="var(--orange)" stroke-width="2.5"/>
+    <line x1="${px}" y1="${py}" x2="${px}" y2="${cy}" stroke="var(--mut)" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <line x1="${cx}" y1="${cy}" x2="${px}" y2="${cy}" stroke="var(--blue)" stroke-width="7" stroke-linecap="round"/>
+    <line x1="${cx}" y1="${cy}" x2="${px}" y2="${py}" stroke="var(--ink)" stroke-width="2.5"/>
+    <text x="${(cx + px) / 2}" y="${cy + (s >= 0 ? 26 : -12)}" font-size="17" text-anchor="middle" fill="var(--blue)" font-weight="700">cos θ</text>
+    <circle cx="${px}" cy="${py}" r="${hit ? 15 : 12}" fill="${hit ? 'var(--green)' : 'var(--blue)'}" stroke="var(--card)" stroke-width="3" style="cursor:grab"/>
+    <text x="${px + (c >= 0 ? 18 : -18)}" y="${py + (s >= 0 ? -12 : 26)}" font-size="20" font-weight="700" text-anchor="${c >= 0 ? 'start' : 'end'}" fill="var(--ink)">P</text></svg>`;
+  $('readA').textContent = 'θ = ' + fA(th);
+  $('readC').innerHTML = 'cos θ = ' + num(c, 3) + (hit ? ' <b class="c-gr">✓ = ½</b>' : '');
+  if (hit && !found.includes(th)) found.push(th);
+  found.sort((a, b) => a - b);
+  $('found').innerHTML = found.map(a => `<span class="chip c-gr">${fA(a)}</span>`).join('');
+  $('cnt').textContent = found.length;
+  $('foundMsg').classList.toggle('hide', found.length < 6);
+  $('rngTxt').textContent = fA(-360) + ' et ' + fA(720);
+  $('thR').value = th;
+}
+function setTh(v) {
+  v = Math.max(-360, Math.min(720, Math.round(v)));
+  const m = ((v % 360) + 360) % 360;
+  for (const b of [60, 300]) if (Math.abs(m - b) <= 2) v = v - (m - b);
+  th = v; r1();
+}
+$('thR').addEventListener('input', e => { th = +e.target.value; r1(); });
+$('p360').onclick = () => setTh(th + 360 > 720 ? th : th + 360);
+$('m360').onclick = () => setTh(th - 360 < -360 ? th : th - 360);
+$('rst1').onclick = () => { found.length = 0; th = 30; r1(); };
+{
+  let drag = false, raw = 30, lastA = 0;
+  const ang = e => { const sv = $('svg1'), b = sv.getBoundingClientRect(); const x = (e.clientX - b.left) / b.width * 440, y = (e.clientY - b.top) / b.height * 420; return Math.atan2(C1.cy - y, x - C1.cx) / DEG; };
+  $('f1').addEventListener('pointerdown', e => { if (!$('svg1')) return; drag = true; raw = th; lastA = ang(e); $('f1').setPointerCapture(e.pointerId); });
+  $('f1').addEventListener('pointermove', e => { if (!drag) return; const a = ang(e); let d = a - lastA; if (d > 180) d -= 360; if (d < -180) d += 360; lastA = a; raw = Math.max(-360, Math.min(720, raw + d)); setTh(raw); });
+  const end = () => { drag = false; };
+  $('f1').addEventListener('pointerup', end); $('f1').addEventListener('pointercancel', end);
+}
+
+/* ---------- Graph y = cos θ (steps 3–4) ---------- */
+const G = { W: 940, H: 330, L: 20, R: 20, T: 34, B: 44, x0: -740, x1: 740, y0: -1.45, y1: 1.45 };
+const gx = t => G.L + (t - G.x0) / (G.x1 - G.x0) * (G.W - G.L - G.R);
+const gy = y => G.T + (G.y1 - y) / (G.y1 - G.y0) * (G.H - G.T - G.B);
+function path(a, b) { let d = ''; for (let t = a; t <= b + 1e-9; t += 4) d += (d ? 'L' : 'M') + gx(t).toFixed(1) + ' ' + gy(Math.cos(t * DEG)).toFixed(1); return d; }
+function solsCos(c, lo, hi) { const a = Math.acos(c) / DEG, out = []; for (let k = -4; k <= 4; k++) for (const v of [a + 360 * k, -a + 360 * k]) if (v >= lo && v <= hi) out.push(v); return uniq(out); }
+function graph({ c, dots, restrict, labels }) {
+  let s = `<svg viewBox="0 0 ${G.W} ${G.H}" role="img" aria-label="Graphique de y = cos θ">`;
+  s += `<line x1="${G.L}" y1="${gy(0)}" x2="${G.W - G.R}" y2="${gy(0)}" stroke="var(--axis)" stroke-width="1.5"/><line x1="${gx(0)}" y1="${G.T - 10}" x2="${gx(0)}" y2="${G.H - G.B + 10}" stroke="var(--axis)" stroke-width="1.5"/>`;
+  for (let t = -720; t <= 720; t += 90) {
+    s += `<line x1="${gx(t)}" y1="${gy(0) - 5}" x2="${gx(t)}" y2="${gy(0) + 5}" stroke="var(--axis)"/>`;
+    if (t % 180 === 0 && t !== 0) s += `<text x="${gx(t)}" y="${G.H - 14}" font-size="14" text-anchor="middle" fill="var(--mut)">${fA(t)}</text>`;
+  }
+  for (const y of [1, -1]) s += `<line x1="${gx(0) - 5}" y1="${gy(y)}" x2="${gx(0) + 5}" y2="${gy(y)}" stroke="var(--axis)"/><text x="${gx(0) - 9}" y="${gy(y) + 5}" font-size="14" text-anchor="end" fill="var(--mut)">${y === 1 ? '1' : '−1'}</text>`;
+  if (restrict) {
+    s += `<path d="${path(-740, 740)}" fill="none" stroke="var(--grey)" stroke-width="2.5"/>`;
+    s += `<path d="${path(0, 180)}" fill="none" stroke="var(--green)" stroke-width="7" stroke-linecap="round"/>`;
+  } else s += `<path d="${path(-740, 740)}" fill="none" stroke="var(--blue)" stroke-width="3.5"/>`;
+  s += `<text x="${gx(-700)}" y="${gy(1.22)}" font-size="16" fill="${restrict ? 'var(--mut)' : 'var(--blue)'}" font-weight="700">y = cos θ</text>`;
+  s += `<line x1="${G.L}" y1="${gy(c)}" x2="${G.W - G.R}" y2="${gy(c)}" stroke="var(--orange)" stroke-width="3" stroke-dasharray="9 6"/>`;
+  s += `<text x="${G.W - G.R - 4}" y="${gy(c) + (c > 0.9 ? 22 : -9)}" font-size="16" text-anchor="end" fill="var(--orange)" font-weight="700">y = ${fC(c)}</text>`;
+  s += `<text x="${G.L + 2}" y="${gy(c) - 9}" font-size="22" fill="var(--orange)">⋯</text>`;
+  for (const d of dots) {
+    s += `<circle cx="${gx(d.t)}" cy="${gy(c)}" r="${d.ring ? 11 : 8}" fill="${d.col}" stroke="var(--card)" stroke-width="2.5"/>`;
+    if (d.ring) s += `<circle cx="${gx(d.t)}" cy="${gy(c)}" r="18" fill="none" stroke="var(--green)" stroke-width="3"/>`;
+    if (labels) s += `<text x="${gx(d.t) + (Math.sin(d.t * DEG) > 0 ? 12 : -12)}" y="${gy(c) - 16}" font-size="15" text-anchor="${Math.sin(d.t * DEG) > 0 ? 'start' : 'end'}" font-weight="700" fill="${d.col}" paint-order="stroke" stroke="var(--card)" stroke-width="5">${fA(d.t)}</text>`;
+  }
+  return s + '</svg>';
+}
+
+/* Step 3 */
+let shown = 0, calcOn = false, timer = null, rev = [];
+const SOL3 = solsCos(0.5, -720, 720);
+function r2() {
+  const dots = rev.map(t => ({ t, col: calcOn && Math.abs(t - 60) < 1e-6 ? 'var(--green)' : 'var(--ink)', ring: calcOn && Math.abs(t - 60) < 1e-6 }));
+  $('f2').innerHTML = graph({ c: 0.5, dots, labels: true });
+  document.querySelectorAll('.per').forEach(e => e.textContent = per());
+  $('gen3eq').innerHTML = S.unit === 'deg' ? `θ = 60° + 360°k &nbsp;&nbsp;ou&nbsp;&nbsp; θ = 300° + 360°k` : `θ = π/3 + 2πk &nbsp;&nbsp;ou&nbsp;&nbsp; θ = 5π/3 + 2πk`;
+  $('gen3').classList.toggle('hide', shown < SOL3.length);
+  $('calcBtn').disabled = shown < SOL3.length;
+  $('calc3').classList.toggle('hide', !calcOn);
+  $('calc3v').textContent = fA(60);
+}
+$('reveal').onclick = () => {
+  clearTimeout(timer); shown = 0; calcOn = false;
+  const order = [...SOL3].sort((a, b) => Math.abs(a) - Math.abs(b) || b - a);
+  const fast = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // reveal from the centre outward
+  let i = 0; rev = [];
+  const tick = () => { rev.push(order[i++]); shown = rev.length; r2(); if (i < order.length) timer = setTimeout(tick, fast ? 0 : 380); };
+  tick();
+};
+$('calcBtn').onclick = () => { calcOn = true; r2(); };
+
+/* ---------- Steps 4–5 : reflection over y = x ---------- */
+const F = { N: 560, lim: 6.9 };
+const fx = x => (x + F.lim) / (2 * F.lim) * F.N, fy = y => (F.lim - y) / (2 * F.lim) * F.N;
+function flipP(x, y, t) { const a = (x + y) / Math.SQRT2, b = (x - y) / Math.SQRT2 * Math.cos(Math.PI * t); return [(a + b) / Math.SQRT2, (a - b) / Math.SQRT2]; }
+function fpath(a, b, t) { let d = ''; for (let u = a; u <= b + 1e-9; u += 0.04) { const [x, y] = flipP(u, Math.cos(u), t); d += (d ? 'L' : 'M') + fx(x).toFixed(1) + ' ' + fy(y).toFixed(1); } return d; }
+function angSols(x) { const a = Math.acos(x), out = []; for (let k = -2; k <= 2; k++) for (const v of [a + 2 * Math.PI * k, -a + 2 * Math.PI * k]) if (Math.abs(v) <= F.lim) out.push(v); return uniq(out); }
+function refl({ t, xv, restrict }) {
+  const swapped = t >= 0.5, done = t > 0.999;
+  let s = `<svg viewBox="0 0 ${F.N} ${F.N}" role="img" aria-label="Réflexion de y = cos x par rapport à y = x">
+    <defs><clipPath id="cl${restrict ? 'b' : 'a'}"><rect width="${F.N}" height="${F.N}"/></clipPath></defs>
+    <line x1="0" y1="${fy(0)}" x2="${F.N}" y2="${fy(0)}" stroke="var(--axis)" stroke-width="1.5"/>
+    <line x1="${fx(0)}" y1="0" x2="${fx(0)}" y2="${F.N}" stroke="var(--axis)" stroke-width="1.5"/>
+    <line x1="${fx(-F.lim)}" y1="${fy(-F.lim)}" x2="${fx(F.lim)}" y2="${fy(F.lim)}" stroke="var(--purple)" stroke-width="2.5" stroke-dasharray="7 6"/>
+    <text x="${fx(4.9)}" y="${fy(5.6)}" font-size="17" fill="var(--purple)" font-weight="700" text-anchor="end">y = x</text>`;
+  for (let k = -4; k <= 4; k++) {
+    if (!k) continue; const v = k * Math.PI / 2, lab = fA(k * 90);
+    if (!swapped) s += `<line x1="${fx(v)}" y1="${fy(0) - 5}" x2="${fx(v)}" y2="${fy(0) + 5}" stroke="var(--axis)"/>` + (k % 2 === 0 || S.unit === 'rad' ? `<text x="${fx(v)}" y="${fy(0) + 22}" font-size="13" text-anchor="middle" fill="var(--mut)">${lab}</text>` : '');
+    else s += `<line x1="${fx(0) - 5}" y1="${fy(v)}" x2="${fx(0) + 5}" y2="${fy(v)}" stroke="var(--axis)"/><text x="${fx(0) - 9}" y="${fy(v) + 5}" font-size="13" text-anchor="end" fill="var(--mut)">${lab}</text>`;
+  }
+  for (const v of [1, -1]) {
+    if (!swapped) s += `<line x1="${fx(0) - 5}" y1="${fy(v)}" x2="${fx(0) + 5}" y2="${fy(v)}" stroke="var(--axis)"/><text x="${fx(0) - 8}" y="${fy(v) + 5}" font-size="13" text-anchor="end" fill="var(--mut)">${v > 0 ? '1' : '−1'}</text>`;
+    else s += `<line x1="${fx(v)}" y1="${fy(0) - 5}" x2="${fx(v)}" y2="${fy(0) + 5}" stroke="var(--axis)"/><text x="${fx(v) + (v > 0 ? 4 : -4)}" y="${fy(0) + 20}" font-size="13" text-anchor="${v > 0 ? 'start' : 'end'}" fill="var(--mut)">${v > 0 ? '1' : '−1'}</text>`;
+  }
+  s += `<text x="${F.N - 8}" y="${fy(0) - 10}" font-size="16" text-anchor="end" fill="var(--mut)" font-weight="700">x (${swapped ? 'rapport' : 'angle'})</text>`;
+  s += `<text x="${fx(0) + 10}" y="20" font-size="16" fill="var(--mut)" font-weight="700">y (${swapped ? 'angle' : 'rapport'})</text>`;
+  s += `<g clip-path="url(#cl${restrict ? 'b' : 'a'})"><path d="${fpath(-F.lim, F.lim, t)}" fill="none" stroke="${restrict ? 'var(--grey)' : 'var(--blue)'}" stroke-width="3.5"/>`;
+  if (restrict) s += `<path d="${fpath(0, Math.PI, t)}" fill="none" stroke="var(--green)" stroke-width="7" stroke-linecap="round"/>`;
+  s += '</g>';
+  if (!swapped) s += `<text x="${fx(-6.5)}" y="${fy(1.6)}" font-size="17" fill="var(--blue)" font-weight="700">y = cos x</text>`;
+  else if (restrict) s += `<text x="${fx(1.2)}" y="${fy(Math.PI / 2)}" font-size="17" fill="var(--green)" font-weight="700">y = cos⁻¹ x</text>`;
+  else s += `<text x="${fx(1.2)}" y="${fy(-5.2)}" font-size="17" fill="var(--blue)" font-weight="700">x = cos y</text>`;
+  if (done && xv !== null) {
+    const a = Math.acos(xv);
+    s += `<line x1="${fx(xv)}" y1="0" x2="${fx(xv)}" y2="${F.N}" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="8 6"/>`;
+    for (const v of angSols(xv)) { const g = restrict && Math.abs(v - a) < 1e-6; s += `<circle cx="${fx(xv)}" cy="${fy(v)}" r="${g ? 10 : 7}" fill="${restrict ? (g ? 'var(--green)' : 'var(--grey)') : 'var(--orange)'}" stroke="var(--card)" stroke-width="2.5"/>`; }
+  }
+  return s + '</svg>';
+}
+
+/* Step 4 */
+let t4 = 0, x4 = 0.5, anim = null;
+function r3() {
+  $('f3').innerHTML = refl({ t: t4, xv: x4, restrict: false });
+  const done = t4 > 0.999;
+  $('after4').classList.toggle('hide', !done);
+  $('tR').value = t4;
+  $('x4Val').textContent = fC(x4);
+  $('x4Sols').innerHTML = '<span class="note" style="align-self:center">…</span>' + angSols(x4).map(v => `<span class="chip c-or">${fA(v / DEG)}</span>`).join('') + '<span class="note" style="align-self:center">…</span>';
+}
+function animTo(target) {
+  cancelAnimationFrame(anim);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { t4 = target; r3(); return; }
+  const start = t4, t0 = performance.now(), dur = 1600 * Math.abs(target - start) + 1;
+  const stepf = now => { const p = Math.min(1, (now - t0) / dur), e = p < .5 ? 2 * p * p : 1 - ((-2 * p + 2) ** 2) / 2; t4 = start + (target - start) * e; r3(); if (p < 1) anim = requestAnimationFrame(stepf); };
+  anim = requestAnimationFrame(stepf);
+}
+$('flip').onclick = () => animTo(1);
+$('unflip').onclick = () => animTo(0);
+$('tR').addEventListener('input', e => { cancelAnimationFrame(anim); t4 = +e.target.value; r3(); });
+$('x4R').addEventListener('input', e => { x4 = +e.target.value; r3(); });
+
+/* Step 5 */
+let x5 = 0.5, restricted = false;
+function r4() {
+  $('f4').innerHTML = refl({ t: 1, xv: x5, restrict: restricted });
+  $('xVal').textContent = fC(x5);
+  const n = angSols(x5).length, a = Math.acos(x5) / DEG;
+  if (!restricted) { $('out5').innerHTML = `${n} angles ici… <span class="c-or">∞ en tout</span>`; $('msg5').textContent = 'Échec du test de la droite verticale : ce n\'est pas une fonction.'; }
+  else { $('out5').innerHTML = `<span class="c-gr">cos⁻¹(${fC(x5)}) = ${fA(a)}</span>`; $('msg5').textContent = 'Sur le morceau vert, chaque rapport donne un seul angle : c\'est la réponse de la calculatrice. Les points gris sont toujours des solutions, mais la calculatrice ne les montre pas : c\'est à nous de les trouver.'; }
+  $('restr').textContent = restricted ? 'Voir toute la relation' : `Restreindre l'image à [${fA(0)}, ${fA(180)}]`;
+  $('why5').classList.toggle('hide', !restricted);
+}
+$('xR').addEventListener('input', e => { x5 = +e.target.value; r4(); });
+$('restr').onclick = () => { restricted = !restricted; r4(); };
+/* ---------- Step 6 : method ---------- */
+let fn = 'cos', c6 = 0.5;
+const PRE = [0.5, -0.5, Math.SQRT2 / 2, Math.sqrt(3) / 2, -Math.sqrt(3) / 2, 0, 1, -1, 0.3];
+const norm = d => ((d % 360) + 360) % 360;
+function r5() {
+  const isC = fn === 'cos';
+  const a = (isC ? Math.acos(c6) : Math.asin(c6)) / DEG;
+  const other = isC ? 360 - a : 180 - a;
+  const inI = uniq([norm(a), norm(other)].map(v => Math.abs(v - 360) < 1e-6 ? 0 : v));
+  const single = inI.length === 1;
+  $('fnName').textContent = fn; $('cShow').textContent = fC(c6);
+  $('presets').innerHTML = PRE.map((v, i) => `<button class="btn" data-p="${i}" style="min-width:64px">${fC(v)}</button>`).join('');
+  $('m1').textContent = `${fn}⁻¹(${fC(c6)}) = ${fA(a)}`;
+  $('m1n').textContent = isC ? `La touche cos⁻¹ donne toujours un angle entre ${fA(0)} et ${fA(180)} (en vert sur le cercle).` : `La touche sin⁻¹ donne toujours un angle entre ${fA(-90)} et ${fA(90)} (en vert sur le cercle).`;
+  if (single) $('m2').innerHTML = `ici, un seul point du cercle a ${isC ? 'cette coordonnée x' : 'cette coordonnée y'} : pas de deuxième angle.`;
+  else $('m2').innerHTML = isC
+    ? `cos θ est la coordonnée <b>x</b>. Le reflet par rapport à l'<b>axe des x</b> a la même coordonnée x :<div class="eq c-pu">θ = ${per()} − ${fA(a)} = ${fA(other)}</div>`
+    : `sin θ est la coordonnée <b>y</b>. Le reflet par rapport à l'<b>axe des y</b> a la même coordonnée y :<div class="eq c-pu">θ = ${fA(180)} − ${a < 0 ? '(' + fA(a) + ')' : fA(a)} = ${fA(other)}</div>`;
+  $('m3').innerHTML = single ? `θ = ${fA(inI[0])} + ${per()}k` : `θ = ${fA(a)} + ${per()}k &nbsp;ou&nbsp; θ = ${fA(other)} + ${per()}k`;
+  $('intv').textContent = `[${fA(0)}, ${per()}[`;
+  $('m4').innerHTML = inI.map(v => { const calc = Math.abs(v - a) < 1e-6; return `<span class="chip ${calc ? 'c-gr' : 'c-pu'}">${fA(v)}</span>`; }).join('') + (!single && a < 0 ? `<span class="note" style="align-self:center">(${fA(a)} + ${per()} = ${fA(norm(a))})</span>` : '');
+  $('c6').value = c6;
+  // circle
+  const cx = 220, cy = 220, R = 160;
+  const P = d => [cx + R * Math.cos(d * DEG), cy - R * Math.sin(d * DEG)];
+  const [ax0, ay0] = P(isC ? 0 : -90), [ax1, ay1] = P(isC ? 180 : 90);
+  let s = `<svg viewBox="0 0 440 440" role="img" aria-label="Cercle unitaire avec les deux solutions">
+    <line x1="20" y1="${cy}" x2="420" y2="${cy}" stroke="var(--axis)" stroke-width="1.5"/><line x1="${cx}" y1="20" x2="${cx}" y2="420" stroke="var(--axis)" stroke-width="1.5"/>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--ink)" stroke-width="2"/>
+    <path d="M ${ax0} ${ay0} A ${R} ${R} 0 0 0 ${ax1} ${ay1}" fill="none" stroke="var(--green)" stroke-width="12" stroke-opacity=".28" stroke-linecap="round"/>`;
+  if (isC) { const x = cx + R * c6; s += `<line x1="${x}" y1="20" x2="${x}" y2="420" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="8 6"/><text x="${x + 6}" y="38" font-size="17" fill="var(--orange)" font-weight="700">x = ${fC(c6)}</text>`; }
+  else { const y = cy - R * c6; s += `<line x1="20" y1="${y}" x2="420" y2="${y}" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="8 6"/><text x="24" y="${y - 8}" font-size="17" fill="var(--orange)" font-weight="700">y = ${fC(c6)}</text>`; }
+  const pts = [[a, 'var(--green)']]; if (!single) pts.push([other, 'var(--purple)']);
+  for (const [d, col] of pts) {
+    const [x, y] = P(d), lx = cx + (R + 34) * Math.cos(d * DEG), ly = cy - (R + 34) * Math.sin(d * DEG);
+    s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${col}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="11" fill="${col}" stroke="var(--card)" stroke-width="3"/>
+      <text x="${lx}" y="${ly + 6}" font-size="17" font-weight="700" text-anchor="middle" fill="${col}">${fA(d === a ? a : norm(d))}</text>`;
+  }
+  // arc for the calculator's angle
+  const r = 34, [bx, by] = [cx + r, cy], [ex, ey] = [cx + r * Math.cos(a * DEG), cy - r * Math.sin(a * DEG)];
+  if (Math.abs(a) > 0.5) s += `<path d="M ${bx} ${by} A ${r} ${r} 0 ${Math.abs(a) > 180 ? 1 : 0} ${a > 0 ? 0 : 1} ${ex} ${ey}" fill="none" stroke="var(--green)" stroke-width="3"/>`;
+  s += `<text x="${isC ? cx : cx + R + 6}" y="${isC ? cy - R - 16 : cy + 4}" font-size="14" text-anchor="${isC ? 'middle' : 'start'}" fill="var(--green)">${isC ? 'image de cos⁻¹' : 'image'}</text>`;
+  $('f5').innerHTML = s + '</svg>';
+}
+$('presets').addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (b) { c6 = PRE[+b.dataset.p]; r5(); } });
+$('c6').addEventListener('input', e => { c6 = +e.target.value; r5(); });
+$('fCos').onclick = () => { fn = 'cos'; $('fCos').setAttribute('aria-pressed', 'true'); $('fSin').setAttribute('aria-pressed', 'false'); r5(); };
+$('fSin').onclick = () => { fn = 'sin'; $('fSin').setAttribute('aria-pressed', 'true'); $('fCos').setAttribute('aria-pressed', 'false'); r5(); };
+
+/* ---------- units, nav ---------- */
+function renderAll() {
+  document.querySelectorAll('.u0').forEach(e => e.textContent = fA(0));
+  document.querySelectorAll('.u90').forEach(e => e.textContent = fA(90));
+  document.querySelectorAll('.u180').forEach(e => e.textContent = fA(180));
+  r0(); r1(); r2(); r3(); r4(); r5();
+}
+function setUnit(u) { S.unit = u; $('uDeg').setAttribute('aria-pressed', u === 'deg'); $('uRad').setAttribute('aria-pressed', u === 'rad'); renderAll(); }
+$('uDeg').onclick = () => setUnit('deg'); $('uRad').onclick = () => setUnit('rad');
+$('dots').innerHTML = Array.from({ length: N }, (_, i) => `<button class="dot" data-i="${i}" aria-label="Étape ${i + 1}">${i + 1}</button>`).join('');
+function go(i) {
+  S.step = Math.max(0, Math.min(N - 1, i));
+  for (let k = 0; k < N; k++) $('s' + k).classList.toggle('on', k === S.step);
+  document.querySelectorAll('.dot').forEach((d, k) => d.setAttribute('aria-current', k === S.step));
+  $('prev').disabled = S.step === 0; $('next').disabled = S.step === N - 1;
+  try { history.replaceState(null, '', '#etape-' + (S.step + 1)); } catch (e) {}
+  window.scrollTo({ top: 0 });
+}
+$('dots').addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) go(+b.dataset.i); });
+$('prev').onclick = () => go(S.step - 1); $('next').onclick = () => go(S.step + 1);
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') go(S.step + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(S.step - 1);
+});
+renderAll();
+const m = /^#etape-(\d)$/.exec(location.hash); go(m ? +m[1] - 1 : 0);
+}
+</script>
+</body>
+</html>
