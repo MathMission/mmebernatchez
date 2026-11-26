@@ -19,16 +19,34 @@
    • Mots de 4 à 9 lettres ; les accents sont ignorés.
    ========================================================== */
 const MOTS = [
-  { date: "2026-11-20", code: "U1VOSVM=",     indice: "Côté opposé sur hypoténuse." },
-  { date: "2026-11-23", code: "RUdBU0FIUEVE", indice: "Translation horizontale d'une sinusoïde." },
-  { date: "2026-11-24", code: "VE5BUkRBVVE=", indice: "Le plan cartésien en a quatre." },
-  { date: "2026-11-25", code: "RVJHRUQ=",     indice: "Unité d'angle : un tour complet en vaut 360." },
-  { date: "2026-11-26", code: "RVROQUNFU09D", indice: "La réciproque du sinus : 1/sin x." },
-  { date: "2026-11-27", code: "RUVOTk9EUk8=", indice: "Sur le cercle trigonométrique, le sinus en est une." },
-  { date: "2026-11-30", code: "RURVVElMUE1B", indice: "La moitié de la distance entre le max et le min." },
-  { date: "2026-12-01", code: "RVRPVFBNWVNB", indice: "Droite dont la courbe s'approche sans jamais la toucher." },
-  { date: "2026-12-02", code: "RVROQUNFUw==", indice: "La fonction inverse du cosinus : 1/cos x." },
-  { date: "2026-12-03", code: "Tk9JVEFVUUU=", indice: "On la résout pour trouver x." },
+  { date: "2026-11-20", code: "U1VOSVM=", indice: "Côté opposé sur hypoténuse." },
+  { date: "2026-11-23", code: "TkFJREFS", indice: "Unité d'angle : un tour complet en vaut 2π." },
+  { date: "2026-11-24", code: "RURPSVJFUA==", indice: "Le temps pour compléter un cycle." },
+  { date: "2026-11-25", code: "U1VOSVNPQw==", indice: "Abscisse d'un point sur le cercle trigonométrique." },
+  { date: "2026-11-26", code: "RVRJVE5FREk=", indice: "Égalité vraie pour toutes les valeurs permises." },
+  { date: "2026-11-27", code: "VE5FTVVHUkE=", indice: "On ne devrait jamais écrire sinus sans ceci." },
+  { date: "2026-11-28", code: "RVNBQg==", indice: "Pour log 1000 = 3, elle vaut 10 sans qu'on l'écrive." },
+  { date: "2026-11-29", code: "RVVRSUJVQw==", indice: "Elle peut avoir jusqu'à trois zéros et deux points tournants." },
+  { date: "2026-11-30", code: "RURVVElMUE1B", indice: "Toujours positive, même quand a ne l'est pas." },
+  { date: "2026-12-01", code: "RUlWSU1FRA==", indice: "Pour le carbone 14, elle dure environ 5730 ans." },
+  { date: "2026-12-02", code: "RVRPVFBNWVNB", indice: "Pour cot x, on en trouve une à chaque multiple de π." },
+  { date: "2026-12-03", code: "VE5BU09QWEU=", indice: "Un logarithme, ce n'est rien d'autre que ça." },
+  { date: "2026-12-04", code: "RVJJQVA=", indice: "x⁴ − 3x² et cos x le sont toutes les deux." },
+  { date: "2026-12-05", code: "RVROQUNFUw==", indice: "Son carré est égal à 1 + tan² x." },
+  { date: "2026-12-06", code: "UkVMVUU=", indice: "On lui doit la base du logarithme naturel." },
+  { date: "2026-12-07", code: "UlVFVENBRg==", indice: "Si P(a) = 0, alors (x − a) en est un." },
+  { date: "2026-12-08", code: "Tk9JVEFVUUU=", indice: "Contrairement à l'identité, elle n'est vraie que pour certaines valeurs." },
+  { date: "2026-12-09", code: "TEVCSUNFRA==", indice: "Chaque 10 de plus, c'est un son 10 fois plus intense." },
+  { date: "2026-12-10", code: "RUdBU0FIUEVE", indice: "La dernière étape quand on esquisse une sinusoïde." },
+  { date: "2026-12-11", code: "VEVSRVROSQ==", indice: "Composé, il fait grossir un placement de façon exponentielle." },
+  { date: "2026-12-12", code: "RU5JQ0FS", indice: "De multiplicité 2, le graphique rebondit sur l'axe des x." },
+  { date: "2026-12-13", code: "RU1NT1M=", indice: "Formule d'angle qui donne sin 75° à partir de 45° et 30°." },
+  { date: "2026-12-14", code: "UkVUSENJUg==", indice: "Sur cette échelle, un séisme de 7 est 10 fois plus fort qu'un de 6." },
+  { date: "2026-12-15", code: "RVNSRVZOSQ==", indice: "Le nom qu'on donne, dans notre classe, à csc, sec et cot." },
+  { date: "2026-12-16", code: "RVJHRUQ=", indice: "Pour un polynôme, il limite le nombre de zéros." },
+  { date: "2026-12-17", code: "RUlSRVRDQUI=", indice: "Dans nos problèmes, sa population double sans arrêt." },
+  { date: "2026-12-18", code: "RVJPR0FIVFlQ", indice: "Une des familles d'identités porte son nom." },
+  { date: "2026-12-19", code: "TEVSVVRBTg==", indice: "C'est le « n » dans ln." },
 ];
 </script>
 <style>
@@ -53,7 +71,6 @@ const MOTS = [
     -webkit-tap-highlight-color:transparent;
   }
   .app{width:100%;max-width:500px;min-height:100%;display:flex;flex-direction:column;padding:0 12px}
-  .back{font-size:13px;padding:8px 2px 0;color:var(--ink);text-decoration:none;font-weight:700}
   header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px;border-bottom:2px solid var(--ink)}
   .brand{text-align:center;flex:1}
   h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:28px;margin:0;letter-spacing:-.5px}
@@ -64,6 +81,15 @@ const MOTS = [
   .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 2px;gap:8px}
   .hint-btn{border:1.5px dashed var(--ink);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
   .hint-btn[disabled]{opacity:.5;cursor:default}
+  .hint-row{display:flex;justify-content:center;padding:0 0 6px;min-height:6px}
+  .defi{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;cursor:pointer;user-select:none}
+  .defi input{position:absolute;opacity:0;width:0;height:0}
+  .sw{width:36px;height:20px;border-radius:999px;background:var(--tile-border);position:relative;transition:background .2s;flex:none}
+  .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+  .defi input:checked + .sw{background:var(--present)}
+  .defi input:checked + .sw::after{transform:translateX(16px)}
+  .defi input:focus-visible + .sw{outline:2px solid var(--accent);outline-offset:2px}
+  .star{background:#fff6df;border:2px solid var(--present);border-radius:8px;padding:8px;text-align:center;font-weight:700;margin:4px 0 12px}
   .hint{background:#fff;border-left:4px solid var(--present);padding:8px 10px;font-size:14px;margin:0 2px 6px;border-radius:4px;display:none}
   .hint.show{display:block}
   .test-banner{background:var(--accent);color:#fff;text-align:center;font-size:13px;padding:6px;border-radius:6px;margin-top:8px;display:none}
@@ -142,7 +168,6 @@ const MOTS = [
 </head>
 <body>
 <div class="app">
-  <a class="back" href="./">← Jeux mathématiques</a>
   <header>
     <button class="icon-btn" id="helpBtn" aria-label="Comment jouer">?</button>
     <div class="brand">
@@ -154,8 +179,9 @@ const MOTS = [
   <div class="test-banner" id="testBanner">Mode test — rien n'est enregistré · <a href="#" id="quitTest" style="color:#fff">quitter</a></div>
   <div class="meta">
     <span id="dateLabel"></span>
-    <button class="hint-btn" id="hintBtn">💡 Indice</button>
+    <label class="defi" title="Jouer sans indice pour gagner une étoile"><input type="checkbox" id="defiToggle"><span class="sw"></span>⭐ Mode défi</label>
   </div>
+  <div class="hint-row"><button class="hint-btn" id="hintBtn">💡 Indice</button></div>
   <div class="hint" id="hint"></div>
   <div class="board-wrap"><div class="board" id="board"></div></div>
   <div class="keyboard" id="keyboard"></div>
@@ -175,7 +201,9 @@ const MOTS = [
   <p class="muted">Jaune : la lettre est dans le mot, mais ailleurs.</p>
   <div class="ex"><div class="tile">P</div><div class="tile">I</div><div class="tile absent">X</div></div>
   <p class="muted">Gris : la lettre n'est pas dans le mot.</p>
-  <p>Les accents sont ignorés (PÉRIODE s'écrit PERIODE). Un nouveau mot chaque jour de classe !</p>
+  <p><b>💡 Indice :</b> il se débloque après 3 essais.</p>
+  <p><b>⭐ Mode défi :</b> active-le pour cacher l'indice. Trouve le mot sans indice et tu gagnes une étoile ⭐ dans ton résultat.</p>
+  <p>Les accents sont ignorés (PÉRIODE s'écrit PERIODE). Un nouveau mot chaque jour, même la fin de semaine !</p>
 </div></div>
 
 <!-- Stats / fin -->
@@ -248,13 +276,12 @@ const MOTS = [
     game = {
       answer, date: entry.date, hint: entry.indice || '', key, test: !!test,
       guesses: saved ? saved.guesses : [], current:'', over: saved ? saved.over : false,
-      won: saved ? saved.won : false, usedHint: saved ? !!saved.usedHint : false
+      won: saved ? saved.won : false, usedHint: saved ? !!saved.usedHint : false,
+      star: saved ? !!saved.star : false
     };
     $('testBanner').classList.toggle('show', !!test);
     $('dateLabel').textContent = test ? 'Mot test' : frDate(entry.date).replace(/^./, c=>c.toUpperCase());
     $('hint').textContent = '💡 ' + (game.hint || 'Pas d\'indice aujourd\'hui.');
-    $('hint').classList.toggle('show', game.usedHint);
-    $('hintBtn').disabled = game.usedHint || !game.hint;
     buildBoard(); buildKeyboard();
     // replay saved guesses
     game.guesses.forEach((g,r)=>{
@@ -263,6 +290,7 @@ const MOTS = [
       [...g].forEach((ch,i)=>{ const t=row.children[i]; t.textContent=ch; t.classList.add(res[i]); });
       colorKeys(g,res);
     });
+    updateHintUI();
     if(game.over) setTimeout(()=>openStats(true), 400);
   }
 
@@ -348,7 +376,7 @@ const MOTS = [
       game.guesses.push(g); game.current='';
       const won = g===game.answer;
       if(won || game.guesses.length===MAX){
-        game.over=true; game.won=won;
+        game.over=true; game.won=won; game.star = won && !game.usedHint && isDefi();
         if(won){
           [...row.children].forEach((t,i)=>setTimeout(()=>t.classList.add('win'), i*90));
           toast(['Génial !','Magnifique !','Superbe !','Bravo !','Bien joué !','Ouf, de justesse !'][game.guesses.length-1]);
@@ -356,11 +384,12 @@ const MOTS = [
         if(!game.test) recordStats(won, game.guesses.length);
         setTimeout(()=>openStats(true), won?1700:2400);
       }
-      save(); busy=false;
+      save(); busy=false; updateHintUI();
+      if(!game.over && game.guesses.length===UNLOCK && game.hint && !game.usedHint && !isDefi()) toast('💡 L\'indice est débloqué');
     }, n*220+300);
   }
 
-  function save(){ if(!game.test) store.set(game.key,{guesses:game.guesses,over:game.over,won:game.won,usedHint:game.usedHint}); }
+  function save(){ if(!game.test) store.set(game.key,{guesses:game.guesses,over:game.over,won:game.won,usedHint:game.usedHint,star:game.star}); }
 
   function recordStats(won, tries){
     const s=store.get('motematique:stats',{played:0,wins:0,streak:0,max:0,dist:[0,0,0,0,0,0]});
@@ -370,10 +399,27 @@ const MOTS = [
   }
 
   // ---------- hint ----------
+  const UNLOCK = 3;
+  const isDefi = () => !!store.get('motematique:defi', false);
+  function updateHintUI(){
+    const b=$('hintBtn');
+    $('defiToggle').checked = isDefi();
+    $('hint').classList.toggle('show', !!(game && game.usedHint));
+    if(!game || !game.hint || game.usedHint || game.over || isDefi()){ b.style.display='none'; return; }
+    b.style.display='';
+    const left = UNLOCK - game.guesses.length;
+    if(left>0){ b.disabled=true; b.textContent='🔒 Indice dans '+left+' essai'+(left>1?'s':''); }
+    else { b.disabled=false; b.textContent='💡 Voir l\'indice'; }
+  }
   $('hintBtn').onclick=()=>{
-    if(!game || !game.hint) return;
-    game.usedHint=true; $('hint').classList.add('show'); $('hintBtn').disabled=true; save();
+    if(!game || !game.hint || game.guesses.length<UNLOCK || isDefi()) return;
+    game.usedHint=true; save(); updateHintUI();
   };
+  $('defiToggle').addEventListener('change', e=>{
+    store.set('motematique:defi', e.target.checked);
+    toast(e.target.checked ? '⭐ Mode défi activé : pas d\'indice' : 'Mode défi désactivé');
+    updateHintUI();
+  });
 
   // ---------- stats / end ----------
   function openStats(end){
@@ -388,6 +434,7 @@ const MOTS = [
     const eb=$('endBlock'), sw=$('shareWrap');
     if(game && game.over){
       eb.innerHTML='<h2>'+(game.won?'Trouvé en '+game.guesses.length+' !':'Pas cette fois…')+'</h2>'+
+        (game.star?'<div class="star">⭐ Trouvé en mode défi, sans indice !</div>':'')+
         '<p class="center muted" style="margin:0">Le mot du jour était</p><div class="answer">'+game.answer+'</div>'+
         (game.hint?'<p class="center muted">💡 '+escapeHtml(game.hint)+'</p>':'');
       sw.innerHTML='<button class="btn" id="shareBtn">Copier mon résultat</button>';
@@ -398,7 +445,7 @@ const MOTS = [
   function share(){
     const em={correct:'🟩',present:'🟨',absent:'⬜'};
     const grid=game.guesses.map(g=>evaluate(g,game.answer).map(r=>em[r]).join('')).join('\n');
-    const txt='Motématique '+(game.test?'(test)':game.date)+' — '+(game.won?game.guesses.length:'X')+'/6'+(game.usedHint?' 💡':'')+'\n'+grid;
+    const txt='Motématique '+(game.test?'(test)':game.date)+' — '+(game.won?game.guesses.length:'X')+'/6'+(game.star?' ⭐':(game.usedHint?' 💡':''))+'\n'+grid;
     copy(txt,'Résultat copié !');
   }
   function copy(txt,msg){
@@ -428,7 +475,7 @@ const MOTS = [
     for(let i=0;i<400;i++){
       const ymd=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
       const wd=d.getDay();
-      if(wd!==0 && wd!==6 && !taken.has(ymd)) return ymd;
+      if(!taken.has(ymd)) return ymd;
       d.setDate(d.getDate()+1);
     }
     return TODAY;
