@@ -198,7 +198,7 @@ svg text{font-family:"Atkinson Hyperlegible",system-ui,sans-serif}
   <h2>La méthode : la calculatrice d'abord, puis on réfléchit</h2>
   <div class="cols">
     <div class="txt">
-      <div class="btns"><div class="seg" role="group" aria-label="Fonction"><button id="fCos" aria-pressed="true">cos θ</button><button id="fSin" aria-pressed="false">sin θ</button></div></div>
+      <div class="btns"><div class="seg" role="group" aria-label="Fonction"><button id="fCos" aria-pressed="true">cos θ</button><button id="fSin" aria-pressed="false">sin θ</button><button id="fTan" aria-pressed="false">tan θ</button></div></div>
       <p class="big" style="margin:4px 0 8px"><span id="fnName">cos</span> θ = <span class="c-or" id="cShow">½</span></p>
       <div class="chips" id="presets"></div>
       <label class="rng" for="c6">Ou choisissez une valeur</label>
@@ -250,7 +250,7 @@ function fA(d) {
   return num(d * DEG, 2);
 }
 const per = () => S.unit === 'deg' ? '360°' : '2π';
-const SPECIAL = [[0.5, '½'], [-0.5, '−½'], [Math.SQRT2 / 2, '√2/2'], [-Math.SQRT2 / 2, '−√2/2'], [Math.sqrt(3) / 2, '√3/2'], [-Math.sqrt(3) / 2, '−√3/2']];
+const SPECIAL = [[0.5, '½'], [-0.5, '−½'], [Math.SQRT2 / 2, '√2/2'], [-Math.SQRT2 / 2, '−√2/2'], [Math.sqrt(3) / 2, '√3/2'], [-Math.sqrt(3) / 2, '−√3/2'], [Math.sqrt(3), '√3'], [-Math.sqrt(3), '−√3'], [1 / Math.sqrt(3), '√3/3'], [-1 / Math.sqrt(3), '−√3/3']];
 function fC(c) { for (const [v, s] of SPECIAL) if (Math.abs(c - v) < 1e-9) return s; return num(c, 2); }
 const uniq = arr => { const out = []; for (const a of arr) if (!out.some(b => Math.abs(a - b) < 1e-6)) out.push(a); return out.sort((a, b) => a - b); };
 
@@ -454,26 +454,34 @@ $('xR').addEventListener('input', e => { x5 = +e.target.value; r4(); });
 $('restr').onclick = () => { restricted = !restricted; r4(); };
 /* ---------- Step 6 : method ---------- */
 let fn = 'cos', c6 = 0.5;
-const PRE = [0.5, -0.5, Math.SQRT2 / 2, Math.sqrt(3) / 2, -Math.sqrt(3) / 2, 0, 1, -1, 0.3];
+const PRES = {
+  cos: [0.5, -0.5, Math.SQRT2 / 2, Math.sqrt(3) / 2, -Math.sqrt(3) / 2, 0, 1, -1, 0.3],
+  sin: [0.5, -0.5, Math.SQRT2 / 2, Math.sqrt(3) / 2, -Math.sqrt(3) / 2, 0, 1, -1, 0.3],
+  tan: [1, -1, Math.sqrt(3), -Math.sqrt(3), 1 / Math.sqrt(3), -1 / Math.sqrt(3), 0, 2, 5]
+};
 const norm = d => ((d % 360) + 360) % 360;
 function r5() {
-  const isC = fn === 'cos';
-  const a = (isC ? Math.acos(c6) : Math.asin(c6)) / DEG;
-  const other = isC ? 360 - a : 180 - a;
+  const isC = fn === 'cos', isT = fn === 'tan';
+  const a = (isC ? Math.acos(c6) : isT ? Math.atan(c6) : Math.asin(c6)) / DEG;
+  const other = isC ? 360 - a : isT ? a + 180 : 180 - a;
   const inI = uniq([norm(a), norm(other)].map(v => Math.abs(v - 360) < 1e-6 ? 0 : v));
   const single = inI.length === 1;
+  const perT = S.unit === 'deg' ? '180°' : 'π';
   $('fnName').textContent = fn; $('cShow').textContent = fC(c6);
-  $('presets').innerHTML = PRE.map((v, i) => `<button class="btn" data-p="${i}" style="min-width:64px">${fC(v)}</button>`).join('');
+  $('presets').innerHTML = PRES[fn].map((v, i) => `<button class="btn" data-p="${i}" style="min-width:64px">${fC(v)}</button>`).join('');
   $('m1').textContent = `${fn}⁻¹(${fC(c6)}) = ${fA(a)}`;
-  $('m1n').textContent = isC ? `La touche cos⁻¹ donne toujours un angle entre ${fA(0)} et ${fA(180)} (en vert sur le cercle).` : `La touche sin⁻¹ donne toujours un angle entre ${fA(-90)} et ${fA(90)} (en vert sur le cercle).`;
+  $('m1n').textContent = isC ? `La touche cos⁻¹ donne toujours un angle entre ${fA(0)} et ${fA(180)} (en vert sur le cercle).`
+    : isT ? `La touche tan⁻¹ donne toujours un angle strictement entre ${fA(-90)} et ${fA(90)} (en vert sur le cercle).`
+    : `La touche sin⁻¹ donne toujours un angle entre ${fA(-90)} et ${fA(90)} (en vert sur le cercle).`;
   if (single) $('m2').innerHTML = `ici, un seul point du cercle a ${isC ? 'cette coordonnée x' : 'cette coordonnée y'} : pas de deuxième angle.`;
-  else $('m2').innerHTML = isC
-    ? `cos θ est la coordonnée <b>x</b>. Le reflet par rapport à l'<b>axe des x</b> a la même coordonnée x :<div class="eq c-pu">θ = ${per()} − ${fA(a)} = ${fA(other)}</div>`
-    : `sin θ est la coordonnée <b>y</b>. Le reflet par rapport à l'<b>axe des y</b> a la même coordonnée y :<div class="eq c-pu">θ = ${fA(180)} − ${a < 0 ? '(' + fA(a) + ')' : fA(a)} = ${fA(other)}</div>`;
-  $('m3').innerHTML = single ? `θ = ${fA(inI[0])} + ${per()}k` : `θ = ${fA(a)} + ${per()}k &nbsp;ou&nbsp; θ = ${fA(other)} + ${per()}k`;
+  else if (isC) $('m2').innerHTML = `cos θ est la coordonnée <b>x</b>. Le reflet par rapport à l'<b>axe des x</b> a la même coordonnée x :<div class="eq c-pu">θ = ${per()} − ${fA(a)} = ${fA(other)}</div>`;
+  else if (isT) $('m2').innerHTML = `tan θ est la <b>pente</b> du rayon. Le <b>point opposé</b> (un demi-tour plus loin) est sur la même droite, donc il a la même pente :<div class="eq c-pu">θ = ${a < 0 ? '(' + fA(a) + ')' : fA(a)} + ${fA(180)} = ${fA(other)}</div>`;
+  else $('m2').innerHTML = `sin θ est la coordonnée <b>y</b>. Le reflet par rapport à l'<b>axe des y</b> a la même coordonnée y :<div class="eq c-pu">θ = ${fA(180)} − ${a < 0 ? '(' + fA(a) + ')' : fA(a)} = ${fA(other)}</div>`;
+  $('m3').innerHTML = isT ? `θ = ${fA(a)} + ${perT}k<div class="note" style="white-space:normal">La période de tan est ${perT} : en ajoutant ${perT} à chaque fois, on obtient déjà le point opposé. Une seule ligne suffit.</div>`
+    : single ? `θ = ${fA(inI[0])} + ${per()}k` : `θ = ${fA(a)} + ${per()}k &nbsp;ou&nbsp; θ = ${fA(other)} + ${per()}k`;
   $('intv').textContent = `[${fA(0)}, ${per()}[`;
   $('m4').innerHTML = inI.map(v => { const calc = Math.abs(v - a) < 1e-6; return `<span class="chip ${calc ? 'c-gr' : 'c-pu'}">${fA(v)}</span>`; }).join('') + (!single && a < 0 ? `<span class="note" style="align-self:center">(${fA(a)} + ${per()} = ${fA(norm(a))})</span>` : '');
-  $('c6').value = c6;
+  const sl = $('c6'); sl.min = isT ? -5 : -1; sl.max = isT ? 5 : 1; sl.value = c6;
   // circle
   const cx = 220, cy = 220, R = 160;
   const P = d => [cx + R * Math.cos(d * DEG), cy - R * Math.sin(d * DEG)];
@@ -481,25 +489,35 @@ function r5() {
   let s = `<svg viewBox="0 0 440 440" role="img" aria-label="Cercle unitaire avec les deux solutions">
     <line x1="20" y1="${cy}" x2="420" y2="${cy}" stroke="var(--axis)" stroke-width="1.5"/><line x1="${cx}" y1="20" x2="${cx}" y2="420" stroke="var(--axis)" stroke-width="1.5"/>
     <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--ink)" stroke-width="2"/>
-    <path d="M ${ax0} ${ay0} A ${R} ${R} 0 0 0 ${ax1} ${ay1}" fill="none" stroke="var(--green)" stroke-width="12" stroke-opacity=".28" stroke-linecap="round"/>`;
+    <path d="M ${ax0} ${ay0} A ${R} ${R} 0 0 0 ${ax1} ${ay1}" fill="none" stroke="var(--green)" stroke-width="12" stroke-opacity=".28" stroke-linecap="${isT ? 'butt' : 'round'}"/>`;
+  if (isT) s += `<circle cx="${ax0}" cy="${ay0}" r="7" fill="var(--card)" stroke="var(--green)" stroke-width="2.5"/><circle cx="${ax1}" cy="${ay1}" r="7" fill="var(--card)" stroke="var(--green)" stroke-width="2.5"/>`;
   if (isC) { const x = cx + R * c6; s += `<line x1="${x}" y1="20" x2="${x}" y2="420" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="8 6"/><text x="${x + 6}" y="38" font-size="17" fill="var(--orange)" font-weight="700">x = ${fC(c6)}</text>`; }
+  else if (isT) {
+    const L = 205, dx = L * Math.cos(a * DEG), dy = L * Math.sin(a * DEG);
+    s += `<line x1="${cx - dx}" y1="${cy + dy}" x2="${cx + dx}" y2="${cy - dy}" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="8 6"/>`;
+    s += `<text x="24" y="38" font-size="17" fill="var(--orange)" font-weight="700">pente = ${fC(c6)}</text>`;
+  }
   else { const y = cy - R * c6; s += `<line x1="20" y1="${y}" x2="420" y2="${y}" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="8 6"/><text x="24" y="${y - 8}" font-size="17" fill="var(--orange)" font-weight="700">y = ${fC(c6)}</text>`; }
   const pts = [[a, 'var(--green)']]; if (!single) pts.push([other, 'var(--purple)']);
   for (const [d, col] of pts) {
     const [x, y] = P(d), lx = cx + (R + 34) * Math.cos(d * DEG), ly = cy - (R + 34) * Math.sin(d * DEG);
     s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${col}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="11" fill="${col}" stroke="var(--card)" stroke-width="3"/>
-      <text x="${lx}" y="${ly + 6}" font-size="17" font-weight="700" text-anchor="middle" fill="${col}">${fA(d === a ? a : norm(d))}</text>`;
+      <text x="${lx}" y="${ly + 6}" font-size="17" font-weight="700" text-anchor="middle" fill="${col}" paint-order="stroke" stroke="var(--card)" stroke-width="4">${fA(d === a ? a : norm(d))}</text>`;
   }
-  // arc for the calculator's angle
   const r = 34, [bx, by] = [cx + r, cy], [ex, ey] = [cx + r * Math.cos(a * DEG), cy - r * Math.sin(a * DEG)];
   if (Math.abs(a) > 0.5) s += `<path d="M ${bx} ${by} A ${r} ${r} 0 ${Math.abs(a) > 180 ? 1 : 0} ${a > 0 ? 0 : 1} ${ex} ${ey}" fill="none" stroke="var(--green)" stroke-width="3"/>`;
-  s += `<text x="${isC ? cx : cx + R + 6}" y="${isC ? cy - R - 16 : cy + 4}" font-size="14" text-anchor="${isC ? 'middle' : 'start'}" fill="var(--green)">${isC ? 'image de cos⁻¹' : 'image'}</text>`;
+  s += isC ? `<text x="${cx}" y="${cy - R - 16}" font-size="14" text-anchor="middle" fill="var(--green)">image de cos⁻¹</text>`
+    : `<text x="432" y="432" font-size="14" text-anchor="end" fill="var(--green)">image de ${fn}⁻¹ (moitié droite)</text>`;
   $('f5').innerHTML = s + '</svg>';
 }
-$('presets').addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (b) { c6 = PRE[+b.dataset.p]; r5(); } });
+$('presets').addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (b) { c6 = PRES[fn][+b.dataset.p]; r5(); } });
 $('c6').addEventListener('input', e => { c6 = +e.target.value; r5(); });
-$('fCos').onclick = () => { fn = 'cos'; $('fCos').setAttribute('aria-pressed', 'true'); $('fSin').setAttribute('aria-pressed', 'false'); r5(); };
-$('fSin').onclick = () => { fn = 'sin'; $('fSin').setAttribute('aria-pressed', 'true'); $('fCos').setAttribute('aria-pressed', 'false'); r5(); };
+function setFn(f) {
+  fn = f; c6 = f === 'tan' ? 1 : 0.5;
+  for (const [id, v] of [['fCos', 'cos'], ['fSin', 'sin'], ['fTan', 'tan']]) $(id).setAttribute('aria-pressed', v === f);
+  r5();
+}
+$('fCos').onclick = () => setFn('cos'); $('fSin').onclick = () => setFn('sin'); $('fTan').onclick = () => setFn('tan');
 
 /* ---------- units, nav ---------- */
 function renderAll() {
